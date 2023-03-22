@@ -17,9 +17,6 @@ public class PlayerDTO {
 
     private Long playerId;
     private String displayName;
-
-    @JsonIgnore
-    private Game game;
     private CharacterType characterType;
     private Integer seatNum;
 

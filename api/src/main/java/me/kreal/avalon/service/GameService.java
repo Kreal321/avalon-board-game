@@ -13,16 +13,14 @@ import me.kreal.avalon.util.avalon.GameMode;
 import me.kreal.avalon.util.avalon.GameModeFactory;
 import me.kreal.avalon.util.enums.GameModeType;
 import me.kreal.avalon.util.enums.GameStatus;
+import me.kreal.avalon.util.enums.RoundStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class GameService {
@@ -30,13 +28,15 @@ public class GameService {
     private final GameDao gameDao;
     private final UserService userService;
     private final RecordService recordService;
+    private final RoundService roundService;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public GameService(GameDao gameDao, UserService userService, RecordService recordService, JwtProvider jwtProvider) {
+    public GameService(GameDao gameDao, UserService userService, RecordService recordService, RoundService roundService, JwtProvider jwtProvider) {
         this.gameDao = gameDao;
         this.userService = userService;
         this.recordService = recordService;
+        this.roundService = roundService;
         this.jwtProvider = jwtProvider;
     }
 
@@ -81,7 +81,7 @@ public class GameService {
                 .gameSize(gameSize)
                 .gameStatus(GameStatus.NOT_STARTED)
                 .gameMode(gameMode)
-                .players(new HashSet<>())
+                .players(new ArrayList<>())
                 .build();
 
         this.gameDao.save(game);
@@ -188,6 +188,9 @@ public class GameService {
         GameModeFactory.getGameMode(GameModeType.FIVE_BASIC).assignPlayerCharacter(g.getPlayers());
 
         this.gameDao.update(g);
+
+        this.roundService.createNewRound(g);
+
         return DataResponse.builder()
                 .success(true)
                 .message("Game started!")
@@ -210,7 +213,7 @@ public class GameService {
 
         return DataResponse.builder()
                 .success(true)
-                .message("You are not in any game.")
+                .message("Info")
                 .data(GameModeFactory.getGameMode(g.getGameMode()).getCharacterInfo(g, userDetail.getPlayerId()))
                 .build();
     }

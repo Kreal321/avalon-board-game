@@ -3,6 +3,7 @@ package me.kreal.avalon.util.avalon;
 import me.kreal.avalon.domain.Game;
 import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.dto.response.CharacterInfo;
+import me.kreal.avalon.util.PlayerMapper;
 import me.kreal.avalon.util.enums.CharacterType;
 import me.kreal.avalon.util.enums.GameModeType;
 import org.springframework.security.core.parameters.P;
@@ -40,13 +41,13 @@ public abstract class GameMode {
         return this.questSize[questNum - 1];
     }
 
-    public void assignPlayerCharacter(Set<Player> players) {
-
-        List<Player> playerList = players.stream().sorted((p1, p2) -> new Random().nextInt(3) - 1).collect(Collectors.toList());
+    public void assignPlayerCharacter(List<Player> players) {
 
         for(int idx = 0; idx < this.gameSize; idx++) {
-            playerList.get(idx).setSeatNum(idx + 1);
+            players.get(idx).setSeatNum(idx + 1);
         }
+
+        List<Player> playerList = players.stream().sorted((p1, p2) -> new Random().nextInt(3) - 1).collect(Collectors.toList());
 
         Collections.shuffle(playerList);
 
@@ -58,54 +59,50 @@ public abstract class GameMode {
 
     public CharacterInfo getCharacterInfo(Game g, Long player_id) {
 
-        Set<Player> players = g.getPlayers();
+        List<Player> players = g.getPlayers();
         // assume player id existed because we can trust jwt token
         Player current = players.stream().filter(p -> p.getPlayerId().equals(player_id)).findAny().get();
 
         switch (current.getCharacterType()) {
             case MERLIN:
                 return CharacterInfo.builder()
-                        .name(current.getCharacterType())
-                        .information(players.stream()
+                        .characterType(current.getCharacterType())
+                        .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.ASSASSIN, CharacterType.MORGANA, CharacterType.OBERON, CharacterType.EVIL))).contains(p.getCharacterType()))
-                                .reduce("You know that ", (prev, curr) -> prev + "Seat #" + curr.getSeatNum() + ": " + curr.getDisplayName() + " is evil. ", String::concat))
+                                .map(PlayerMapper::convertToDTO)
+                                .collect(Collectors.toList()))
                         .build();
 
             case GOOD:
+            case OBERON:
                 return CharacterInfo.builder()
-                        .name(current.getCharacterType())
-                        .information("You may be clueless like a penguin in the desert, but you've got heart and want to help the good guys beat this game like a pinata at a birthday party!")
+                        .characterType(current.getCharacterType())
                         .build();
-
 
             case EVIL:
             case MORDRED:
             case MORGANA:
             case ASSASSIN:
                 return CharacterInfo.builder()
-                        .name(current.getCharacterType())
-                        .information(players.stream()
+                        .characterType(current.getCharacterType())
+                        .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.ASSASSIN, CharacterType.MORGANA, CharacterType.MORDRED, CharacterType.EVIL))).contains(p.getCharacterType()))
-                                .reduce("You know that ", (prev, curr) -> prev + "Seat #" + curr.getSeatNum() + ": " + curr.getDisplayName() + " is your team. ", String::concat))
+                                .map(PlayerMapper::convertToDTO)
+                                .collect(Collectors.toList()))
                         .build();
 
             case PERCIVAL:
                 return CharacterInfo.builder()
-                        .name(current.getCharacterType())
-                        .information(players.stream()
+                        .characterType(current.getCharacterType())
+                        .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.MERLIN, CharacterType.MORGANA))).contains(p.getCharacterType()))
-                                .reduce("You know that ", (prev, curr) -> prev + "Seat #" + curr.getSeatNum() + ": " + curr.getDisplayName() + " thumbs up. ", String::concat))
-                        .build();
-
-            case OBERON:
-                return CharacterInfo.builder()
-                        .name(current.getCharacterType())
-                        .information("You may be clueless like a penguin in the desert, but you've got heart and want to help the bad guys beat this game like a pinata at a birthday party!")
+                                .map(PlayerMapper::convertToDTO)
+                                .collect(Collectors.toList()))
                         .build();
 
             default:
                 return CharacterInfo.builder()
-                        .name(current.getCharacterType())
+                        .characterType(current.getCharacterType())
                         .information("Something went wrong.")
                         .build();
         }

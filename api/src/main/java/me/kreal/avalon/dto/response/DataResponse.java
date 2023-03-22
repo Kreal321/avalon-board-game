@@ -12,4 +12,11 @@ public class DataResponse {
     private String message;
     private Object data;
     private String token;
+
+    public static DataResponse error(String message) {
+        return DataResponse.builder()
+                .success(false)
+                .message(message)
+                .build();
+    }
 }

@@ -2,6 +2,7 @@ package me.kreal.avalon.util;
 
 import me.kreal.avalon.domain.Game;
 import me.kreal.avalon.dto.GameDTO;
+import me.kreal.avalon.dto.response.GameResponse;
 
 import java.util.stream.Collectors;
 
@@ -18,8 +19,39 @@ public class GameMapper {
                     .gameMode(game.getGameMode())
                     .players(game.getPlayers().stream()
                                 .map(PlayerMapper::convertToDTO)
-                                .collect(Collectors.toSet()))
+                                .collect(Collectors.toList()))
                     .build();
+    }
+
+    public static GameResponse convertToResponse(Game game) {
+        GameResponse response = GameResponse.builder()
+                    .gameId(game.getGameId())
+                    .gameNum(game.getGameNum())
+                    .gameSize(game.getGameSize())
+                    .gameStatus(game.getGameStatus())
+                    .gameStartTime(game.getGameStartTime())
+                    .gameEndTime(game.getGameEndTime())
+                    .gameMode(game.getGameMode())
+                    .players(game.getPlayers().stream()
+                                .map(PlayerMapper::convertToResponse)
+                                .collect(Collectors.toList()))
+                    .rounds(game.getRounds().stream()
+                                .map(RoundMapper::convertToResponse)
+                                .collect(Collectors.toList()))
+                    .build();
+
+        switch (game.getGameStatus()) {
+            case IN_PROGRESS:
+                response.getPlayers()
+                        .forEach(player -> player.setCharacterType(null));
+                response.getRounds().stream()
+                        .flatMap(round -> round.getTeams().stream())
+                        .flatMap(team -> team.getTeamMembers().stream())
+                        .forEach(teamMember -> teamMember.setStatus(null));
+                break;
+        }
+
+        return response;
     }
 
 }

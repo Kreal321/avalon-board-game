@@ -2,11 +2,14 @@ package me.kreal.avalon.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
+import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.util.enums.GameModeType;
 import me.kreal.avalon.util.enums.GameStatus;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -26,6 +29,6 @@ public class GameDTO {
     private Timestamp gameEndTime;
     private GameModeType gameMode;
 
-    private Set<PlayerDTO> players = new HashSet<>();
+    private List<PlayerDTO> players = new ArrayList<>();
 
 }

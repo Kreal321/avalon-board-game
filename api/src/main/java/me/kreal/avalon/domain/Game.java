@@ -8,7 +8,9 @@ import me.kreal.avalon.util.enums.GameStatus;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -47,12 +49,17 @@ public class Game implements Serializable {
     private GameModeType gameMode;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "game")
-    private Set<Player> players = new HashSet<>();
+    private List<Player> players = new ArrayList<>();
 
     @JsonIgnore
     @ToString.Exclude
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "game")
     private Set<Record> records = new HashSet<>();
+
+    @JsonIgnore
+    @ToString.Exclude
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "game")
+    private List<Round> rounds = new ArrayList<>();
 
     public void addPlayer(Player player) {
         this.players.add(player);
