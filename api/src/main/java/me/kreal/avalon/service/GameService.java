@@ -9,12 +9,14 @@ import me.kreal.avalon.dto.response.CharacterInfo;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.security.JwtProvider;
+import me.kreal.avalon.util.GameMapper;
 import me.kreal.avalon.util.avalon.GameMode;
 import me.kreal.avalon.util.avalon.GameModeFactory;
 import me.kreal.avalon.util.enums.GameModeType;
 import me.kreal.avalon.util.enums.GameStatus;
 import me.kreal.avalon.util.enums.RoundStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,25 +57,54 @@ public class GameService {
         Optional<Game> gameOptional = this.findGameById(gameId);
 
         if (!gameOptional.isPresent()) {
+            return DataResponse.error("Cannot find game with id = " + gameId);
+        }
+
+        Game game = gameOptional.get();
+
+        if (GameStatus.gameIsFinished(game.getGameStatus())) {
             return DataResponse.builder()
-                    .success(false)
-                    .message("Cannot find game with id = " + gameId)
+                    .success(true)
+                    .data(GameMapper.convertToResponse(game))
                     .build();
         }
 
+        Optional<User> userOptional = this.userService.findUserByUsername(username);
+
+        if (!userOptional.isPresent()) {
+            return DataResponse.builder()
+                    .success(true)
+                    .data(GameMapper.convertToResponse(game))
+                    .build();
+        }
+
+        Optional<Record> recordOptional = this.recordService.findRecordByGameAndUser(game, userOptional.get());
+
+        // not in the game, but can watch
+        if (!recordOptional.isPresent()) {
+            return DataResponse.builder()
+                    .success(true)
+                    .data(GameMapper.convertToResponse(game))
+                    .build();
+        }
+
+        // in the game
         return DataResponse.builder()
                 .success(true)
-                .data(gameOptional.get())
+                .data(GameMapper.convertToResponse(game))
+                .token(this.jwtProvider.createToken(recordOptional.get()))
                 .build();
     }
 
     @Transactional
     public DataResponse createNewGame(int gameSize, GameModeType gameMode, int gameNum) {
+
+        if (gameSize != GameModeFactory.getGameMode(gameMode).getGameSize()) {
+            return DataResponse.error("Invalid game size or game mode");
+        }
+
         if (this.gameDao.findGameByGameNumAndGameStatus(gameNum, GameStatus.NOT_STARTED).isPresent()) {
-            return DataResponse.builder()
-                    .success(false)
-                    .message("Game num is existed. do you want to join?")
-                    .build();
+            return DataResponse.error("Game num is existed. do you want to join?");
         }
 
         Game game = Game.builder()
@@ -82,28 +113,17 @@ public class GameService {
                 .gameStatus(GameStatus.NOT_STARTED)
                 .gameMode(gameMode)
                 .players(new ArrayList<>())
+                .records(new HashSet<>())
+                .rounds(new ArrayList<>())
                 .build();
 
         this.gameDao.save(game);
 
-        return DataResponse.builder()
-                .success(true)
-                .data(game)
-                .build();
+        return DataResponse.success("Game created successfully.", GameMapper.convertToResponse(game));
 
     }
 
-    public DataResponse handleJoinGameRequest(int gameNum, AuthUserDetail userDetail) {
-
-        DataResponse response = this.joinGameByToken(userDetail);
-
-        if (response.getSuccess()) return response;
-
-        return this.joinNotStartedGameByGameNum(gameNum, userDetail.getUsername());
-
-    }
-
-    public DataResponse joinGameByToken(AuthUserDetail userDetail) {
+    public DataResponse joinGameWithToken(AuthUserDetail userDetail) {
         if (userDetail.getGameId() != null) {
             // assume game exist because we can trust jwt token
             Game g = this.findGameById(userDetail.getGameId()).get();
@@ -124,14 +144,16 @@ public class GameService {
     @Transactional
     public DataResponse startGameByToken(AuthUserDetail userDetail) {
         if (userDetail.getGameId() == null) {
-            return DataResponse.builder()
-                    .success(false)
-                    .message("You are not in any game.")
-                    .build();
+            return DataResponse.error("You are not in a game.");
         }
 
         // assume game exist because we can trust jwt token
         Game g = this.findGameById(userDetail.getGameId()).get();
+
+        if (g.getGameStatus() != GameStatus.NOT_STARTED) {
+            return DataResponse.error("Game has already started.");
+        }
+
         return this.startGame(g);
 
     }
@@ -145,7 +167,7 @@ public class GameService {
         if(!gameOptional.isPresent()) {
             return DataResponse.builder()
                     .success(false)
-                    .message("Room num is not existed")
+                    .message("Room num is not valid or game has already started.")
                     .build();
         }
 
@@ -158,7 +180,7 @@ public class GameService {
                     .build();
         }
 
-        Record r = recordService.createNewRecord(gameOptional.get(), userOptional.get());
+        Record r = recordService.findOrCreateNewRecord(gameOptional.get(), userOptional.get());
 
         return DataResponse.builder()
                 .success(true)
@@ -171,21 +193,15 @@ public class GameService {
     public DataResponse startGame(Game g) {
 
         if (g.getPlayers().size() > g.getGameSize()) {
-            return DataResponse.builder()
-                    .success(false)
-                    .message("Number of players is larger than game size. Please increase the game size.")
-                    .build();
+            return DataResponse.error("Number of players is larger than game size. Please increase the game size.");
         } else if (g.getPlayers().size() < g.getGameSize()) {
-            return DataResponse.builder()
-                    .success(false)
-                    .message("Number of players is smaller than game size. Please decrease the game size.")
-                    .build();
+            return DataResponse.error("Number of players is smaller than game size. Please decrease the game size.");
         }
 
         g.setGameStatus(GameStatus.IN_PROGRESS);
         g.setGameStartTime(new Timestamp(System.currentTimeMillis()));
 
-        GameModeFactory.getGameMode(GameModeType.FIVE_BASIC).assignPlayerCharacter(g.getPlayers());
+        GameModeFactory.getGameMode(g.getGameMode()).assignPlayerCharacter(g.getPlayers());
 
         this.gameDao.update(g);
 
@@ -194,18 +210,15 @@ public class GameService {
         return DataResponse.builder()
                 .success(true)
                 .message("Game started!")
-                .data(g)
+                .data(GameMapper.convertToResponse(g))
                 .build();
 
 
     }
 
-    public DataResponse getGameInfoByToken(AuthUserDetail userDetail) {
+    public DataResponse getGameLatestInfoByToken(AuthUserDetail userDetail) {
         if (userDetail.getGameId() == null || userDetail.getPlayerId() == null) {
-            return DataResponse.builder()
-                    .success(false)
-                    .message("You are not in any game.")
-                    .build();
+            return DataResponse.error("You are not in any game.");
         }
 
         // assume game exist because we can trust jwt token
@@ -214,7 +227,7 @@ public class GameService {
         return DataResponse.builder()
                 .success(true)
                 .message("Info")
-                .data(GameModeFactory.getGameMode(g.getGameMode()).getCharacterInfo(g, userDetail.getPlayerId()))
+                .data(GameMapper.convertToResponse(g, userDetail.getPlayerId()))
                 .build();
     }
 

@@ -3,6 +3,7 @@ package me.kreal.avalon.util;
 import me.kreal.avalon.domain.Game;
 import me.kreal.avalon.dto.GameDTO;
 import me.kreal.avalon.dto.response.GameResponse;
+import me.kreal.avalon.util.avalon.GameModeFactory;
 
 import java.util.stream.Collectors;
 
@@ -50,6 +51,14 @@ public class GameMapper {
                         .forEach(teamMember -> teamMember.setStatus(null));
                 break;
         }
+
+        return response;
+    }
+
+    public static GameResponse convertToResponse(Game game, Long player_id) {
+        GameResponse response = GameMapper.convertToResponse(game);
+
+        response.setCharacter(GameModeFactory.getGameMode(game.getGameMode()).getCharacterInfo(game, player_id));
 
         return response;
     }

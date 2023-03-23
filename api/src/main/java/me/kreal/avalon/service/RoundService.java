@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -49,6 +50,8 @@ public class RoundService {
                     .leader(game.getPlayers().get(0))
                     .teamSize(3)
                     .roundStatus(RoundStatus.INITIAL_TEAM)
+                    .votes(new ArrayList<>())
+                    .teams(new ArrayList<>())
                     .build();
 
             this.roundDao.save(round);
@@ -117,8 +120,6 @@ public class RoundService {
 
         Round round = roundOptional.get();
 
-        System.out.print(round.getGame().getPlayers().get(1).getDisplayName());
-
         if (!round.getGame().getGameId().equals(gameId)) {
             return DataResponse.error("Round not found");
         }
@@ -127,9 +128,9 @@ public class RoundService {
             return DataResponse.error("You are not the leader");
         }
 
-//        if (teamRequest.getTeamType() == TeamType.INITIAL && round.getRoundStatus() != RoundStatus.INITIAL_TEAM) {
-//            return DataResponse.error("Round is not in initial team status");
-//        }
+        if (teamRequest.getTeamType() == TeamType.INITIAL && round.getRoundStatus() != RoundStatus.INITIAL_TEAM) {
+            return DataResponse.error("Round is not in initial team status");
+        }
 
         if (teamRequest.getTeamType() == TeamType.FINAL && round.getRoundStatus() != RoundStatus.DISCUSSING) {
             return DataResponse.error("Round is not in final team status");
@@ -137,6 +138,14 @@ public class RoundService {
 
         if (teamRequest.getTeamMembers().size() != round.getTeamSize()) {
             return DataResponse.error("Team size is not correct");
+        }
+
+        List<Long> playerIds = round.getGame().getPlayers().stream()
+                .map(Player::getPlayerId)
+                .collect(Collectors.toList());
+
+        if (teamRequest.getTeamMembers().stream().filter(playerIds::contains).count() != round.getTeamSize()) {
+            return DataResponse.error("Team members are not in the game");
         }
 
         Team team = Team.builder()

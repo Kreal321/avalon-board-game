@@ -3,6 +3,7 @@ package me.kreal.avalon.controller;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.service.GameService;
+import me.kreal.avalon.util.avalon.GameModeFactory;
 import me.kreal.avalon.util.enums.GameModeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,14 +22,25 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<DataResponse> newGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum) {
-        return ResponseEntity.ok(this.gameService.createNewGame(size, gameMode, roomNum));
+    public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum) {
+
+        DataResponse response = this.gameService.createNewGame(size, gameMode, roomNum);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/join/{gameNum}")
     public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int gameNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameService.handleJoinGameRequest(gameNum, userDetail);
+        DataResponse response = this.gameService.joinNotStartedGameByGameNum(gameNum, userDetail.getUsername());
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
 
         return ResponseEntity.ok(response);
     }
@@ -36,7 +48,11 @@ public class GameController {
     @GetMapping("/join")
     public ResponseEntity<DataResponse> handleJoinGameRequestWithToken(@AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameService.joinGameByToken(userDetail);
+        DataResponse response = this.gameService.joinGameWithToken(userDetail);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
 
         return ResponseEntity.ok(response);
     }
@@ -46,6 +62,10 @@ public class GameController {
 
         DataResponse response = this.gameService.findGameByIdAndUsername(gameId, userDetail.getUsername());
 
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
         return ResponseEntity.ok(response);
     }
 
@@ -54,13 +74,21 @@ public class GameController {
 
         DataResponse response = this.gameService.startGameByToken(userDetail);
 
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/info")
-    public ResponseEntity<DataResponse> handleGetGameInfoRequestWithToken(@AuthenticationPrincipal AuthUserDetail userDetail) {
+    @GetMapping("/refresh")
+    public ResponseEntity<DataResponse> handleGetGameRefreshRequestWithToken(@AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameService.getGameInfoByToken(userDetail);
+        DataResponse response = this.gameService.getGameLatestInfoByToken(userDetail);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
 
         return ResponseEntity.ok(response);
     }

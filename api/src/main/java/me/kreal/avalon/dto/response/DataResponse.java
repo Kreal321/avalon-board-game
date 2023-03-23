@@ -19,4 +19,26 @@ public class DataResponse {
                 .message(message)
                 .build();
     }
+
+    public static DataResponse success(String message) {
+        return DataResponse.builder()
+                .success(true)
+                .message(message)
+                .build();
+    }
+
+    public static DataResponse success(Object data) {
+        return DataResponse.builder()
+                .success(false)
+                .data(data)
+                .build();
+    }
+
+    public static DataResponse success(String message, Object data) {
+        return DataResponse.builder()
+                .success(true)
+                .message(message)
+                .data(data)
+                .build();
+    }
 }

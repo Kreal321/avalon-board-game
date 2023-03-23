@@ -28,7 +28,7 @@ public class RecordService {
         return this.recordDao.findRecordByGameAndUser(g, u);
     }
 
-    public Record createNewRecord(Game g, User u) {
+    public Record findOrCreateNewRecord(Game g, User u) {
 
         // Check where user has joined the game
         Optional<Record> recordOptional = this.findRecordByGameAndUser(g, u);
