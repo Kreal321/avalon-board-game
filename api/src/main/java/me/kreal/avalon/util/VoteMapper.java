@@ -10,7 +10,7 @@ public class VoteMapper {
         return VoteResponse.builder()
                 .voteId(vote.getVoteId())
                 .roundId(vote.getRound().getRoundId())
-                .playerId(vote.getPlayer().getPlayerId())
+                .playerId(vote.getPlayerId())
                 .accept(vote.getAccept())
                 .build();
     }

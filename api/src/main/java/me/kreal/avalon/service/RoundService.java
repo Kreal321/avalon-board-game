@@ -5,6 +5,8 @@ import me.kreal.avalon.domain.*;
 import me.kreal.avalon.dto.request.TeamRequest;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.util.RoundMapper;
+import me.kreal.avalon.util.avalon.GameModeFactory;
+import me.kreal.avalon.util.enums.CharacterType;
 import me.kreal.avalon.util.enums.RoundStatus;
 import me.kreal.avalon.util.enums.TeamMemberStatus;
 import me.kreal.avalon.util.enums.TeamType;
@@ -62,6 +64,7 @@ public class RoundService {
         return null;
     }
 
+    @Transactional
     public DataResponse createNewVoteForRound(Long roundId, Long gameId, Long playerId, Boolean accept) {
 
         Optional<Round> roundOptional = this.roundDao.getById(roundId);
@@ -104,10 +107,71 @@ public class RoundService {
         return DataResponse.builder()
                 .success(true)
                 .message("Vote added")
-                .data(round)
+                .data(RoundMapper.convertToResponse(round))
                 .build();
     }
 
+    @Transactional
+    public DataResponse createNewChallengeForRound(Long roundId, Long gameId, Long playerId, Boolean success) {
+
+        Optional<Round> roundOptional = this.roundDao.getById(roundId);
+
+        if (!roundOptional.isPresent()) {
+            return DataResponse.error("Round not found");
+        }
+
+        Round round = roundOptional.get();
+
+        if (!round.getGame().getGameId().equals(gameId)) {
+            return DataResponse.error("Round not found");
+        }
+
+        if (round.getRoundStatus() != RoundStatus.FINAL_TEAM_VOTING_SUCCESS) {
+            return DataResponse.error("Round is not in pending challenge status");
+        }
+
+        Team finalTeam = round.getTeams().stream()
+                .filter(team -> team.getTeamType() == TeamType.FINAL)
+                .findAny()
+                .get();
+
+        Optional<TeamMember> teamMemberOptional = finalTeam.getTeamMembers().stream()
+                .filter(member -> member.getPlayerId().equals(playerId))
+                .findAny();
+
+        if (!teamMemberOptional.isPresent()) {
+            return DataResponse.error("You are not in the team");
+        }
+
+        TeamMember teamMember = teamMemberOptional.get();
+
+        if (teamMember.getStatus() != TeamMemberStatus.CHALLENGE_PENDING) {
+            return DataResponse.error("You have already voted");
+        }
+
+        if (!success && CharacterType.isGood(teamMember.getPlayer().getCharacterType())) {
+            return DataResponse.error("You are a good character, you cannot fail the quest.");
+        }
+
+        teamMember.setStatus(success ? TeamMemberStatus.CHALLENGE_SUCCESS : TeamMemberStatus.CHALLENGE_FAILED);
+
+
+        if (finalTeam.getTeamMembers().stream().noneMatch(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_PENDING)) {
+            if (finalTeam.getTeamMembers().stream().filter(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_FAILED).count() >= GameModeFactory.getGameMode(round.getGame().getGameMode()).getFailThreshold(round.getQuestNum())) {
+                round.setRoundStatus(RoundStatus.QUEST_FAIL);
+            } else {
+                round.setRoundStatus(RoundStatus.QUEST_SUCCESS);
+            }
+        }
+
+        this.roundDao.save(round);
+
+        return DataResponse.builder()
+                .success(true)
+                .message("Challenge added")
+                .data(RoundMapper.convertToResponse(round))
+                .build();
+    }
 
     @Transactional
     public DataResponse createNewTeamForRound(Long roundId, Long gameId, Long playerId, TeamRequest teamRequest) {
@@ -156,7 +220,7 @@ public class RoundService {
         team.addTeamMembers(teamRequest.getTeamMembers().stream()
                 .map(id -> TeamMember.builder()
                         .playerId(id)
-                        .status(TeamMemberStatus.VOTING_NOT_YET)
+                        .status(TeamMemberStatus.CHALLENGE_PENDING)
                         .build())
                 .collect(Collectors.toList()));
 

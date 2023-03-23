@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 public class RoundMapper {
 
     public static RoundResponse convertToResponse(Round round) {
-        return RoundResponse.builder()
+        RoundResponse response = RoundResponse.builder()
                 .roundId(round.getRoundId())
                 .questNum(round.getQuestNum())
                 .roundNum(round.getRoundNum())
@@ -20,5 +20,11 @@ public class RoundMapper {
                 .votes(round.getVotes().stream().map(VoteMapper::convertToResponse).collect(Collectors.toList()))
                 .teams(round.getTeams().stream().map(TeamMapper::convertToResponse).collect(Collectors.toList()))
                 .build();
+
+        if (round.getRoundStatus() == RoundStatus.FINAL_TEAM_VOTING) {
+            response.getVotes().forEach(vote -> vote.setAccept(null));
+        }
+
+        return response;
     }
 }

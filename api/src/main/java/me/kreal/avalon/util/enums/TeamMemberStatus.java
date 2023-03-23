@@ -1,5 +1,5 @@
 package me.kreal.avalon.util.enums;
 
 public enum TeamMemberStatus {
-    VOTING_SUCCESS, VOTING_FAIL, VOTING_NOT_YET
+    CHALLENGE_SUCCESS, CHALLENGE_FAILED, CHALLENGE_PENDING
 }

@@ -33,8 +33,8 @@ public abstract class GameMode {
     }
 
     // >= 7
-    public boolean isTwoFailQuest(int questNum) {
-        return this.gameSize >= 7 && questNum == 4;
+    public int getFailThreshold(int questNum) {
+        return this.gameSize >= 7 && questNum == 4 ? 2 : 1;
     }
 
     public int getQuestSize(int questNum) {
