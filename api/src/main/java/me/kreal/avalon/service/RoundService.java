@@ -43,14 +43,14 @@ public class RoundService {
         Optional<Round> roundOptional = this.findMostRecentRound(game.getGameId());
 
         // 1st round
-        if(!roundOptional.isPresent()) {
+        if (!roundOptional.isPresent()) {
 
             Round round = Round.builder()
                     .game(game)
                     .questNum(1)
                     .roundNum(1)
-                    .leader(game.getPlayers().get(0))
-                    .teamSize(3)
+                    .leader(GameModeFactory.getGameMode(game.getGameMode()).getFirstLeader(game.getPlayers()))
+                    .teamSize(GameModeFactory.getGameMode(game.getGameMode()).getTeamSize(1))
                     .roundStatus(RoundStatus.INITIAL_TEAM)
                     .votes(new ArrayList<>())
                     .teams(new ArrayList<>())
@@ -59,6 +59,51 @@ public class RoundService {
             this.roundDao.save(round);
 
             return round;
+        }
+
+        Round round = roundOptional.get();
+
+        // game is over
+        if (round.getQuestNum() == 5 && (round.getRoundNum() == 5 || round.getRoundStatus() == RoundStatus.QUEST_FAIL || round.getRoundStatus() == RoundStatus.QUEST_SUCCESS)) {
+            return null;
+        }
+
+        // new round for current quest
+        if (round.getRoundStatus() == RoundStatus.FINAL_TEAM_VOTING_FAIL && round.getRoundNum() < 5) {
+
+            Round r = Round.builder()
+                    .game(game)
+                    .questNum(round.getQuestNum())
+                    .roundNum(round.getRoundNum() + 1)
+                    .leader(GameModeFactory.getGameMode(game.getGameMode()).getNextLeader(game.getPlayers(), round.getLeader()))
+                    .teamSize(GameModeFactory.getGameMode(game.getGameMode()).getTeamSize(round.getQuestNum()))
+                    .roundStatus(RoundStatus.INITIAL_TEAM)
+                    .votes(new ArrayList<>())
+                    .teams(new ArrayList<>())
+                    .build();
+
+            this.roundDao.save(r);
+
+            return r;
+        }
+
+        // new round for next quest
+        if ((round.getRoundStatus() == RoundStatus.QUEST_FAIL || round.getRoundStatus() == RoundStatus.QUEST_SUCCESS) && round.getQuestNum() < 5) {
+
+            Round r = Round.builder()
+                    .game(game)
+                    .questNum(round.getQuestNum() + 1)
+                    .roundNum(1)
+                    .leader(GameModeFactory.getGameMode(game.getGameMode()).getNextLeader(game.getPlayers(), round.getLeader()))
+                    .teamSize(GameModeFactory.getGameMode(game.getGameMode()).getTeamSize(round.getQuestNum() + 1))
+                    .roundStatus(RoundStatus.INITIAL_TEAM)
+                    .votes(new ArrayList<>())
+                    .teams(new ArrayList<>())
+                    .build();
+
+            this.roundDao.save(r);
+
+            return r;
         }
 
         return null;
@@ -98,6 +143,7 @@ public class RoundService {
                 round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_SUCCESS);
             } else {
                 round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_FAIL);
+                this.createNewRound(round.getGame());
             }
         }
 
@@ -162,6 +208,7 @@ public class RoundService {
             } else {
                 round.setRoundStatus(RoundStatus.QUEST_SUCCESS);
             }
+            this.createNewRound(round.getGame());
         }
 
         this.roundDao.save(round);
@@ -229,7 +276,11 @@ public class RoundService {
         if (teamRequest.getTeamType() == TeamType.INITIAL) {
             round.setRoundStatus(RoundStatus.DISCUSSING);
         } else {
-            round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING);
+            if (round.getRoundNum() == 5) {
+                round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_SUCCESS);
+            } else {
+                round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING);
+            }
         }
 
         this.roundDao.save(round);

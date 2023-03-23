@@ -37,17 +37,17 @@ public abstract class GameMode {
         return this.gameSize >= 7 && questNum == 4 ? 2 : 1;
     }
 
-    public int getQuestSize(int questNum) {
+    public int getTeamSize(int questNum) {
         return this.questSize[questNum - 1];
     }
 
     public void assignPlayerCharacter(List<Player> players) {
 
-        for(int idx = 0; idx < this.gameSize; idx++) {
-            players.get(idx).setSeatNum(idx + 1);
-        }
-
         List<Player> playerList = players.stream().sorted((p1, p2) -> new Random().nextInt(3) - 1).collect(Collectors.toList());
+
+        for(int idx = 0; idx < this.gameSize; idx++) {
+            playerList.get(idx).setSeatNum(idx + 1);
+        }
 
         Collections.shuffle(playerList);
 
@@ -56,6 +56,18 @@ public abstract class GameMode {
         }
 
     }
+
+    public Player getFirstLeader(List<Player> players) {
+        return players.stream().filter(p -> p.getSeatNum() == 1).findAny().get();
+    }
+
+    public Player getNextLeader(List<Player> players, Player leader) {
+        int leaderSeat = leader.getSeatNum();
+        int nextLeaderSeat = leaderSeat == this.gameSize ? 1 : leaderSeat + 1;
+        return players.stream().filter(p -> p.getSeatNum() == nextLeaderSeat).findAny().get();
+    }
+
+
 
     public CharacterInfo getCharacterInfo(Game g, Long player_id) {
 
