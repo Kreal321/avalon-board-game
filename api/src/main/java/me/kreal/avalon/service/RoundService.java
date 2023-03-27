@@ -31,8 +31,9 @@ public class RoundService {
         return this.roundDao.findMostRecentRoundByGameId(gameId);
     }
 
-    public Optional<Round> findByGameId(Long gameId){
-        return this.roundDao.getById(gameId);
+    public Optional<Round> findRoundById(Long roundId){
+        assert roundId != null;
+        return this.roundDao.getById(roundId);
     }
 
     public Round createNewRound(Game game) {
@@ -111,186 +112,18 @@ public class RoundService {
         return null;
     }
 
-    @Transactional
-    public DataResponse createNewVoteForRound(Long roundId, Long gameId, Long playerId, Boolean accept) {
-
-        Optional<Round> roundOptional = this.roundDao.getById(roundId);
-
-        if (!roundOptional.isPresent()) {
-            return DataResponse.error("Round not found");
-        }
-
-        Round round = roundOptional.get();
-
-        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
-            return DataResponse.error("Game is over");
-        }
-
-        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
-            return DataResponse.error("Assassin is in action");
-        }
-
-        if (!round.getGame().getGameId().equals(gameId)) {
-            return DataResponse.error("Round not found");
-        }
-
-        if (round.getRoundStatus() != RoundStatus.FINAL_TEAM_VOTING) {
-            return DataResponse.error("Round is not in voting status");
-        }
-
-        if (round.getVotes().stream().anyMatch(vote -> vote.getPlayerId().equals(playerId))) {
-            return DataResponse.error("You have already voted");
-        }
-
-        round.addVote(Vote.builder()
-                        .playerId(playerId)
-                        .accept(accept)
-                        .build());
 
 
-        if (round.getVotes().size() == round.getGame().getGameSize()) {
-            if (round.getVotes().stream().filter(Vote::getAccept).count() >= round.getVotes().size() / 2) {
-                round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_SUCCESS);
-            } else {
-                round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_FAIL);
-                this.createNewRound(round.getGame());
-            }
-        }
-
-        this.roundDao.save(round);
-
-
-        return DataResponse.builder()
-                .success(true)
-                .message("Vote added")
-                .data(RoundMapper.convertToResponse(round))
-                .build();
-    }
 
     @Transactional
-    public DataResponse createNewChallengeForRound(Long roundId, Long gameId, Long playerId, Boolean success) {
-
-        Optional<Round> roundOptional = this.roundDao.getById(roundId);
-
-        if (!roundOptional.isPresent()) {
-            return DataResponse.error("Round not found");
-        }
-
-        Round round = roundOptional.get();
-
-        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
-            return DataResponse.error("Game is over");
-        }
-
-        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
-            return DataResponse.error("Assassin is in action");
-        }
-
-        if (!round.getGame().getGameId().equals(gameId)) {
-            return DataResponse.error("Round not found");
-        }
-
-        if (round.getRoundStatus() != RoundStatus.FINAL_TEAM_VOTING_SUCCESS) {
-            return DataResponse.error("Round is not in pending challenge status");
-        }
-
-        Team finalTeam = round.getTeams().stream()
-                .filter(team -> team.getTeamType() == TeamType.FINAL)
-                .findAny()
-                .get();
-
-        Optional<TeamMember> teamMemberOptional = finalTeam.getTeamMembers().stream()
-                .filter(member -> member.getPlayerId().equals(playerId))
-                .findAny();
-
-        if (!teamMemberOptional.isPresent()) {
-            return DataResponse.error("You are not in the team");
-        }
-
-        TeamMember teamMember = teamMemberOptional.get();
-
-        if (teamMember.getStatus() != TeamMemberStatus.CHALLENGE_PENDING) {
-            return DataResponse.error("You have already voted");
-        }
-
-        if (!success && CharacterType.isGood(teamMember.getPlayer().getCharacterType())) {
-            return DataResponse.error("You are a good character, you cannot fail the quest.");
-        }
-
-        teamMember.setStatus(success ? TeamMemberStatus.CHALLENGE_SUCCESS : TeamMemberStatus.CHALLENGE_FAILED);
-
-
-        if (finalTeam.getTeamMembers().stream().noneMatch(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_PENDING)) {
-            if (finalTeam.getTeamMembers().stream().filter(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_FAILED).count() >= GameModeFactory.getGameMode(round.getGame().getGameMode()).getFailThreshold(round.getQuestNum())) {
-                round.setRoundStatus(RoundStatus.QUEST_FAIL);
-            } else {
-                round.setRoundStatus(RoundStatus.QUEST_SUCCESS);
-            }
-            this.createNewRound(round.getGame());
-        }
-
-        this.roundDao.save(round);
-
-        return DataResponse.builder()
-                .success(true)
-                .message("Challenge added")
-                .data(RoundMapper.convertToResponse(round))
-                .build();
-    }
-
-    @Transactional
-    public DataResponse createNewTeamForRound(Long roundId, Long gameId, Long playerId, TeamRequest teamRequest) {
-
-        Optional<Round> roundOptional = this.roundDao.getById(roundId);
-
-        if (!roundOptional.isPresent()) {
-            return DataResponse.error("Round not found");
-        }
-
-        Round round = roundOptional.get();
-
-        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
-            return DataResponse.error("Game is over");
-        }
-
-        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
-            return DataResponse.error("Assassin is in action");
-        }
-
-        if (!round.getGame().getGameId().equals(gameId)) {
-            return DataResponse.error("Round not found");
-        }
-
-        if (!round.getLeader().getPlayerId().equals(playerId)) {
-            return DataResponse.error("You are not the leader");
-        }
-
-        if (teamRequest.getTeamType() == TeamType.INITIAL && round.getRoundStatus() != RoundStatus.INITIAL_TEAM) {
-            return DataResponse.error("Round is not in initial team status");
-        }
-
-        if (teamRequest.getTeamType() == TeamType.FINAL && round.getRoundStatus() != RoundStatus.DISCUSSING) {
-            return DataResponse.error("Round is not in final team status");
-        }
-
-        if (teamRequest.getTeamMembers().size() != round.getTeamSize()) {
-            return DataResponse.error("Team size is not correct");
-        }
-
-        List<Long> playerIds = round.getGame().getPlayers().stream()
-                .map(Player::getPlayerId)
-                .collect(Collectors.toList());
-
-        if (teamRequest.getTeamMembers().stream().filter(playerIds::contains).count() != round.getTeamSize()) {
-            return DataResponse.error("Team members are not in the game");
-        }
+    public void createNewTeamForRound(Round round, TeamType teamType, List<Long> teamMembers) {
 
         Team team = Team.builder()
-                .teamType(teamRequest.getTeamType())
+                .teamType(teamType)
                 .teamMembers(new ArrayList<>())
                 .build();
 
-        team.addTeamMembers(teamRequest.getTeamMembers().stream()
+        team.addTeamMembers(teamMembers.stream()
                 .map(id -> TeamMember.builder()
                         .playerId(id)
                         .status(TeamMemberStatus.CHALLENGE_PENDING)
@@ -299,7 +132,7 @@ public class RoundService {
 
         round.addTeam(team);
 
-        if (teamRequest.getTeamType() == TeamType.INITIAL) {
+        if (teamType == TeamType.INITIAL) {
             round.setRoundStatus(RoundStatus.DISCUSSING);
         } else {
             if (round.getRoundNum() == 5) {
@@ -311,13 +144,43 @@ public class RoundService {
 
         this.roundDao.save(round);
 
-        return DataResponse.builder()
-                .success(true)
-                .message("Team added")
-                .data(RoundMapper.convertToResponse(round))
-                .build();
-
     }
 
+    @Transactional
+    public void createNewVoteForRound(Round round, Long playerId, Boolean accept) {
+
+        round.addVote(Vote.builder()
+                .playerId(playerId)
+                .accept(accept)
+                .build());
+
+        if (round.getVotes().size() == round.getGame().getGameSize()) {
+            if (round.getVotes().stream().filter(Vote::getAccept).count() >= round.getVotes().size() / 2) {
+                round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_SUCCESS);
+            } else {
+                round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_FAIL);
+                this.createNewRound(round.getGame());
+            }
+        }
+
+        this.roundDao.save(round);
+    }
+
+    @Transactional
+    public void createNewMissionForRound(Round round, Team finalTeam, TeamMember teamMember, boolean success) {
+
+        teamMember.setStatus(success ? TeamMemberStatus.CHALLENGE_SUCCESS : TeamMemberStatus.CHALLENGE_FAILED);
+
+        if (finalTeam.getTeamMembers().stream().noneMatch(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_PENDING)) {
+            if (finalTeam.getTeamMembers().stream().filter(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_FAILED).count() >= GameModeFactory.getGameMode(round.getGame().getGameMode()).getFailThreshold(round.getQuestNum())) {
+                round.setRoundStatus(RoundStatus.QUEST_FAIL);
+            } else {
+                round.setRoundStatus(RoundStatus.QUEST_SUCCESS);
+            }
+            this.createNewRound(round.getGame());
+        }
+
+        this.roundDao.save(round);
+    }
 
 }

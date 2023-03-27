@@ -83,30 +83,25 @@ public class GameService {
     }
 
 
-    public DataResponse finishGame(Game game) {
-
-        if (GameStatus.gameIsFinished(game.getGameStatus())) {
-            return DataResponse.error("Game has already finished.");
-        }
-
-        if (GameStatus.assassinIsInAction(game.getGameStatus())) {
-            return DataResponse.error("Assassin is in action.");
-        }
+    public void checkGameStatus(Game game) {
 
         long successTimes = game.getRounds().stream()
                 .filter(RoundStatus::roundHasQuest)
                 .filter(round -> round.getRoundStatus() == RoundStatus.QUEST_SUCCESS)
                 .count();
 
+        long failTimes = game.getRounds().stream()
+                .filter(RoundStatus::roundHasQuest)
+                .filter(round -> round.getRoundStatus() == RoundStatus.QUEST_SUCCESS)
+                .count();
+
         if (successTimes >= 3) {
             game.setGameStatus(GameStatus.GOOD_WON);
-        } else {
+        } else if (failTimes >= 3) {
             game.setGameStatus(GameStatus.EVIL_WON_WITH_QUEST);
         }
 
         this.gameDao.save(game);
-
-        return DataResponse.success("Game finished.", GameMapper.convertToResponse(game));
 
     }
 

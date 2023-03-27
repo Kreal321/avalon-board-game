@@ -31,6 +31,9 @@ public class Team implements Serializable {
     @JoinColumn(name = "round_id")
     private Round round;
 
+    @Column(name = "round_id", insertable = false, updatable = false)
+    private Long roundId;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "team_type", nullable = false)
     private TeamType teamType;

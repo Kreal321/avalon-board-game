@@ -3,6 +3,7 @@ package me.kreal.avalon.controller;
 import me.kreal.avalon.dto.request.TeamRequest;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
+import me.kreal.avalon.service.GameLogicService;
 import me.kreal.avalon.service.PlayerService;
 import me.kreal.avalon.service.RoundService;
 import me.kreal.avalon.util.enums.TeamType;
@@ -15,28 +16,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/round")
+@RequestMapping("/game/{gameId}/round/{roundId}")
 public class RoundController {
 
     private final RoundService roundService;
+    private final GameLogicService gameLogicService;
 
     @Autowired
-    public RoundController(RoundService roundService) {
+    public RoundController(RoundService roundService, GameLogicService gameLogicService) {
         this.roundService = roundService;
+        this.gameLogicService = gameLogicService;
     }
 
-    @PostMapping("/{roundId}/team/new")
-    public ResponseEntity<DataResponse> handleNewTeamRequest(@PathVariable("roundId") Long roundId, @Valid @RequestBody TeamRequest teamRequest, @AuthenticationPrincipal AuthUserDetail userDetail, BindingResult result) {
+    @PostMapping("/team/new")
+    public ResponseEntity<DataResponse> handleNewTeamRequest(@PathVariable("gameId") Long gameId, @PathVariable("roundId") Long roundId, @RequestBody TeamRequest teamRequest, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        if (userDetail.getGameId() == null || userDetail.getPlayerId() == null) {
-            return ResponseEntity.badRequest().body(DataResponse.error("You are not in a game"));
-        }
-
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body(DataResponse.error(result.getFieldErrors().get(0).getDefaultMessage()));
-        }
-
-        DataResponse response = this.roundService.createNewTeamForRound(roundId, userDetail.getGameId(), userDetail.getPlayerId(), teamRequest);
+        DataResponse response = this.gameLogicService.authUserCreateTeamWithGameIdAndRoundId(userDetail, teamRequest, gameId, roundId);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -46,14 +41,10 @@ public class RoundController {
 
     }
 
-    @PostMapping("/{roundId}/vote/new")
-    public ResponseEntity<DataResponse> handleNewVoteRequest(@PathVariable("roundId") Long roundId, @RequestParam("accept") Boolean accept, @AuthenticationPrincipal AuthUserDetail userDetail) {
+    @PostMapping("/vote/new")
+    public ResponseEntity<DataResponse> handleNewVoteRequest(@PathVariable("gameId") Long gameId, @PathVariable("roundId") Long roundId, @RequestParam("accept") Boolean accept, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        if (userDetail.getGameId() == null || userDetail.getPlayerId() == null) {
-            return ResponseEntity.badRequest().body(DataResponse.error("You are not in a game"));
-        }
-
-        DataResponse response = this.roundService.createNewVoteForRound(roundId, userDetail.getGameId(), userDetail.getPlayerId(), accept);
+        DataResponse response = this.gameLogicService.authUserCreateVoteWithGameIdAndRoundId(userDetail, accept, gameId, roundId);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -63,14 +54,10 @@ public class RoundController {
 
     }
 
-    @PostMapping("/{roundId}/challenge/new")
-    public ResponseEntity<DataResponse> handleNewChallengeRequest(@PathVariable("roundId") Long roundId, @RequestParam("success") Boolean accept, @AuthenticationPrincipal AuthUserDetail userDetail) {
+    @PostMapping("/mission/new")
+    public ResponseEntity<DataResponse> handleNewChallengeRequest(@PathVariable("gameId") Long gameId, @PathVariable("roundId") Long roundId, @RequestParam("success") Boolean success, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        if (userDetail.getGameId() == null || userDetail.getPlayerId() == null) {
-            return ResponseEntity.badRequest().body(DataResponse.error("You are not in a game"));
-        }
-
-        DataResponse response = this.roundService.createNewChallengeForRound(roundId, userDetail.getGameId(), userDetail.getPlayerId(), accept);
+        DataResponse response = this.gameLogicService.authUserCreateMissionWithGameIdAndRoundId(userDetail, success, gameId, roundId);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);

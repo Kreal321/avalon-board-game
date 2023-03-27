@@ -1,23 +1,22 @@
 package me.kreal.avalon.service;
 
 import lombok.Synchronized;
-import me.kreal.avalon.domain.Game;
-import me.kreal.avalon.domain.Record;
-import me.kreal.avalon.domain.User;
+import me.kreal.avalon.domain.*;
+import me.kreal.avalon.dto.request.TeamRequest;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.security.JwtProvider;
 import me.kreal.avalon.util.GameMapper;
 import me.kreal.avalon.util.avalon.GameModeFactory;
-import me.kreal.avalon.util.enums.GameModeType;
-import me.kreal.avalon.util.enums.GameStatus;
+import me.kreal.avalon.util.enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Optional;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 public class GameLogicService {
@@ -28,17 +27,19 @@ public class GameLogicService {
     private final RecordService recordService;
     private final RoundService roundService;
     private final VoteService voteService;
+    private final TeamService teamService;
     private final TeamMemberService teamMemberService;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public GameLogicService(UserService userService, GameService gameService, PlayerService playerService, RecordService recordService, RoundService roundService, VoteService voteService, TeamMemberService teamMemberService, JwtProvider jwtProvider) {
+    public GameLogicService(UserService userService, GameService gameService, PlayerService playerService, RecordService recordService, RoundService roundService, VoteService voteService, TeamService teamService, TeamMemberService teamMemberService, JwtProvider jwtProvider) {
         this.userService = userService;
         this.gameService = gameService;
         this.playerService = playerService;
         this.recordService = recordService;
         this.roundService = roundService;
         this.voteService = voteService;
+        this.teamService = teamService;
         this.teamMemberService = teamMemberService;
         this.jwtProvider = jwtProvider;
     }
@@ -73,6 +74,15 @@ public class GameLogicService {
         return DataResponse.success("Game created")
                 .data(GameMapper.convertToResponse(game));
 
+    }
+
+    public DataResponse authUserLeaveGame(AuthUserDetail authUserDetail) {
+
+        authUserDetail.setGameId(null);
+        authUserDetail.setPlayerId(null);
+
+        return DataResponse.success("Leave game success")
+                .token(this.jwtProvider.createToken(authUserDetail));
     }
 
     public DataResponse authUserJoinGameWithGameNum(AuthUserDetail authUserDetail, int gameNum) {
@@ -171,6 +181,183 @@ public class GameLogicService {
         return DataResponse.success("Game started")
                 .data(GameMapper.convertToResponse(game, authUserDetail.getPlayerId()));
 
+    }
+
+    public DataResponse authUserCreateTeamWithGameIdAndRoundId(AuthUserDetail authUserDetail, TeamRequest teamRequest, Long gameId, Long roundId) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        if (!authUserDetail.getGameId().equals(gameId)) {
+            return DataResponse.error("You are not in this game.");
+        }
+
+        Optional<Round> roundOptional = this.roundService.findRoundById(roundId);
+
+        if (!roundOptional.isPresent()) {
+            return DataResponse.error("Round not found");
+        }
+
+        Round round = roundOptional.get();
+
+        if (!round.getGame().getGameId().equals(gameId)) {
+            return DataResponse.error("Round not found");
+        }
+
+        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
+            return DataResponse.error("Game is over");
+        }
+
+        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
+            return DataResponse.error("Assassin is in action");
+        }
+
+        // check team
+
+        if (!round.getLeader().getPlayerId().equals(authUserDetail.getPlayerId())) {
+            return DataResponse.error("You are not the leader");
+        }
+
+        if (teamRequest.getTeamType() == TeamType.INITIAL && round.getRoundStatus() != RoundStatus.INITIAL_TEAM) {
+            return DataResponse.error("Round is not in initial team status");
+        }
+
+        if (teamRequest.getTeamType() == TeamType.FINAL && round.getRoundStatus() != RoundStatus.DISCUSSING) {
+            return DataResponse.error("Round is not in final team status");
+        }
+
+        if (teamRequest.getTeamMembers().size() != round.getTeamSize()) {
+            return DataResponse.error("Team size is not correct");
+        }
+
+        List<Long> playerIds = round.getGame().getPlayers().stream()
+                .map(Player::getPlayerId)
+                .collect(Collectors.toList());
+
+        if (teamRequest.getTeamMembers().stream().filter(playerIds::contains).count() != round.getTeamSize()) {
+            return DataResponse.error("Team members are not in the game");
+        }
+
+        this.roundService.createNewTeamForRound(round, teamRequest.getTeamType(), teamRequest.getTeamMembers());
+
+        return DataResponse.success("Team created")
+                .data(GameMapper.convertToResponse(round.getGame()));
+
+    }
+
+    public DataResponse authUserCreateVoteWithGameIdAndRoundId(AuthUserDetail authUserDetail, boolean accept, Long gameId, Long roundId) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        if (!authUserDetail.getGameId().equals(gameId)) {
+            return DataResponse.error("You are not in this game.");
+        }
+
+        Optional<Round> roundOptional = this.roundService.findRoundById(roundId);
+
+        if (!roundOptional.isPresent()) {
+            return DataResponse.error("Round not found");
+        }
+
+        Round round = roundOptional.get();
+
+        if (!round.getGame().getGameId().equals(gameId)) {
+            return DataResponse.error("Round not found");
+        }
+
+        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
+            return DataResponse.error("Game is over");
+        }
+
+        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
+            return DataResponse.error("Assassin is in action");
+        }
+
+        // check vote
+
+        if (round.getRoundStatus() != RoundStatus.FINAL_TEAM_VOTING) {
+            return DataResponse.error("Round is not in voting status");
+        }
+
+        if (this.voteService.findVoteByRoundIdAndPlayerId(roundId, authUserDetail.getPlayerId()).isPresent()) {
+            return DataResponse.error("You have already voted");
+        }
+
+        this.roundService.createNewVoteForRound(round, authUserDetail.getPlayerId(), accept);
+
+        return DataResponse.success("Vote created")
+                .data(GameMapper.convertToResponse(round.getGame()));
+    }
+
+    public DataResponse authUserCreateMissionWithGameIdAndRoundId(AuthUserDetail authUserDetail, boolean success, Long gameId, Long roundId) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        if (!authUserDetail.getGameId().equals(gameId)) {
+            return DataResponse.error("You are not in this game.");
+        }
+
+        Optional<Round> roundOptional = this.roundService.findRoundById(roundId);
+
+        if (!roundOptional.isPresent()) {
+            return DataResponse.error("Round not found");
+        }
+
+        Round round = roundOptional.get();
+
+        if (!round.getGame().getGameId().equals(gameId)) {
+            return DataResponse.error("Round not found");
+        }
+
+        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
+            return DataResponse.error("Game is over");
+        }
+
+        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
+            return DataResponse.error("Assassin is in action");
+        }
+
+        // check mission
+
+        if (round.getRoundStatus() != RoundStatus.FINAL_TEAM_VOTING_SUCCESS) {
+            return DataResponse.error("Round is not in pending mission status");
+        }
+
+        Team finalTeam = this.teamService.findFinalTeamByRoundId(roundId).get();
+
+        Optional<TeamMember> teamMemberOptional = finalTeam.getTeamMembers().stream()
+                .filter(member -> member.getPlayerId().equals(authUserDetail.getPlayerId()))
+                .findAny();
+
+        if (!teamMemberOptional.isPresent()) {
+            return DataResponse.error("You are not in the team");
+        }
+
+        TeamMember teamMember = teamMemberOptional.get();
+
+        if (teamMember.getStatus() != TeamMemberStatus.CHALLENGE_PENDING) {
+            return DataResponse.error("You have already voted");
+        }
+
+        if (!success && CharacterType.isGood(teamMember.getPlayer().getCharacterType())) {
+            return DataResponse.error("You are a good character, you cannot fail the quest.");
+        }
+
+        this.roundService.createNewMissionForRound(round, finalTeam, teamMember, success);
+
+        // check if game is over
+
+        if (RoundStatus.roundIsFinished(round.getRoundStatus())) {
+            this.gameService.checkGameStatus(round.getGame());
+        }
+
+        return DataResponse.success("Mission created")
+                .data(GameMapper.convertToResponse(round.getGame()));
     }
 
 }

@@ -27,6 +27,9 @@ public class Vote implements Serializable {
     @JoinColumn(name = "round_id")
     private Round round;
 
+    @Column(name = "round_id", insertable = false, updatable = false)
+    private Long roundId;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "player_id", insertable = false, updatable = false)
     private Player player;

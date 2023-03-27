@@ -36,6 +36,18 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/leave")
+    public ResponseEntity<DataResponse> handleLeaveGameRequest(@AuthenticationPrincipal AuthUserDetail userDetail) {
+
+        DataResponse response = this.gameLogicService.authUserLeaveGame(userDetail);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
     @GetMapping("/join/{gameNum}")
     public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int gameNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 

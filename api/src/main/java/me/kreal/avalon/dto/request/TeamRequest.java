@@ -16,8 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class TeamRequest {
 
-    @NotNull(message = "Username can not be empty. ")
     private TeamType teamType;
+
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private List<Long> teamMembers;
 

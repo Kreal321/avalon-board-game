@@ -33,6 +33,7 @@ public class JwtProvider {
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
+
     }
 
     public String createToken(User u){

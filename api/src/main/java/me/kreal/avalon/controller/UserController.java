@@ -49,10 +49,7 @@ public class UserController {
 
         // Validation failed
         if (result.hasErrors()) {
-            return ResponseEntity.ok(DataResponse.builder()
-                    .success(false)
-                    .message("User information is incorrect.")
-                    .build());
+            return ResponseEntity.ok(DataResponse.error("User information is incorrect."));
         }
 
         return ResponseEntity.ok(this.userService.findUserByLoginRequest(request));
