@@ -4,12 +4,14 @@ import me.kreal.avalon.dao.UserDao;
 import me.kreal.avalon.domain.User;
 import me.kreal.avalon.dto.request.UserRequest;
 import me.kreal.avalon.dto.response.DataResponse;
+import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.security.JwtProvider;
 import me.kreal.avalon.util.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -26,6 +28,10 @@ public class UserService {
 
     public Optional<User> findUserByUsername(String username) {
         return this.userDao.findUserByUsername(username);
+    }
+
+    public User findUserByAuthUserDetail(AuthUserDetail authUserDetail) {
+        return this.userDao.findUserByUsername(authUserDetail.getUsername()).get();
     }
 
     @Transactional
@@ -77,6 +83,7 @@ public class UserService {
                 .build();
 
     }
+
 
 
 }

@@ -31,6 +31,9 @@ public class Record {
     @JoinColumn(name = "game_id")
     private Game game;
 
+    @Column(name = "game_id", insertable = false, updatable = false)
+    private Long gameId;
+
     @Column(name = "player_id")
     private Long playerId;
 

@@ -6,10 +6,7 @@ import me.kreal.avalon.dto.request.TeamRequest;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.util.RoundMapper;
 import me.kreal.avalon.util.avalon.GameModeFactory;
-import me.kreal.avalon.util.enums.CharacterType;
-import me.kreal.avalon.util.enums.RoundStatus;
-import me.kreal.avalon.util.enums.TeamMemberStatus;
-import me.kreal.avalon.util.enums.TeamType;
+import me.kreal.avalon.util.enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +36,11 @@ public class RoundService {
     }
 
     public Round createNewRound(Game game) {
+
+        // game is over
+        if (GameStatus.gameIsFinished(game.getGameStatus())) {
+            return null;
+        }
 
         Optional<Round> roundOptional = this.findMostRecentRound(game.getGameId());
 
@@ -120,6 +122,14 @@ public class RoundService {
 
         Round round = roundOptional.get();
 
+        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
+            return DataResponse.error("Game is over");
+        }
+
+        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
+            return DataResponse.error("Assassin is in action");
+        }
+
         if (!round.getGame().getGameId().equals(gameId)) {
             return DataResponse.error("Round not found");
         }
@@ -167,6 +177,14 @@ public class RoundService {
         }
 
         Round round = roundOptional.get();
+
+        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
+            return DataResponse.error("Game is over");
+        }
+
+        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
+            return DataResponse.error("Assassin is in action");
+        }
 
         if (!round.getGame().getGameId().equals(gameId)) {
             return DataResponse.error("Round not found");
@@ -231,6 +249,14 @@ public class RoundService {
 
         Round round = roundOptional.get();
 
+        if (GameStatus.gameIsFinished(round.getGame().getGameStatus())) {
+            return DataResponse.error("Game is over");
+        }
+
+        if (GameStatus.assassinIsInAction(round.getGame().getGameStatus())) {
+            return DataResponse.error("Assassin is in action");
+        }
+
         if (!round.getGame().getGameId().equals(gameId)) {
             return DataResponse.error("Round not found");
         }
@@ -292,4 +318,6 @@ public class RoundService {
                 .build();
 
     }
+
+
 }

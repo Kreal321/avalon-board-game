@@ -17,10 +17,4 @@ public class PlayerController {
     }
 
 
-//    @PostMapping("/new")
-//    public ResponseEntity<DataResponse> newPlayerRequest(@RequestBody PlayerNewRequest request) {
-//
-//        return ResponseEntity.ok(this.playerService.createNewPlayer(request));
-//
-//    }
 }

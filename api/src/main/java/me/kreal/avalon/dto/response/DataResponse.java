@@ -41,4 +41,19 @@ public class DataResponse {
                 .data(data)
                 .build();
     }
+
+    public DataResponse token(String token) {
+
+        this.token = token;
+        return this;
+
+    }
+
+    public DataResponse data(Object data) {
+
+        this.data = data;
+        return this;
+
+    }
+
 }

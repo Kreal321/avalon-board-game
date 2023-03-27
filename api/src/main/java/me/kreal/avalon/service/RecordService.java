@@ -1,5 +1,6 @@
 package me.kreal.avalon.service;
 
+import lombok.Synchronized;
 import me.kreal.avalon.dao.PlayerDao;
 import me.kreal.avalon.dao.RecordDao;
 import me.kreal.avalon.domain.Game;
@@ -28,19 +29,20 @@ public class RecordService {
         return this.recordDao.findRecordByGameAndUser(g, u);
     }
 
-    public Record findOrCreateNewRecord(Game g, User u) {
+    @Synchronized
+    public Record findOrCreateNewRecord(Game game, User user) {
 
         // Check where user has joined the game
-        Optional<Record> recordOptional = this.findRecordByGameAndUser(g, u);
+        Optional<Record> recordOptional = this.findRecordByGameAndUser(game, user);
 
         if (recordOptional.isPresent()) return recordOptional.get();
 
         // Create record
-        Player p = this.playerService.createNewPlayer(g, u);
+        Player p = this.playerService.createNewPlayer(game, user);
 
         Record r = Record.builder()
-                .user(u)
-                .game(g)
+                .user(user)
+                .game(game)
                 .playerId(p.getPlayerId())
                 .victoryStatus(VictoryStatus.IN_PROGRESS)
                 .build();

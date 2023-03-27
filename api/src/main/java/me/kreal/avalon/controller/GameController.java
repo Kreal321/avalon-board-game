@@ -2,6 +2,7 @@ package me.kreal.avalon.controller;
 
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
+import me.kreal.avalon.service.GameLogicService;
 import me.kreal.avalon.service.GameService;
 import me.kreal.avalon.util.avalon.GameModeFactory;
 import me.kreal.avalon.util.enums.GameModeType;
@@ -15,16 +16,18 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
 
     private final GameService gameService;
+    private final GameLogicService gameLogicService;
 
     @Autowired
-    public GameController(GameService gameService) {
+    public GameController(GameService gameService, GameLogicService gameLogicService) {
         this.gameService = gameService;
+        this.gameLogicService = gameLogicService;
     }
 
     @PostMapping("/new")
     public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum) {
 
-        DataResponse response = this.gameService.createNewGame(size, gameMode, roomNum);
+        DataResponse response = this.gameLogicService.createNewGame(size, gameMode, roomNum);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -36,19 +39,7 @@ public class GameController {
     @GetMapping("/join/{gameNum}")
     public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int gameNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameService.joinNotStartedGameByGameNum(gameNum, userDetail.getUsername());
-
-        if (!response.getSuccess()) {
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/join")
-    public ResponseEntity<DataResponse> handleJoinGameRequestWithToken(@AuthenticationPrincipal AuthUserDetail userDetail) {
-
-        DataResponse response = this.gameService.joinGameWithToken(userDetail);
+        DataResponse response = this.gameLogicService.authUserJoinGameWithGameNum(userDetail, gameNum);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -60,7 +51,7 @@ public class GameController {
     @GetMapping("/{gameId}")
     public ResponseEntity<DataResponse> handleFindGameByIdRequest(@PathVariable Long gameId, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameService.findGameByIdAndUsername(gameId, userDetail.getUsername());
+        DataResponse response = this.gameLogicService.authUserFindGameWithId(userDetail, gameId);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -69,22 +60,10 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/start")
-    public ResponseEntity<DataResponse> handleStartGameRequestWithToken(@AuthenticationPrincipal AuthUserDetail userDetail) {
+    @GetMapping("/{gameId}/start")
+    public ResponseEntity<DataResponse> handleStartGameRequestWithToken(@PathVariable Long gameId, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameService.startGameByToken(userDetail);
-
-        if (!response.getSuccess()) {
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/refresh")
-    public ResponseEntity<DataResponse> handleGetGameRefreshRequestWithToken(@AuthenticationPrincipal AuthUserDetail userDetail) {
-
-        DataResponse response = this.gameService.getGameLatestInfoByToken(userDetail);
+        DataResponse response = this.gameLogicService.authUserStartGameWithId(userDetail, gameId);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -92,5 +71,6 @@ public class GameController {
 
         return ResponseEntity.ok(response);
     }
+
 
 }
