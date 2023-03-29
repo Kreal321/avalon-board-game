@@ -1,0 +1,33 @@
+<footer class="footer has-cards" >
+    <div class="container">
+      <div class="row row-grid align-items-center" [ngClass]="{'d-none': getPath()!=='/' && getPath()!=='/home' || getPath()==='/register' || getPath()==='/login'}">
+        <div class="col-lg-6">
+          <h4 class="text-primary font-weight-light mb-2">Let the good times roll!</h4>
+          <h5 class="mb-0 font-weight-light">Save time on licensing and note-taking with the Avalon Helper, and let us handle the rules and scoring for you.</h5>
+        </div>
+      </div>
+      <hr>
+      <div class="row align-items-center justify-content-md-between">
+        <div class="col-md-6 col-sm-12">
+          <div class="copyright">
+            &copy; {{currentTime | date: 'yyyy'}}
+            <a href="#" target="_blank">Kason Xu</a>.
+          </div>
+        </div>
+        <div class="col-md-6 col-sm-12">
+          <ul class="nav nav-footer justify-content-md-end">
+            <li class="nav-item">
+              <a href="https://avalon.fun/pdfs/rules.pdf" class="nav-link" target="_blank">Avalon Rules</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://boardgamegeek.com/boardgame/128882/resistance-avalon" class="nav-link" target="_blank">BoardGameGeek</a>
+            </li>
+            <li class="nav-item">
+              <a href="https://github.com/Kreal321/avalon-board-game" class="nav-link" target="_blank">GitHub</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  
