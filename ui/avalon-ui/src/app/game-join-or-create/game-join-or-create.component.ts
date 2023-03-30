@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import Swal from 'sweetalert2'
 
 
 @Component({
@@ -19,7 +20,53 @@ export class GameJoinOrCreateComponent implements OnInit {
 
   toggleCreationForm(): void {
     this.showCreationForm = !this.showCreationForm;
+
   }
+
+  joinGame(): void {
+    if (this.gameNum == null || this.gameNum.toString().length != 4) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Please enter a 4 digit game number',
+        icon: 'error',
+      })
+      return;
+    }
+    
+      Swal.fire({
+        title: 'Success',
+        text: 'You have joined game ' + this.gameNum,
+        icon: 'success',
+      })
+    
+  }
+
+  createGame(): void {
+    if (this.gameModeNum == 0) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Please select a game mode',
+        icon: 'error',
+      })
+      return;
+    } 
+    if (this.gameNum == null || this.gameNum.toString().length != 4) {
+      Swal.fire({
+        title: 'Error',
+        text: 'Please enter a 4 digit game number',
+        icon: 'error',
+      })
+      return;
+    }
+
+    Swal.fire({
+      title: 'Success',
+      text: 'You have created a game with game number ' + this.gameNum + ' and game mode ' + this.gameModeNum + '.',
+      icon: 'success',
+    })
+  }
+
+
 
 
 }
