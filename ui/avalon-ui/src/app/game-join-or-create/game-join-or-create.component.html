@@ -1,23 +1,332 @@
-<div class="row align-items-center text-left">
-    <div class="col-lg-5 col-12">
-        <h1 class="display-3"> Play with us, <div class="text-primary"> Anytime, Anywhere. </div> </h1>
-        <p class="lead pb-4"> 
-            Do you have your game room code? <br/> Join a game with your friends!
-        </p>
-        <div class="row row-input">
-            <div class="col-8">
-                <input aria-label="Your email" id="signupSrEmail" name="email" placeholder="Game Num" type="email" class="form-control">
+<div class="container my-5">
+
+    <div class="row align-items-center text-left">
+        <div class="col-lg-5 col-12">
+            <h1 class="display-3"> Play with us, <div class="text-primary"> Anytime, Anywhere. </div>
+            </h1>
+            <p class="lead pb-4">
+                Do you have your game room code? <br /> Join a game with your friends!
+            </p>
+            <div class="row row-input">
+                <div class="col-8">
+                    <input id="gameNum" name="gameNum" placeholder="Game Num" type="number" class="form-control" [(ngModel)]="gameNum">
                 </div>
-            <div class="col-4">
-                <button type="submit" class="btn btn-primary btn-block"> Join </button>
+                <div class="col-4">
+                    <button type="submit" class="btn btn-primary btn-block"> Join </button>
+                </div>
             </div>
+            <hr>
+            <p class="lead">
+                Or create a new game room!
+            </p>
+            <button class="btn btn-primary btn-block" (click)="toggleCreationForm()"> Create Game </button>
+
         </div>
-        <hr>
-        <p class="lead"> 
-            Or create a new game room!
-        </p>
-        <button type="submit" class="btn btn-primary btn-block"> Create Game </button>
+        <div class="col-lg-7 col-12 my-4"><img src="assets/img/avalon.jpeg" width="100%" class="ml-lg-5"></div>
+    </div>
+
+</div>
+
+
+<div class="container mt-5" *ngIf="showCreationForm">
+    <div class="row mb-2">
+        <div class="col-md-8">
+            <h3 class="display-3">Most Popular Game Mode</h3>
+            <p class="lead mt-1"> Here are the most popular game modes </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6 mt-2 mt-lg-0">
+            <div class="mb-3">
+                <small class="text-uppercase font-weight-bold">5 Players</small>
+            </div>
+            <div class="custom-tab-content flex-column flex-md-row">
+                <div ngbNav #gameMode5="ngbNav" [(activeId)]="gameModeNum" class="nav nav-pills justify-content-center pt-0" type="pills">
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="51">
+                        <a class="nav-link" ngbNavLink> Basic </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, 2 generic good guys VS Assassin, generic bad guy. </span> <br />
+                                    The standard setup, seems to be best for beginners.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="52">
+                        <a class="nav-link" ngbNavLink> Morgana </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Morgana. </span> <br />
+                                    The most enjoyable games, without a doubt.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="53">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </div>
+
+            <div [ngbNavOutlet]="gameMode5" class="custom-tab-content mb-3"></div>
+        </div>
+
+        <div class="col-lg-6 mt-2 mt-lg-0">
+            <div class="mb-3">
+                <small class="text-uppercase font-weight-bold">6 Players</small>
+            </div>
+            <div class="custom-tab-content flex-column flex-md-row">
+                <div ngbNav #gameMode6="ngbNav" [(activeId)]="gameModeNum" class="nav nav-pills justify-content-center pt-0" type="pills">
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="61">
+                        <a class="nav-link" ngbNavLink> Basic </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, 2 generic good guys VS Assassin, generic bad guy. </span> <br />
+                                    The standard setup, seems to be best for beginners.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="62">
+                        <a class="nav-link" ngbNavLink> Morgana </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Morgana. </span> <br />
+                                    The most enjoyable games, without a doubt.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="63">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </div>
+
+            <div [ngbNavOutlet]="gameMode6" class="custom-tab-content mb-3"></div>
+        </div>
+
+        <div class="col-lg-6 mt-2 mt-lg-0">
+            <div class="mb-3">
+                <small class="text-uppercase font-weight-bold">7 Players</small>
+            </div>
+            <div class="custom-tab-content flex-column flex-md-row">
+                <div ngbNav #gameMode7="ngbNav" [(activeId)]="gameModeNum" class="nav nav-pills justify-content-center pt-0" type="pills">
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="71">
+                        <a class="nav-link" ngbNavLink> Basic </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, 2 generic good guys VS Assassin, generic bad guy. </span> <br />
+                                    The standard setup, seems to be best for beginners.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="72">
+                        <a class="nav-link" ngbNavLink> Morgana </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Morgana. </span> <br />
+                                    The most enjoyable games, without a doubt.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="73">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </div>
+
+            <div [ngbNavOutlet]="gameMode7" class="custom-tab-content mb-3"></div>
+        </div>
+
+        <div class="col-lg-6 mt-2 mt-lg-0">
+            <div class="mb-3">
+                <small class="text-uppercase font-weight-bold">8 Players</small>
+            </div>
+            <div class="custom-tab-content flex-column flex-md-row">
+                <div ngbNav #gameMode8="ngbNav" [(activeId)]="gameModeNum" class="nav nav-pills justify-content-center pt-0" type="pills">
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="81">
+                        <a class="nav-link" ngbNavLink> Basic </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, 2 generic good guys VS Assassin, generic bad guy. </span> <br />
+                                    The standard setup, seems to be best for beginners.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="82">
+                        <a class="nav-link" ngbNavLink> Morgana </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Morgana. </span> <br />
+                                    The most enjoyable games, without a doubt.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="83">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </div>
+
+            <div [ngbNavOutlet]="gameMode8" class="custom-tab-content mb-3"></div>
+        </div>
+
+        <div class="col-lg-6 mt-2 mt-lg-0">
+            <div class="mb-3">
+                <small class="text-uppercase font-weight-bold">9 Players</small>
+            </div>
+            <div class="custom-tab-content flex-column flex-md-row">
+                <div ngbNav #gameMode9="ngbNav" [(activeId)]="gameModeNum" class="nav nav-pills justify-content-center pt-0" type="pills">
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="91">
+                        <a class="nav-link" ngbNavLink> Basic </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, 2 generic good guys VS Assassin, generic bad guy. </span> <br />
+                                    The standard setup, seems to be best for beginners.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="92">
+                        <a class="nav-link" ngbNavLink> Morgana </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Morgana. </span> <br />
+                                    The most enjoyable games, without a doubt.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="93">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="94">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </div>
+
+            <div [ngbNavOutlet]="gameMode9" class="custom-tab-content mb-3"></div>
+        </div>
+
+        <div class="col-lg-6 mt-2 mt-lg-0">
+            <div class="mb-3">
+                <small class="text-uppercase font-weight-bold">10 Players</small>
+            </div>
+            <div class="custom-tab-content flex-column flex-md-row">
+                <div ngbNav #gameMode10="ngbNav" [(activeId)]="gameModeNum" class="nav nav-pills justify-content-center pt-0" type="pills">
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="101">
+                        <a class="nav-link" ngbNavLink> Basic </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, 2 generic good guys VS Assassin, generic bad guy. </span> <br />
+                                    The standard setup, seems to be best for beginners.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="102">
+                        <a class="nav-link" ngbNavLink> Morgana </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Morgana. </span> <br />
+                                    The most enjoyable games, without a doubt.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                    <div ngbNavItem class="nav-item" [ngbNavItem]="103">
+                        <a class="nav-link" ngbNavLink> Mordred </a>
+                        <ng-template ngbNavContent>
+                            <div class="tab-content">
+                                <p class="description">
+                                    <span class="text-primary"> Merlin, Percival, one generic good guy VS Assassin, Mordred. </span> <br />
+                                    Easily the funnest games. Merlin only knows the Assassin, Percival knows the Merlin, but the bad guys know each other.
+                                </p>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+
+            </div>
+
+            <div [ngbNavOutlet]="gameMode10" class="custom-tab-content mb-3"></div>
+        </div>
 
     </div>
-    <div class="col-lg-7 col-12 my-4"><img src="assets/img/avalon.jpeg" width="100%" class="ml-lg-5"></div>
+
+
+
+
 </div>

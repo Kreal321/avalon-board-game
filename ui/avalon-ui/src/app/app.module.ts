@@ -25,6 +25,7 @@ import { GameHomeComponent } from './game-home/game-home.component';
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     NgbModule,
     AppRoutingModule,
     RouterModule
