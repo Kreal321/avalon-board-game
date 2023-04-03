@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2'
-
+import { GameService } from '../games/shared/game.service';
 
 @Component({
   selector: 'app-game-join-or-create',
@@ -13,7 +13,9 @@ export class GameJoinOrCreateComponent implements OnInit {
   showCreationForm: boolean = false;
   gameModeNum: number = 0;
 
-  constructor() { }
+  constructor(
+    private gameService: GameService
+  ) { }
 
   ngOnInit() {
   }
@@ -33,11 +35,27 @@ export class GameJoinOrCreateComponent implements OnInit {
       return;
     }
     
-      Swal.fire({
-        title: 'Success',
-        text: 'You have joined game ' + this.gameNum,
-        icon: 'success',
-      })
+
+
+    this.gameService.joinGameByGameNum(this.gameNum).subscribe(
+      data => {
+        Swal.fire({
+          title: 'Success',
+          html:`
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">Game Mode: </span>
+                </div>
+                <select class="form-control">
+                    <option value="51" selected>5 Players - Basic</option>
+                </select>
+            </div>
+          `,
+          icon: 'success',
+          confirmButtonText: 'Join Game'
+        })
+      }
+    )
     
   }
 
