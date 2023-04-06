@@ -3,8 +3,8 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { Observable, of } from 'rxjs';
 import Swal from 'sweetalert2'
 import { catchError, map, tap } from 'rxjs/operators';
-import { Game } from './game.model';
-import { DataResponse } from '../../shared/dataResponse.model';
+import { Game } from '../models/game.model';
+import { DataResponse } from '../models/dataResponse.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,15 +26,15 @@ export class GameService {
     private http: HttpClient
   ) { }
 
-  private handleError<T>() {
+  private handleError() {
     return (response: HttpErrorResponse) => {
-      if (response.status === 403) {
+      if (response.status == 403) {
         Swal.fire({
           title: 'You are not logged in',
           text: 'Please login first',
           icon: 'error',
         })
-      } else if (response.status === 400) {
+      } else if (response.status == 400) {
         Swal.fire({
           title: 'Bad Request',
           text: response.error.message,
@@ -48,13 +48,13 @@ export class GameService {
         })
         console.error('An unexpected error occurred:', response.error.message);
       }
-      return of(response.error as T);
+      return of(response.error as DataResponse);
     };
   }
 
   joinGameByGameNum(gameNum: number): Observable<any> {
     return this.http.get<DataResponse>(this.hostUrl + '/game/join/' + gameNum, this.httpOptions).pipe(
-      catchError(this.handleError<DataResponse>()),
+      catchError(this.handleError()),
       // tap(response => response.token == null ? null : localStorage.setItem('token', response.token)),
       tap(response => response.token == null ? null : console.log(response.token)),
       map(response => response.data)

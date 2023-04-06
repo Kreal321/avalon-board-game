@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import Swal from 'sweetalert2'
-import { GameService } from '../games/shared/game.service';
+import { GameService } from '../../core/services/game.service';
+import { GameModeService } from '../../core/services/gameMode.service';
+import { GameMode } from '../../core/models/gameMode.model';
+import { Game } from '../../core/models/game.model';
 
 @Component({
   selector: 'app-game-join-or-create',
@@ -9,15 +12,27 @@ import { GameService } from '../games/shared/game.service';
 })
 export class GameJoinOrCreateComponent implements OnInit {
 
-  gameNum: number;
   showCreationForm: boolean = false;
+
+  gameNum: number;
   gameModeNum: number = 0;
+  
+  gameModePlayers: number[];
+  gameModes: GameMode[];
 
   constructor(
-    private gameService: GameService
-  ) { }
+    private gameService: GameService,
+    private gameModeService: GameModeService
+  ) { 
+    this.gameModePlayers = [5, 6, 7, 8, 9, 10];
+  }
 
   ngOnInit() {
+    this.gameModeService.getGameModes().subscribe(
+      data => {
+        this.gameModes = data;
+      }
+    )
   }
 
   toggleCreationForm(): void {
@@ -36,26 +51,28 @@ export class GameJoinOrCreateComponent implements OnInit {
     }
     
 
-
     this.gameService.joinGameByGameNum(this.gameNum).subscribe(
       data => {
-        Swal.fire({
-          title: 'Success',
-          html:`
-            <div class="input-group mb-3">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Game Mode: </span>
-                </div>
-                <select class="form-control">
-                    <option value="51" selected>5 Players - Basic</option>
-                </select>
-            </div>
-          `,
-          icon: 'success',
-          confirmButtonText: 'Join Game'
-        })
-      }
-    )
+        if (data) {
+          let current = this.gameModes.find(x => x.gameModeType == data.gameMode);
+
+          Swal.fire({
+            title: 'Success',
+            html:`
+              <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Game Mode: </span>
+                  </div>
+                  <select class="form-control bg-white" disabled>
+                      <option selected>${current.name}</option>
+                  </select>
+              </div>
+            `,
+            icon: 'success',
+            confirmButtonText: 'Join Game'
+          })
+        }
+      })
     
   }
 
