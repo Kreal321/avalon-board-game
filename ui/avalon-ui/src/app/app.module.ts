@@ -15,6 +15,7 @@ import { GameJoinOrCreateComponent } from './features/game-join-or-create/game-j
 import { GameHomeComponent } from './features/game-home/game-home.component';
 import { PageHomeComponent } from './features/page-home/page-home.component';
 import { GameModeContainerComponent } from './features/components/game-mode-container/game-mode-container.component';
+import { LoginOrSignupComponent } from './features/components/login-or-signup/login-or-signup.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { GameModeContainerComponent } from './features/components/game-mode-cont
     GameJoinOrCreateComponent,
     GameHomeComponent,
     PageHomeComponent,
-    GameModeContainerComponent
+    GameModeContainerComponent,
+    LoginOrSignupComponent
   ],
   imports: [
     BrowserModule,

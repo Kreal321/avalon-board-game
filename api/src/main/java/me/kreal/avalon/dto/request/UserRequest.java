@@ -18,8 +18,10 @@ public class UserRequest {
     @Pattern(regexp = "[0-9]{4}", message = "The user number must consist of four digits. ")
     private String userHash;
 
-    private String realName;
-
     private String preferredName;
+
+    private String email;
+
+    private String password;
 
 }

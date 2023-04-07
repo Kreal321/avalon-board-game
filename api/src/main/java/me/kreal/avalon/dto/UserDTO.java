@@ -18,7 +18,8 @@ public class UserDTO {
     private Long userId;
     private String username;
     private String userHash;
-    private String realName;
+    private String email;
+    private String oneTimePassword;
     private String preferredName;
 
 }

@@ -26,6 +26,13 @@ public class UserService {
         this.jwtProvider = jwtProvider;
     }
 
+    // helper methods
+
+    // generate one time password, 6 digits
+    private String getRandomPassword() {
+        return String.valueOf((int) (Math.random() * 900000) + 100000);
+    }
+
     public Optional<User> findUserByUsername(String username) {
         return this.userDao.findUserByUsername(username);
     }
@@ -36,6 +43,13 @@ public class UserService {
 
     @Transactional
     public DataResponse createNewPlayer(UserRequest request) {
+
+        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+            return DataResponse.builder()
+                    .success(false)
+                    .message("Email is required.")
+                    .build();
+        }
 
         User u = UserMapper.convertToEntity(request);
 
@@ -49,6 +63,8 @@ public class UserService {
         if (u.getPreferredName() == null || u.getPreferredName().trim().isEmpty()) {
             u.setPreferredName(u.getUsername());
         }
+
+        u.setOneTimePassword(this.getRandomPassword());
 
         this.userDao.save(u);
 
@@ -64,6 +80,13 @@ public class UserService {
     @Transactional
     public DataResponse findUserByLoginRequest(UserRequest request) {
 
+        if (request.getPassword() == null || request.getPassword().trim().isEmpty()){
+            return DataResponse.builder()
+                    .success(false)
+                    .message("Password is empty.")
+                    .build();
+        }
+
         User u = UserMapper.convertToEntity(request);
 
         Optional<User> userOptional = this.findUserByUsername(u.getUsername());
@@ -72,6 +95,13 @@ public class UserService {
             return DataResponse.builder()
                     .success(false)
                     .message("Cannot find user.")
+                    .build();
+        }
+
+        if (!userOptional.get().getOneTimePassword().equals(u.getOneTimePassword())) {
+            return DataResponse.builder()
+                    .success(false)
+                    .message("Password is incorrect.")
                     .build();
         }
 

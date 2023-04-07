@@ -31,16 +31,19 @@ public class UserController {
 
         // Validation failed
         if (result.hasErrors()) {
-            return ResponseEntity.ok(DataResponse.builder()
-                    .success(false)
-                    .message(result.getFieldErrors().stream()
+            return ResponseEntity.badRequest()
+                    .body(DataResponse.error(result.getFieldErrors().stream()
                             .map(FieldError::getDefaultMessage)
-                            .reduce("", String::concat))
-                    .build());
+                            .reduce("", String::concat)));
         }
 
+        DataResponse response = this.userService.createNewPlayer(request);
 
-        return ResponseEntity.ok(this.userService.createNewPlayer(request));
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
 
     }
 
@@ -49,10 +52,19 @@ public class UserController {
 
         // Validation failed
         if (result.hasErrors()) {
-            return ResponseEntity.ok(DataResponse.error("User information is incorrect."));
+            return ResponseEntity.badRequest()
+                    .body(DataResponse.error(result.getFieldErrors().stream()
+                            .map(FieldError::getDefaultMessage)
+                            .reduce("", String::concat)));
         }
 
-        return ResponseEntity.ok(this.userService.findUserByLoginRequest(request));
+        DataResponse response = this.userService.findUserByLoginRequest(request);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
 
     }
 

@@ -1,0 +1,129 @@
+
+<div class="container">
+    <div class="row justify-content-center" *ngIf="!signUpForm">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card bg-secondary shadow border-0">
+                <div class="card-body px-lg-5 py-sm-5">
+                    <div class="text-center text-muted mb-4">
+                        <small>Sign in with token</small>
+                    </div>
+                    <div class="input-group input-group-alternative">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text"><i class="fa fa-key"></i></span>
+                        </div>
+                        <input class="form-control" placeholder="token" type="text" name="token" [(ngModel)]="token">
+                        <div class="input-group-prepend">
+                            <button type="button" class="btn btn-outline-primary" disabled>Sign in</button>
+                        </div>
+                    </div>
+                </div>  
+
+                <div class="card-header bg-white px-lg-5 py-sm-5">
+                    <div class="text-center text-muted mb-4">
+                        <small>Or sign in with credentials</small>
+                    </div>
+                    <form role="form">
+                        <div class="form-group mb-3">
+                        <div class="input-group input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                            </div>
+                            <input class="form-control" placeholder="username" type="text" name="username" [(ngModel)]="username">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">#</span>
+                            </div>
+                            <input class="form-control" placeholder="0000" type="text" name="userHash" [(ngModel)]="userHash">
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="6-digit code" type="text" name="code" [(ngModel)]="code">
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary my-4">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <a href="javascript:void(0)" class="text-light">
+                        <small>Forgot your account?</small>
+                    </a>
+                    </div>
+                    <div class="col-6 text-right">
+                    <a href="javascript:void(0)" class="text-light" (click)="toggleSignUpForm()">
+                        <small>Create new account</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row justify-content-center" *ngIf="signUpForm">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card bg-secondary shadow border-0">
+
+                <div class="card-header bg-white px-lg-5 py-sm-5">
+                    <div class="text-center text-muted mb-4">
+                        <small>Sign Up with email</small>
+                    </div>
+                    <form role="form">
+                        <div class="form-group mb-3">
+                            <div class="input-group input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-user-circle-o"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="username" type="text" name="username" [(ngModel)]="username">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">#</span>
+                                </div>
+                                <input class="form-control" placeholder="0000" type="text" name="userHash" [(ngModel)]="userHash">
+                            </div>
+                        </div>
+                        <div class="form-group mb-3">
+                            <div class="input-group input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-envelope"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Email Address" type="email" name="email" [(ngModel)]="email">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group input-group-alternative">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fa fa-gamepad"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Preferred Name" type="text" name="preferredName" [(ngModel)]="preferredName">
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary my-4">Sign Up</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <a href="javascript:void(0)" class="text-light">
+                        <small>Forgot your account?</small>
+                    </a>
+                    </div>
+                    <div class="col-6 text-right">
+                    <a href="javascript:void(0)" class="text-light" (click)="toggleSignUpForm()">
+                        <small>Login</small>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

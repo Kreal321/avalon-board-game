@@ -24,8 +24,11 @@ public class User implements Serializable {
     @Column(name = "username", unique = true, nullable = false)
     private String username;
 
-    @Column(name = "real_name")
-    private String realName;
+    @Column(name = "email", nullable = false)
+    private String email;
+
+    @Column(name = "oneTimePassword", nullable = false)
+    private String oneTimePassword;
 
     @Column(name = "preferred_name", nullable = false)
     private String preferredName;

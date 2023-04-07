@@ -9,7 +9,8 @@ public class UserMapper {
     public static User convertToEntity(UserRequest request) {
         return User.builder()
                 .username(request.getUsername() + "#" + request.getUserHash())
-                .realName(request.getRealName())
+                .email(request.getEmail())
+                .oneTimePassword(request.getPassword())
                 .preferredName(request.getPreferredName())
                 .build();
     }
@@ -21,7 +22,8 @@ public class UserMapper {
                 .userId(user.getUserId())
                 .username(array[0])
                 .userHash(array[1])
-                .realName(user.getRealName())
+                .email(user.getEmail())
+                .oneTimePassword(user.getOneTimePassword())
                 .preferredName(user.getPreferredName())
                 .build();
     }
