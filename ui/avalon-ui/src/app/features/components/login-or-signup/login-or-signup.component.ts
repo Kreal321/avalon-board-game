@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/core/services/user.service';
 
 @Component({
   selector: 'app-login-or-signup',
@@ -16,13 +17,23 @@ export class LoginOrSignupComponent implements OnInit {
   code: string = '';
 
 
-  constructor() { }
+  constructor(
+    private userService: UserService
+  ) { }
 
   ngOnInit(): void {
   }
 
   toggleSignUpForm(): void {
     this.signUpForm = !this.signUpForm;
+  }
+
+  loginWithCredentials(): void {
+    this.userService.loginWithCredentials(this.username, this.userHash, this.code).subscribe(
+      response => {
+        console.log(response);
+      }
+    );
   }
 
 
