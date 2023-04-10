@@ -1,5 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { UserService } from '../../../core/services/user.service';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2'
+
 
 @Component({
   selector: 'app-login-or-signup',
@@ -8,7 +11,7 @@ import { UserService } from '../../../core/services/user.service';
 })
 export class LoginOrSignupComponent implements OnInit {
 
-  signUpForm: boolean = false;
+  @Input() signUpForm: boolean = false;
   token: string = '';
   username: string = '';
   userHash: string = '';
@@ -18,7 +21,8 @@ export class LoginOrSignupComponent implements OnInit {
 
 
   constructor(
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +35,33 @@ export class LoginOrSignupComponent implements OnInit {
   loginWithCredentials(): void {
     this.userService.loginWithCredentials(this.username, this.userHash, this.code).subscribe(
       response => {
-        console.log(response);
+        if (response.success) {
+          Swal.fire({
+            title: 'Login Successful',
+            text: 'Welcome back ' + response.data.preferredName,
+            icon: 'success',
+            confirmButtonText: 'Continue',
+          }).then(() => {
+            this.router.navigate(['/game']);
+          })
+        }
+      }
+    );
+  }
+
+  register(): void {
+    this.userService.register(this.username, this.userHash, this.email, this.preferredName).subscribe(
+      response => {
+        if (response.success) {
+          Swal.fire({
+            title: 'Registration Successful',
+            text: 'Welcome ' + response.data.preferredName,
+            icon: 'success',
+            confirmButtonText: 'Continue',
+          }).then(() => {
+            this.router.navigate(['/game']);
+          })
+        }
       }
     );
   }

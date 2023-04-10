@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import Swal from 'sweetalert2'
 import { catchError, map, tap } from 'rxjs/operators';
 import { DataResponse } from '../models/dataResponse.model';
 
@@ -24,8 +23,12 @@ export class UserService {
   //   );
   // }
 
-  loginWithCredentials(username: string, userHash: string, password: string): Observable<any> {
+  loginWithCredentials(username: string, userHash: string, password: string): Observable<DataResponse> {
     return this.http.post<DataResponse>(this.hostUrl + '/user/login', {username, userHash, password});
+  }
+
+  register(username: string, userHash: string, email: string, preferredName: string): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/user/register', {username, userHash, email, preferredName});
   }
 
   logout(): void {

@@ -14,9 +14,12 @@ import { NavbarComponent } from './core/components/navbar/navbar.component';
 import { GameIntroComponent } from './features/game-intro/game-intro.component';
 import { GameJoinOrCreateComponent } from './features/game-join-or-create/game-join-or-create.component';
 import { GameHomeComponent } from './features/game-home/game-home.component';
-import { PageHomeComponent } from './features/page-home/page-home.component';
 import { GameModeContainerComponent } from './features/components/game-mode-container/game-mode-container.component';
 import { LoginOrSignupComponent } from './features/components/login-or-signup/login-or-signup.component';
+
+import { PageHomeComponent } from './features/page-home/page-home.component';
+import { PageSignupComponent } from './features/page-signup/page-signup.component';
+import { PageLoginComponent } from './features/page-login/page-login.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +31,9 @@ import { LoginOrSignupComponent } from './features/components/login-or-signup/lo
     GameHomeComponent,
     PageHomeComponent,
     GameModeContainerComponent,
-    LoginOrSignupComponent
+    LoginOrSignupComponent,
+    PageSignupComponent,
+    PageLoginComponent
   ],
   imports: [
     BrowserModule,

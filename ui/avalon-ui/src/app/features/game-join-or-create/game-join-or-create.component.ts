@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 import Swal from 'sweetalert2'
 import { GameService } from '../../core/services/game.service';
 import { GameModeService } from '../../core/services/gameMode.service';
 import { GameMode } from '../../core/models/gameMode.model';
-import { Game } from '../../core/models/game.model';
+
 
 @Component({
   selector: 'app-game-join-or-create',
@@ -16,14 +18,15 @@ export class GameJoinOrCreateComponent implements OnInit {
 
   gameNum: number;
   gameModeNum: number = 0;
-  
+
   gameModePlayers: number[];
   gameModes: GameMode[];
 
   constructor(
     private gameService: GameService,
-    private gameModeService: GameModeService
-  ) { 
+    private gameModeService: GameModeService,
+    private router: Router
+  ) {
     this.gameModePlayers = [5, 6, 7, 8, 9, 10];
   }
 
@@ -49,16 +52,16 @@ export class GameJoinOrCreateComponent implements OnInit {
       })
       return;
     }
-    
+
 
     this.gameService.joinGameByGameNum(this.gameNum).subscribe(
-      data => {
-        if (data) {
-          let current = this.gameModes.find(x => x.gameModeType == data.gameMode);
+      response => {
+        if (response.success) {
+          let current = this.gameModes.find(x => x.gameModeType == response.data.gameMode);
 
           Swal.fire({
-            title: 'Success',
-            html:`
+            title: 'Joined Game Successfully',
+            html: `
               <div class="input-group mb-3">
                   <div class="input-group-prepend">
                     <span class="input-group-text">Game Mode: </span>
@@ -69,11 +72,13 @@ export class GameJoinOrCreateComponent implements OnInit {
               </div>
             `,
             icon: 'success',
-            confirmButtonText: 'Join Game'
+            confirmButtonText: 'Enter Game'
+          }).then(() => {
+            this.router.navigate(['/game/' + this.gameNum]);
           })
         }
-      })
-    
+      }
+    )
   }
 
   createGame(): void {
@@ -84,7 +89,7 @@ export class GameJoinOrCreateComponent implements OnInit {
         icon: 'error',
       })
       return;
-    } 
+    }
     if (this.gameNum == null || this.gameNum.toString().length != 4) {
       Swal.fire({
         title: 'Error',
@@ -94,11 +99,26 @@ export class GameJoinOrCreateComponent implements OnInit {
       return;
     }
 
-    Swal.fire({
-      title: 'Success',
-      text: 'You have created a game with game number ' + this.gameNum + ' and game mode ' + this.gameModeNum + '.',
-      icon: 'success',
-    })
+    this.gameModeService.getGameModeById(this.gameModeNum).subscribe(
+      gameMode => {
+        this.gameService.createGame(gameMode.numberOfPlayers, this.gameNum, gameMode.gameModeType).subscribe(
+          response => {
+            if (response.success) {
+              Swal.fire({
+                title: 'Created Game Successfully',
+                text: 'You have created a game with game number ' + this.gameNum + ' and game mode ' + this.gameModeNum + '.',
+                icon: 'success',
+                confirmButtonText: 'Join Game',
+              }).then(() => {
+                this.joinGame();
+              })
+            }
+          }
+        )
+      }
+    );
+
+    
   }
 
 

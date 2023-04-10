@@ -1,4 +1,5 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpHeaders, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
@@ -11,7 +12,9 @@ import { DataResponse } from '../models/dataResponse.model';
 @Injectable()
 export class AuthService implements HttpInterceptor {
 
-    constructor() { }
+    constructor(
+        private router: Router
+    ) { }
 
     intercept(
         req: HttpRequest<any>,
@@ -43,6 +46,11 @@ export class AuthService implements HttpInterceptor {
                             title: 'You are not logged in',
                             text: 'Please login first',
                             icon: 'error',
+                            confirmButtonText: 'Login',
+                        }).then((request) => {
+                            if (request.isConfirmed) {
+                                this.router.navigate(['/login']);
+                            }
                         })
                     } else if (error.status == 400) {
                         Swal.fire({
@@ -60,7 +68,6 @@ export class AuthService implements HttpInterceptor {
                         throwError(() => error);
                     }
                 }
-                console.log('tap error', error);
                 return of([]);
             })
         ) as Observable<HttpEvent<any>>;
