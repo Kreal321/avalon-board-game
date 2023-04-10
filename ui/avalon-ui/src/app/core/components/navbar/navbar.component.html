@@ -23,9 +23,14 @@
           </a>
           <div class="dropdown-menu" ngbDropdownMenu>
             <div class="dropdown-menu-inner">
-              <a [routerLink]="['/login']" class="nav-link p-1"> Login </a>
-              <a [routerLink]="['/signup']" class="nav-link p-1"> Sign Up </a>
-              <a [routerLink]="['/logout']" class="nav-link p-1"> Log Out </a>
+
+              <a href="javascript:void(0)" (click)="logout()" *ngIf="isLoggedIn(); else notLoggedIn" class="nav-link p-1"> Log Out </a>
+
+              <ng-template #notLoggedIn>
+                <a [routerLink]="['/login']" class="nav-link p-1"> Login </a>
+                <a [routerLink]="['/signup']" class="nav-link p-1"> Sign Up </a>
+              </ng-template>
+
             </div>
           </div>
         </li>

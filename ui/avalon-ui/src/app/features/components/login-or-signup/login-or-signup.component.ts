@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from 'src/app/core/services/user.service';
+import { UserService } from '../../../core/services/user.service';
 
 @Component({
   selector: 'app-login-or-signup',
@@ -8,7 +8,7 @@ import { UserService } from 'src/app/core/services/user.service';
 })
 export class LoginOrSignupComponent implements OnInit {
 
-  signUpForm: boolean = true;
+  signUpForm: boolean = false;
   token: string = '';
   username: string = '';
   userHash: string = '';

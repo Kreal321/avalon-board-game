@@ -54,7 +54,7 @@ export class GameService {
 
   joinGameByGameNum(gameNum: number): Observable<any> {
     return this.http.get<DataResponse>(this.hostUrl + '/game/join/' + gameNum, this.httpOptions).pipe(
-      catchError(this.handleError()),
+      // catchError(this.handleError()),
       // tap(response => response.token == null ? null : localStorage.setItem('token', response.token)),
       tap(response => response.token == null ? null : console.log(response.token)),
       map(response => response.data)
