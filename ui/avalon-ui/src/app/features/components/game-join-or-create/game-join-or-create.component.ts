@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import Swal from 'sweetalert2'
-import { GameService } from '../../core/services/game.service';
-import { GameModeService } from '../../core/services/gameMode.service';
-import { GameMode } from '../../core/models/gameMode.model';
+import { GameService } from '../../../core/services/game.service';
+import { GameModeService } from '../../../core/services/gameMode.service';
+import { GameMode } from '../../../core/models/gameMode.model';
 
 
 @Component({

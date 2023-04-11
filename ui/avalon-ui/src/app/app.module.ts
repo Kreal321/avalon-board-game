@@ -11,15 +11,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { FooterComponent } from './core/components/footer/footer.component';
 import { NavbarComponent } from './core/components/navbar/navbar.component';
-import { GameIntroComponent } from './features/game-intro/game-intro.component';
-import { GameJoinOrCreateComponent } from './features/game-join-or-create/game-join-or-create.component';
-import { GameHomeComponent } from './features/game-home/game-home.component';
+import { GameIntroComponent } from './features/components/game-intro/game-intro.component';
+import { GameJoinOrCreateComponent } from './features/components/game-join-or-create/game-join-or-create.component';
 import { GameModeContainerComponent } from './features/components/game-mode-container/game-mode-container.component';
 import { LoginOrSignupComponent } from './features/components/login-or-signup/login-or-signup.component';
 
 import { PageHomeComponent } from './features/page-home/page-home.component';
 import { PageSignupComponent } from './features/page-signup/page-signup.component';
 import { PageLoginComponent } from './features/page-login/page-login.component';
+import { PageGameRoomComponent } from './features/page-game-room/page-game-room.component';
+import { PageGameDashboardComponent } from './features/page-game-dashboard/page-game-dashboard.component';
 
 @NgModule({
   declarations: [
@@ -28,12 +29,13 @@ import { PageLoginComponent } from './features/page-login/page-login.component';
     NavbarComponent,
     GameIntroComponent,
     GameJoinOrCreateComponent,
-    GameHomeComponent,
     PageHomeComponent,
     GameModeContainerComponent,
     LoginOrSignupComponent,
     PageSignupComponent,
-    PageLoginComponent
+    PageLoginComponent,
+    PageGameRoomComponent,
+    PageGameDashboardComponent
   ],
   imports: [
     BrowserModule,

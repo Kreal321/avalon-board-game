@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-game-home',
-  templateUrl: './game-home.component.html',
-  styleUrls: ['./game-home.component.css']
+  selector: 'app-page-game-room',
+  templateUrl: './page-game-room.component.html',
+  styleUrls: ['./page-game-room.component.css']
 })
-export class GameHomeComponent implements OnInit {
+export class PageGameRoomComponent implements OnInit {
 
   gameId: number;
 
