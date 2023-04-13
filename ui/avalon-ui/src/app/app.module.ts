@@ -21,6 +21,7 @@ import { PageSignupComponent } from './features/page-signup/page-signup.componen
 import { PageLoginComponent } from './features/page-login/page-login.component';
 import { PageGameRoomComponent } from './features/page-game-room/page-game-room.component';
 import { PageGameDashboardComponent } from './features/page-game-dashboard/page-game-dashboard.component';
+import { PlayerContainerComponent } from './features/components/player-container/player-container.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,8 @@ import { PageGameDashboardComponent } from './features/page-game-dashboard/page-
     PageSignupComponent,
     PageLoginComponent,
     PageGameRoomComponent,
-    PageGameDashboardComponent
+    PageGameDashboardComponent,
+    PlayerContainerComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,7 +45,7 @@ import { PageGameDashboardComponent } from './features/page-game-dashboard/page-
     FormsModule,
     RouterModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthService, multi: true },
