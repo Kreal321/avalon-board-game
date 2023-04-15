@@ -1,0 +1,71 @@
+<nav class="navbar navbar-expand-sm navbar-dark bg-primary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Avalon</a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        (click)="togglerNavBar.toggle()"
+        aria-controls="togglerNavBar"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars"></i>
+      </button>
+      <div
+        class="collapse navbar-collapse"
+        id="togglerNavBar"
+        mdbCollapse
+        #togglerNavBar="mdbCollapse"
+      >
+        <ul class="navbar-nav ms-auto mb-2 mb-sm-0">
+          <li class="nav-item mx-2">
+            <a class="nav-link {{'' | isActive}}"  href="#">Home</a>
+          </li>
+          <li class="nav-item mx-2">
+            <a class="nav-link {{'/game' | isActive}}" href="#">Game</a>
+          </li>
+
+          <li class="d-sm-none">
+            <hr class="dropdown-divider mx-1" />
+          </li>
+
+          <li class="nav-item mx-2" *ngIf="!isLoggedIn()">
+            <a class="nav-link {{'/login' | isActive}}" href="/login">Login</a>
+          </li>
+          <li class="nav-item mx-2" *ngIf="!isLoggedIn()">
+            <a class="nav-link {{'/register' | isActive}}" href="/register">Register</a>
+          </li>
+
+          
+          <li class="nav-item mx-2 d-sm-none" *ngIf="isLoggedIn()">
+            <a class="nav-link {{'/profile' | isActive}}" href="/profile">Profile</a>
+          </li>
+          <li class="nav-item mx-2 d-sm-none" *ngIf="isLoggedIn()">
+            <a class="nav-link" href="javascript:void(0)" (click)="logout()">Sign Out</a>
+          </li>
+          <li class="nav-item mx-2 dropdown d-none d-sm-flex" *ngIf="isLoggedIn()">
+            <div mdbDropdown class="dropdown">
+                <a
+                class="nav-link dropdown-toggle {{'/profile' | isActive}}"
+                role="button"
+                href="javascript:void(0)"
+                id="dropdownMenu2"
+                mdbDropdownToggle
+                aria-expanded="false"
+                >
+                User
+            </a>
+                <ul mdbDropdownMenu class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenu2">
+                  <li>
+                    <a class="dropdown-item" href="/profile">Profile</a>
+                  </li>
+                  <li>
+                    <a class="dropdown-item" href="javascript:void(0)" (click)="logout()">Sign Out</a>
+                  </li>
+                </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
