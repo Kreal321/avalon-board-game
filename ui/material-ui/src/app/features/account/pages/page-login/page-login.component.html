@@ -1,1 +1,46 @@
-<p>page-login works!</p>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-10">
+            <div class="card bg-secondary shadow border-0">
+                <div class="card-header bg-white px-lg-5 py-sm-5">
+                    <div class="text-center text-muted mb-4">
+                        <small>Sign in with credentials</small>
+                    </div>
+                    <form role="form">
+                        <div class="form-group mb-3">
+                            <div class="input-group input-group-alternative mb-3">
+                                <span class="input-group-text"><i class="fas fa-circle-user"></i></span>
+                                <input class="form-control" placeholder="username" type="text" name="username" [(ngModel)]="username">
+                                <span class="input-group-text"><i class="fas fa-hashtag"></i></span>
+                                <input class="form-control" placeholder="0000" type="text" name="userHash" [(ngModel)]="userHash">
+                            </div>
+
+                            <div class="input-group input-group-alternative">
+                                <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
+                                <input class="form-control" placeholder="6-digit code" type="text" name="code" [(ngModel)]="code">
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary mt-3" (click)="loginWithCredentials()">Sign in</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+            <div class="row mt-3">
+                <div class="col-6">
+                    <a href="javascript:void(0)" class="text-primary">
+                        <small>Forgot your account?</small>
+                    </a>
+                    </div>
+                    <div class="col-6 text-right">
+                        <a href="/register" class="text-primary">
+                            <small>Create new account</small>
+                        </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

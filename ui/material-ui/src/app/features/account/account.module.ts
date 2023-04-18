@@ -1,4 +1,7 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { CommonModule } from '@angular/common'; 
 
 // MDB Modules
 import { MdbAccordionModule } from 'mdb-angular-ui-kit/accordion';
@@ -28,6 +31,9 @@ import { PageRegisterComponent } from './pages/page-register/page-register.compo
     PageRegisterComponent
   ],
   imports: [
+    FormsModule,
+    BrowserModule,
+    CommonModule,
     AccountRoutingModule,
     MdbAccordionModule,
     MdbCarouselModule,
