@@ -8,6 +8,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { SharedModule } from './shared/shared.module';
 
 import { AccountModule } from './features/account/account.module';
+import { GameModule } from './features/game/game.module';
+
 
 // components
 import { AppComponent } from './app.component';
@@ -25,6 +27,7 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
     AppRoutingModule,
     SharedModule,
     AccountModule,
+    GameModule,
     BrowserAnimationsModule,
     HttpClientModule
   ],
