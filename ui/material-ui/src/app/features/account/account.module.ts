@@ -23,12 +23,14 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { AccountRoutingModule } from './account-routing.module';
 import { PageLoginComponent } from './pages/page-login/page-login.component';
 import { PageRegisterComponent } from './pages/page-register/page-register.component';
+import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 
 
 @NgModule({
   declarations: [
     PageLoginComponent,
-    PageRegisterComponent
+    PageRegisterComponent,
+    PageProfileComponent
   ],
   imports: [
     FormsModule,

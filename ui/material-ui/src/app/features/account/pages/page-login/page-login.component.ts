@@ -32,7 +32,7 @@ export class PageLoginComponent {
             icon: 'success',
             confirmButtonText: 'Continue',
           }).then(() => {
-            this.router.navigate(['/game']);
+            this.router.navigate(['/profile']);
           })
         }
       }

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
 import { PathIsActivePipe } from './pipes/pathIsActive.pipe';
 import { NavComponent } from './components/nav/nav.component';
@@ -18,6 +19,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
   ],
   imports: [
     CommonModule,
+    RouterModule,
     MdbCollapseModule,
     MdbDropdownModule,
   ],
