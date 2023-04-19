@@ -1,2 +1,2 @@
-<app-game-join></app-game-join>
-<app-game-create></app-game-create>
+<app-game-join [(showCreationForm)]="showCreationForm" *ngIf="!showCreationForm"></app-game-join>
+<app-game-create [(showCreationForm)]="showCreationForm" *ngIf="showCreationForm"></app-game-create>
