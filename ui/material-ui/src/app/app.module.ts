@@ -24,9 +24,9 @@ import { AuthInterceptor } from './core/interceptors/auth.interceptor';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
     SharedModule,
     AccountModule,
+    AppRoutingModule,
     GameModule,
     BrowserAnimationsModule,
     HttpClientModule

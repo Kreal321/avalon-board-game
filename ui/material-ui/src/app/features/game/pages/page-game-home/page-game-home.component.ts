@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-page-game-home',
@@ -7,8 +8,12 @@ import { Component } from '@angular/core';
 })
 export class PageGameHomeComponent {
 
-  showCreationForm: boolean = false;
+  gameId: number;
 
-  constructor() { }
+  constructor(
+    private route: ActivatedRoute,
+  ) { 
+    this.gameId = Number(this.route.snapshot.paramMap.get('id'));
+  }
 
 }
