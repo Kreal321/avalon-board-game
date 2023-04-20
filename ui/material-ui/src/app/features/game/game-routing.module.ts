@@ -7,6 +7,7 @@ import { PageGameHomeComponent } from './pages/page-game-home/page-game-home.com
 
 const routes: Routes = [
     { path: '', component: PageHomeComponent},
+    { path: 'game', component: PageHomeComponent },
     { path: 'game/:id', component: PageGameHomeComponent },
 ];
 

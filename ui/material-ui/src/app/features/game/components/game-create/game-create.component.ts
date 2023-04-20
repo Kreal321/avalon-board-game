@@ -1,4 +1,5 @@
 import { Component, OnInit, EventEmitter, Input, Output } from '@angular/core';
+import { Router } from '@angular/router';
 
 import Swal from 'sweetalert2';
 
@@ -25,6 +26,7 @@ export class GameCreateComponent implements OnInit {
   constructor(
     private gameService: GameService,
     private gameModeService: GameModeService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -71,24 +73,17 @@ export class GameCreateComponent implements OnInit {
     }
 
     this.gameModeService.getGameModeById(this.gameModeNum).subscribe(
-      // gameMode => {
-      //   this.gameService.createGame(gameMode.numberOfPlayers, this.gameNum, gameMode.gameModeType).subscribe(
-      //     response => {
-      //       if (response.success) {
-      //         Swal.fire({
-      //           title: 'Created Game Successfully',
-      //           text: 'You have created a game with game number ' + this.gameNum + ' and game mode ' + this.gameModeNum + '.',
-      //           icon: 'success',
-      //           confirmButtonText: 'Join Game',
-      //         }).then(() => {
-      //           this.joinGame();
-      //         })
-      //       }
-      //     }
-      //   )
-      // }
+      gameMode => {
+        if (gameMode != undefined && this.gameNum != undefined) {
+          this.gameService.createGame(gameMode.numberOfPlayers, this.gameNum, gameMode.gameModeType).subscribe(
+            response => {
+              if (response.success) {
+                this.router.navigate(['/game/' + response.data.gameId]);
+              }
+            }
+          )
+        }
+      }
     );
   }
-
-
 }

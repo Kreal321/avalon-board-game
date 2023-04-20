@@ -40,25 +40,7 @@ export class GameJoinComponent {
     this.gameService.joinGameByGameNum(this.gameNum).subscribe(
       response => {
         if (response.success) {
-          // let current = this.gameModes.find(x => x.gameModeType == response.data.gameMode);
-
-          // Swal.fire({
-          //   title: 'Joined Game Successfully',
-          //   html: `
-          //     <div class="input-group mb-3">
-          //         <div class="input-group-prepend">
-          //           <span class="input-group-text">Game Mode: </span>
-          //         </div>
-          //         <select class="form-control bg-white" disabled>
-          //             <option selected>${current.name}</option>
-          //         </select>
-          //     </div>
-          //   `,
-          //   icon: 'success',
-          //   confirmButtonText: 'Enter Game'
-          // }).then(() => {
-          //   this.router.navigate(['/game/' + this.gameNum]);
-          // })
+          this.router.navigate(['/game/' + response.data.gameId]);
         }
       }
     )
