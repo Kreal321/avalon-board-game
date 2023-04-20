@@ -23,4 +23,12 @@ export class GameService {
     return this.http.post<DataResponse>(this.hostUrl + '/game/new?size=' + size + "&roomNum=" + roomNum + "&gameMode=" + gameMode, {});
   }
 
+  findGameByGameId(gameId: number): Observable<DataResponse> {
+    return this.http.get<DataResponse>(this.hostUrl + '/game/' + gameId);
+  }
+
+  startGame(gameId: number): Observable<DataResponse> {
+    return this.http.get<DataResponse>(this.hostUrl + '/game/' + gameId + '/start');
+  }
+
 }

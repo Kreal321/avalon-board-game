@@ -40,10 +40,6 @@ export class GameModeService implements OnInit {
         return of(this.gameModes);
     }
 
-    getGameModesByNumberOfPlayers(numberOfPlayers: number) : Observable<GameMode[]> {
-        return of(this.gameModes.filter(gameMode => gameMode.numberOfPlayers == numberOfPlayers));
-    }
-
     getGameModeById(id: number) : Observable<GameMode | undefined> {
         return of(this.gameModes.find(gameMode => gameMode.id == id));
     }

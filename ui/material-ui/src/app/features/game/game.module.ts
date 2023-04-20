@@ -12,6 +12,8 @@ import { PageGameHomeComponent } from './pages/page-game-home/page-game-home.com
 import { GameJoinComponent } from './components/game-join/game-join.component';
 import { GameCreateComponent } from './components/game-create/game-create.component';
 import { GameHistoryComponent } from './components/game-history/game-history.component';
+import { GameInfoComponent } from './components/game-info/game-info.component';
+import { GamePlayersComponent } from './components/game-players/game-players.component';
 
 
 
@@ -22,6 +24,8 @@ import { GameHistoryComponent } from './components/game-history/game-history.com
     GameCreateComponent,
     PageHomeComponent,
     GameHistoryComponent,
+    GameInfoComponent,
+    GamePlayersComponent,
   ],
   imports: [
     FormsModule,

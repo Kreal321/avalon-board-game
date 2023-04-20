@@ -26,9 +26,15 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum) {
+    public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
         DataResponse response = this.gameLogicService.createNewGame(size, gameMode, roomNum);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        response = this.gameLogicService.authUserJoinGameWithGameNum(userDetail, roomNum);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -49,10 +55,10 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/join/{gameNum}")
-    public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int gameNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
+    @GetMapping("/join/{roomNum}")
+    public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
-        DataResponse response = this.gameLogicService.authUserJoinGameWithGameNum(userDetail, gameNum);
+        DataResponse response = this.gameLogicService.authUserJoinGameWithGameNum(userDetail, roomNum);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);

@@ -95,6 +95,10 @@ public class GameLogicService {
 
         Game game = notStartedGame.get();
 
+        if(game.getGameSize() <= game.getPlayers().size()) {
+            return DataResponse.error("Game is full");
+        }
+
         User user = this.userService.findUserByAuthUserDetail(authUserDetail);
 
         Record record = this.recordService.findOrCreateNewRecord(game, user);
@@ -115,9 +119,9 @@ public class GameLogicService {
 
         Game game = gameOptional.get();
 
-        // game is finished
+        // game is finished or not started
 
-        if (GameStatus.gameIsFinished(game.getGameStatus())) {
+        if (GameStatus.gameIsFinished(game.getGameStatus()) || game.getGameStatus() == GameStatus.NOT_STARTED) {
             return DataResponse.success("Game found")
                     .data(GameMapper.convertToResponse(game));
         }

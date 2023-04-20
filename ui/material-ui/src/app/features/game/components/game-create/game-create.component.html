@@ -11,7 +11,7 @@
                         <input class="form-control" placeholder="Game Room Number" type="text" name="gameNum" [(ngModel)]="gameNum">
                     </div>
                     <div class="input-group input-group-lg input-group-alternative mb-3">
-                        <span class="input-group-text"><i class="fas fa-sign-hanging"></i></span>
+                        <span class="input-group-text"><i class="fas fa-dice"></i></span>
                         <select class="form-control form-select" [(ngModel)]="gameModeNum" (ngModelChange)="gameModeChange()">
                             <option value="0">Select Game Mode</option>
                             <option *ngFor="let gameMode of gameModes" value="{{gameMode.id}}">{{gameMode.name}}</option>
