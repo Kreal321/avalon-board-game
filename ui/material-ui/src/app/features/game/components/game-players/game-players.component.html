@@ -1,37 +1,38 @@
 <div class="card shadow">
-    <div class="card-body">
-        <div class="d-flex justify-content-between">
-            <div>
-              <h6 class="card-subtitle mb-2 text-muted">Players</h6>
-              <p class="card-text">{{game?.players?.length}} / {{game?.gameSize}}</p>
-            </div>
-            <div>
-                <h6 class="card-subtitle mb-2 text-muted">Room Num</h6>
-                <p class="card-text">{{game?.gameNum}}</p>
-            </div>
-            <div>
-                <button class="btn btn-primary"><i class="far fa-paper-plane me-2"></i>Invite</button>
-            </div>
+  <div class="card-body">
+    <div class="d-flex justify-content-between">
+        <div>
+          <h6 class="card-subtitle mb-2 text-muted">Players</h6>
+          <p class="card-text">{{game?.players?.length}} / {{game?.gameSize}}</p>
         </div>
-
-        <hr />
-
-        <ol class="list-group list-group-light list-group-numbered">
-            <li *ngFor="let player of game?.players" class="list-group-item d-flex justify-content-between align-items-center py-1">
-              <div class="ms-2 me-auto">
-                <div class="fw-bold">{{player.displayName}}</div>
-              </div>
-              <span class="badge badge-primary rounded-pill">{{player.seatNum}}</span>
-            </li>
-        </ol>
-
-        <hr>
-  
-        <div class="input-group input-group-alternative">
-            <span class="input-group-text"><i class="fas fa-gamepad"></i></span>
-            <input class="form-control" placeholder="Display Name" type="text" name="gameNum" >
-            <button class="btn btn-primary">change</button>
+        <div>
+            <h6 class="card-subtitle mb-2 text-muted">Room Num</h6>
+            <p class="card-text">{{game?.gameNum}}</p>
+        </div>
+        <div>
+            <button class="btn btn-primary"><i class="far fa-paper-plane me-2"></i>Invite</button>
         </div>
     </div>
+
+    <hr />
+
+    <ol class="list-group list-group-light list-group-numbered">
+        <li *ngFor="let player of game?.players" class="list-group-item d-flex justify-content-between align-items-center py-1">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{player.displayName}}</div>
+            <span class="badge badge-primary rounded-pill" *ngIf="!(game?.gameStatus | gameStatus:'isNotFinished')">{{player.characterType}}</span>
+          </div>
+          <span class="badge badge-primary rounded-pill" *ngIf="isThumbsUp(player)"><i class="far fa-thumbs-up"></i></span>
+        </li>
+    </ol>
+
+    <hr>
+
+    <div class="input-group input-group-alternative">
+        <span class="input-group-text"><i class="fas fa-gamepad"></i></span>
+        <input class="form-control" placeholder="Display Name" type="text" name="gameNum" >
+        <button class="btn btn-primary">change</button>
+    </div>
   </div>
+</div>
   

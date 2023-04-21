@@ -1,0 +1,18 @@
+<div class="card shadow">
+    <div class="card-body pb-0">
+        <div class="d-flex justify-content-between">
+            <app-game-quest-display [quest]="quest" *ngFor="let quest of quests"></app-game-quest-display>
+        </div>
+        <div class="d-flex justify-content-between mt-1">
+            <span class="fs-6">Round: {{currentQuestRound}}</span>
+            <small class="text-muted" *ngIf="gameSizeLargerThan(6)">Quest 4 needs 2 fail cards</small>
+        </div>
+        <hr>
+    </div>
+    <div>
+        <mdb-accordion [multiple]="true" [flush]="true">
+            <app-game-round *ngFor="let round of game?.rounds" [round]="round"></app-game-round>
+        </mdb-accordion>
+    </div>
+    <div class="card-body py-1"></div>
+</div>

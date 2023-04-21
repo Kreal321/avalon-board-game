@@ -1,6 +1,7 @@
 import { GameModeType } from '../enums/gameModeType.enum';
 import { Character } from './character.model';
 import { Player } from './player.model';
+import { Round } from './round.model';
 
 export interface Game {
     character: Character;
@@ -12,4 +13,5 @@ export interface Game {
     gameEndtime: Date;
     gameStatus: string;
     players: Player[];
+    rounds: Round[];
 }

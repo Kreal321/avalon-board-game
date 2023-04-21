@@ -2,7 +2,7 @@ import { GameModeType } from "../enums/gameModeType.enum";
 
 export interface GameMode {
     id: number;
-    tabName: string;
+    quests: number[];
     name: string;
     rules: string;
     description: string;
