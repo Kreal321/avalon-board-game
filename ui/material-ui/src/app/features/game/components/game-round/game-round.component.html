@@ -1,13 +1,39 @@
 <mdb-accordion-item>
     <ng-template mdbAccordionItemHeader>Quest {{round?.questNum}} Round {{round?.roundNum}}</ng-template>
     <ng-template mdbAccordionItemBody>
-      Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry
-      richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor
-      brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
-      aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et.
-      Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente
-      ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer
-      farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them
-      accusamus labore sustainable VHS.
+      <div class="d-flex justify-content-between mb-3">
+          <div>
+              <h6 class="card-subtitle mb-2 text-muted">Team Size</h6>
+              <p class="card-text">{{round?.teamSize}}</p>
+          </div>
+          <div>
+              <h6 class="card-subtitle mb-2 text-muted">Team Leader</h6>
+              <!-- <p class="card-text">{{players ? players[round!.leaderId - 1].displayName : ""}}</p> -->
+              <app-player-badge [player]="players | player:round!.leaderId" [color]="'primary'"></app-player-badge>
+          </div>
+          <div>
+              <h6 class="card-subtitle mb-2 text-muted">Status</h6>
+              <p class="card-text">{{round?.roundStatus}}</p>
+          </div>
+      </div>
+      <div class="mb-3">
+          <h6 class="card-subtitle mb-2 text-muted">Initial Team</h6>
+          <div class="d-flex">
+            <span *ngFor="let member of round!.teams[0].teamMembers" class="me-2" >
+              <app-player-badge [player]="players | player:member.playerId" [color]="'primary'"></app-player-badge>
+            </span>
+          </div>
+      </div>
+      <div class="mb-3">
+          <h6 class="card-subtitle mb-2 text-muted">Final Team</h6>
+          <p class="card-text">Player 1, Player 1, Player 1, Player 1</p>
+      </div>
+      <hr />
+      <div class="mb-3">
+        <app-vote-container [status]="'success'"></app-vote-container>
+      </div>
+      <div class="mb-3">
+        <app-vote-container [status]="'fail'" [voteType]="'mission'"></app-vote-container>
+      </div>
     </ng-template>
 </mdb-accordion-item>

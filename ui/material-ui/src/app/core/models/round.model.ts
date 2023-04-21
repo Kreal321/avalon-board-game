@@ -1,3 +1,5 @@
+import { Team } from "./team.model.";
+
 export interface Round {
     roundId: number;
     questNum: number;
@@ -5,4 +7,5 @@ export interface Round {
     leaderId: number;
     teamSize: number;
     roundStatus: string;
+    teams: Team[];
 }

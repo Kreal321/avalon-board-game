@@ -11,7 +11,7 @@
     </div>
     <div>
         <mdb-accordion [multiple]="true" [flush]="true">
-            <app-game-round *ngFor="let round of game?.rounds" [round]="round"></app-game-round>
+            <app-game-round *ngFor="let round of game?.rounds" [round]="round" [players]="game?.players"></app-game-round>
         </mdb-accordion>
     </div>
     <div class="card-body py-1"></div>

@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { GameStatusPipe } from './pipes/gameStatus.pipe';
+import { PlayerPipe } from './pipes/player.pipe';
+
 import { NavComponent } from './components/nav/nav.component';
 import { FooterComponent } from './components/footer/footer.component';
 
@@ -14,6 +16,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
 @NgModule({
   declarations: [
     GameStatusPipe,
+    PlayerPipe,
     NavComponent,
     FooterComponent
   ],
@@ -25,6 +28,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
   ],
   exports: [
     GameStatusPipe,
+    PlayerPipe,
     NavComponent,
     FooterComponent
   ]

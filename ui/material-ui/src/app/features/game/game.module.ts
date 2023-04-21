@@ -19,6 +19,8 @@ import { GamePlayersComponent } from './components/game-players/game-players.com
 import { GameRoundComponent } from './components/game-round/game-round.component';
 import { GameRoundsComponent } from './components/game-rounds/game-rounds.component';
 import { GameQuestDisplayComponent } from './components/game-quest-display/game-quest-display.component';
+import { PlayerBadgeComponent } from './components/player-badge/player-badge.component';
+import { VoteContainerComponent } from './components/vote-container/vote-container.component';
 
 
 
@@ -34,6 +36,8 @@ import { GameQuestDisplayComponent } from './components/game-quest-display/game-
     GameRoundComponent,
     GameRoundsComponent,
     GameQuestDisplayComponent,
+    PlayerBadgeComponent,
+    VoteContainerComponent,
   ],
   imports: [
     FormsModule,
