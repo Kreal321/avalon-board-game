@@ -1,5 +1,6 @@
 package me.kreal.avalon.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import me.kreal.avalon.dto.PlayerDTO;
@@ -14,6 +15,7 @@ import me.kreal.avalon.dto.PlayerDTO;
 public class VoteResponse {
 
     private Long voteId;
+    @JsonIgnore
     private Long roundId;
     private Long playerId;
     private Boolean accept;

@@ -1,0 +1,8 @@
+<div>
+    <h6 class="card-subtitle mb-2 text-muted">{{team?.teamType | titlecase}} Team</h6>
+    <div class="d-flex">
+      <span *ngFor="let member of team?.teamMembers" class="me-2" >
+        <app-player-badge [player]="member.player" [color]="'info'"></app-player-badge>
+      </span>
+    </div>
+</div>

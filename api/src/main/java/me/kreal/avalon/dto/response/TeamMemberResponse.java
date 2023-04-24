@@ -17,8 +17,11 @@ import me.kreal.avalon.util.enums.TeamMemberStatus;
 public class TeamMemberResponse {
 
     private Long teamMemberId;
+    @JsonIgnore
     private Long teamId;
+    @JsonIgnore
     private Long playerId;
+    private PlayerResponse player;
     private TeamMemberStatus status;
 
 }

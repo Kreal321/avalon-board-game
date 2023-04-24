@@ -1,5 +1,6 @@
 package me.kreal.avalon.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import me.kreal.avalon.dto.PlayerDTO;
@@ -20,7 +21,9 @@ public class RoundResponse {
     private Long gameId;
     private Integer questNum;
     private Integer roundNum;
+    @JsonIgnore
     private Long leaderId;
+    private PlayerResponse leader;
     private Integer teamSize;
     private RoundStatus roundStatus;
 

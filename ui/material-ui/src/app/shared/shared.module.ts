@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { GameStatusPipe } from './pipes/gameStatus.pipe';
-import { PlayerPipe } from './pipes/player.pipe';
+
 
 import { NavComponent } from './components/nav/nav.component';
 import { FooterComponent } from './components/footer/footer.component';
@@ -11,12 +11,13 @@ import { FooterComponent } from './components/footer/footer.component';
 
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
 import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
+import { EnumPrintPipe } from './pipes/enumPrint.pipe';
 
 
 @NgModule({
   declarations: [
     GameStatusPipe,
-    PlayerPipe,
+    EnumPrintPipe,
     NavComponent,
     FooterComponent
   ],
@@ -28,7 +29,7 @@ import { MdbDropdownModule } from 'mdb-angular-ui-kit/dropdown';
   ],
   exports: [
     GameStatusPipe,
-    PlayerPipe,
+    EnumPrintPipe,
     NavComponent,
     FooterComponent
   ]

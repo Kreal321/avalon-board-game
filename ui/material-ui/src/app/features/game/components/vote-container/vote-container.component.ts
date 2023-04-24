@@ -1,4 +1,13 @@
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
+import { RoundStatus } from 'src/app/core/enums/roundStatus.enum';
+import { Vote } from 'src/app/core/models/vote.model';
+import { Player } from 'src/app/core/models/player.model';
+import { Character } from 'src/app/core/models/character.model';
+
+import { GameService } from 'src/app/core/services/game.service';
+import { Round } from 'src/app/core/models/round.model';
+
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-vote-container',
@@ -7,37 +16,60 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 })
 export class VoteContainerComponent implements OnChanges{
 
-  @Input() status: string = "processing";
-  @Input() voteType: string = "Team Vote";
+  // @Input() status: RoundStatus | undefined;
+  // @Input() votes: Vote[] | undefined;
 
-  color: string = "primary";
-  title: string = "Processing";
+  @Input() round: Round | undefined;
+  @Input() players: Player[] | undefined;
+  @Input() character: Character | undefined;
 
-  constructor() { }
+  color: string = "secondary";
+  showVotes: boolean = false;
+  canVote: boolean = false;
+
+  constructor(
+    private gameService: GameService
+  ) { }
 
   ngOnChanges(): void {
-
-    if (this.voteType == "mission") {
-      this.title = "Mission";
+    if (this.round?.roundStatus === RoundStatus.FINAL_TEAM_VOTING) {
+      this.color = "primary";
+      this.showVotes = true;
     } else {
-      this.title = "Team Vote";
+      this.color = "secondary";
+      this.showVotes = false;
     }
-    
-    switch(this.status) {
-      case "success":
-        this.color = "success";
-        this.title += " Succeeded";
-        break;
-      case "fail":
-        this.color = "danger";
-        this.title += " Failed";
-        break;
-      default:
-        this.color = "primary";
-        this.title += " In Progress";
-        break;
-    }
+  }
 
+  getBadgeColor(player: Player): string {
+    let v : Vote | undefined = this.round?.votes?.find(vote => vote.playerId === player.playerId);
+    if (v) {
+      if (v?.playerId === this.character?.current.playerId) {
+        this.canVote = false;
+      }
+      if (this.round?.roundStatus === RoundStatus.FINAL_TEAM_VOTING) {
+        return "info";
+      } else if (v.accept) {
+        return "success";
+      } else {
+        return "danger";
+      }
+    }
+    return "secondary";
+  }
+
+  vote(accept: boolean): void {
+    this.gameService.vote(this.round!.gameId, this.round!.roundId, accept).subscribe(
+      response => {
+        if (response.success) {
+          Swal.fire({
+            title: 'Success',
+            text: 'You have voted' + (accept ? ' to accept' : ' to reject') + ' the final team assignment.',
+            icon: 'success',
+          })
+        }
+      }
+    );
   }
 
 }

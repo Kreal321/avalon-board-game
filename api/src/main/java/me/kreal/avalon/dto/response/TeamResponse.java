@@ -1,5 +1,6 @@
 package me.kreal.avalon.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 import me.kreal.avalon.domain.TeamMember;
@@ -18,6 +19,7 @@ import java.util.List;
 public class TeamResponse {
 
     private Long teamId;
+    @JsonIgnore
     private Long roundId;
     private TeamType teamType;
 

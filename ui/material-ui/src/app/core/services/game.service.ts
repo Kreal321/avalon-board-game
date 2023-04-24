@@ -31,4 +31,8 @@ export class GameService {
     return this.http.get<DataResponse>(this.hostUrl + '/game/' + gameId + '/start');
   }
 
+  vote(gameId: number, roundId: number, accept: boolean): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/game/' + gameId + '/round/' + roundId + '/vote/new?accept=' + accept, {});
+  }
+
 }

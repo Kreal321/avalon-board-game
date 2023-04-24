@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { Character } from 'src/app/core/models/character.model';
 import { Player } from 'src/app/core/models/player.model';
 import { Round } from 'src/app/core/models/round.model';
 
@@ -11,5 +12,7 @@ export class GameRoundComponent {
 
   @Input() round: Round | undefined;
   @Input() players: Player[] | undefined;
+  @Input() collapsed: boolean = true;
+  @Input() character: Character | undefined;
 
 }

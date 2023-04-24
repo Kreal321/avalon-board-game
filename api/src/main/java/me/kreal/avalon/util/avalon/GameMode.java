@@ -79,6 +79,7 @@ public abstract class GameMode {
             case MERLIN:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
+                        .current(current)
                         .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.ASSASSIN, CharacterType.MORGANA, CharacterType.OBERON, CharacterType.EVIL))).contains(p.getCharacterType()))
                                 .map(PlayerMapper::convertToDTO)
@@ -89,6 +90,7 @@ public abstract class GameMode {
             case OBERON:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
+                        .current(current)
                         .build();
 
             case EVIL:
@@ -97,6 +99,7 @@ public abstract class GameMode {
             case ASSASSIN:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
+                        .current(current)
                         .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.ASSASSIN, CharacterType.MORGANA, CharacterType.MORDRED, CharacterType.EVIL))).contains(p.getCharacterType()))
                                 .map(PlayerMapper::convertToDTO)
@@ -106,6 +109,7 @@ public abstract class GameMode {
             case PERCIVAL:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
+                        .current(current)
                         .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.MERLIN, CharacterType.MORGANA))).contains(p.getCharacterType()))
                                 .map(PlayerMapper::convertToDTO)
@@ -115,6 +119,7 @@ public abstract class GameMode {
             default:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
+                        .current(current)
                         .information("Something went wrong.")
                         .build();
         }

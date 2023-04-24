@@ -21,6 +21,7 @@ import { GameRoundsComponent } from './components/game-rounds/game-rounds.compon
 import { GameQuestDisplayComponent } from './components/game-quest-display/game-quest-display.component';
 import { PlayerBadgeComponent } from './components/player-badge/player-badge.component';
 import { VoteContainerComponent } from './components/vote-container/vote-container.component';
+import { TeamContainerComponent } from './components/team-container/team-container.component';
 
 
 
@@ -38,6 +39,7 @@ import { VoteContainerComponent } from './components/vote-container/vote-contain
     GameQuestDisplayComponent,
     PlayerBadgeComponent,
     VoteContainerComponent,
+    TeamContainerComponent,
   ],
   imports: [
     FormsModule,

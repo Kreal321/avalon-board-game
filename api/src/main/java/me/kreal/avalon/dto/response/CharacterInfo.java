@@ -15,6 +15,7 @@ import java.util.List;
 public class CharacterInfo {
 
     private CharacterType characterType;
+    private Player current;
     private String information;
     private List<PlayerDTO> thumbsUpPlayers;
 

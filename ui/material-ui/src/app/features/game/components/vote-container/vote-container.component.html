@@ -1,8 +1,16 @@
 <div>
-    <h6 class="card-subtitle mb-2 text-{{color}}">{{title}}</h6>
-    <p class="card-text">
-      <span class="badge badge-success">Player 1</span>
-      <span class="badge badge-success">Player 1</span>
-      <span class="badge badge-danger">Player 1</span>
-    </p>
+    <h6 class="card-subtitle mb-2 text-{{color}}">Final Team Vote</h6>
+    <div class="d-flex">
+        <span *ngFor="let player of players" class="me-2" >
+          <app-player-badge [player]="player" [color]="getBadgeColor(player)"></app-player-badge>
+        </span>
+    </div>
+    <div class="border border-2 rounded-6 p-3 m-3 border-primary" *ngIf="showVotes">
+        <p class="card-subtitle text-center mb-1">Do you agree with the final team assignment?</p>
+        <div class="d-flex justify-content-center">
+            <button class="btn btn-success me-2" [disabled]="!canVote" (click)="vote(true)">Approve</button>
+            <button class="btn btn-danger me-2" [disabled]="!canVote" (click)="vote(false)">Reject</button>
+        </div>
+    </div>
+
 </div>
