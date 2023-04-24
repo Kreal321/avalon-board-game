@@ -126,7 +126,7 @@ public class RoundService {
         team.addTeamMembers(teamMembers.stream()
                 .map(id -> TeamMember.builder()
                         .playerId(id)
-                        .status(TeamMemberStatus.CHALLENGE_PENDING)
+                        .status(TeamMemberStatus.MISSION_PENDING)
                         .build())
                 .collect(Collectors.toList()));
 
@@ -169,10 +169,10 @@ public class RoundService {
     @Transactional
     public void createNewMissionForRound(Round round, Team finalTeam, TeamMember teamMember, boolean success) {
 
-        teamMember.setStatus(success ? TeamMemberStatus.CHALLENGE_SUCCESS : TeamMemberStatus.CHALLENGE_FAILED);
+        teamMember.setStatus(success ? TeamMemberStatus.MISSION_SUCCESS : TeamMemberStatus.MISSION_FAILED);
 
-        if (finalTeam.getTeamMembers().stream().noneMatch(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_PENDING)) {
-            if (finalTeam.getTeamMembers().stream().filter(member -> member.getStatus() == TeamMemberStatus.CHALLENGE_FAILED).count() >= GameModeFactory.getGameMode(round.getGame().getGameMode()).getFailThreshold(round.getQuestNum())) {
+        if (finalTeam.getTeamMembers().stream().noneMatch(member -> member.getStatus() == TeamMemberStatus.MISSION_PENDING)) {
+            if (finalTeam.getTeamMembers().stream().filter(member -> member.getStatus() == TeamMemberStatus.MISSION_FAILED).count() >= GameModeFactory.getGameMode(round.getGame().getGameMode()).getFailThreshold(round.getQuestNum())) {
                 round.setRoundStatus(RoundStatus.QUEST_FAIL);
             } else {
                 round.setRoundStatus(RoundStatus.QUEST_SUCCESS);

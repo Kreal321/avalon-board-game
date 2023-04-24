@@ -22,6 +22,7 @@ import { GameQuestDisplayComponent } from './components/game-quest-display/game-
 import { PlayerBadgeComponent } from './components/player-badge/player-badge.component';
 import { VoteContainerComponent } from './components/vote-container/vote-container.component';
 import { TeamContainerComponent } from './components/team-container/team-container.component';
+import { TeamAssignmentComponent } from './components/team-assignment/team-assignment.component';
 
 
 
@@ -40,6 +41,7 @@ import { TeamContainerComponent } from './components/team-container/team-contain
     PlayerBadgeComponent,
     VoteContainerComponent,
     TeamContainerComponent,
+    TeamAssignmentComponent,
   ],
   imports: [
     FormsModule,

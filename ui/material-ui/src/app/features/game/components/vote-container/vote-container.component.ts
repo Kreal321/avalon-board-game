@@ -25,7 +25,7 @@ export class VoteContainerComponent implements OnChanges{
 
   color: string = "secondary";
   showVotes: boolean = false;
-  canVote: boolean = false;
+  canVote: boolean = true;
 
   constructor(
     private gameService: GameService

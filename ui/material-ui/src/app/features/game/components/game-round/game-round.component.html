@@ -18,6 +18,9 @@
       <div class="mb-3" *ngFor="let team of round?.teams">
         <app-team-container [team]="team" [players]="players"></app-team-container>
       </div>
+      <div class="mb-3">
+        <app-team-assignment [players]="players" [round]="round"></app-team-assignment>
+      </div>
       <hr />
       <div class="mb-3">
         <app-vote-container [players]="players" [round]="round" [character]="character"></app-vote-container>

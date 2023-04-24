@@ -245,6 +245,8 @@ public class GameLogicService {
 
         this.roundService.createNewTeamForRound(round, teamRequest.getTeamType(), teamRequest.getTeamMembers());
 
+
+
         return DataResponse.success("Team created")
                 .data(GameMapper.convertToResponse(round.getGame()));
 
@@ -344,7 +346,7 @@ public class GameLogicService {
 
         TeamMember teamMember = teamMemberOptional.get();
 
-        if (teamMember.getStatus() != TeamMemberStatus.CHALLENGE_PENDING) {
+        if (teamMember.getStatus() != TeamMemberStatus.MISSION_PENDING) {
             return DataResponse.error("You have already voted");
         }
 

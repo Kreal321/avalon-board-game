@@ -1,7 +1,7 @@
 <div>
     <h6 class="card-subtitle mb-2 text-{{color}}">Final Team Vote</h6>
-    <div class="d-flex">
-        <span *ngFor="let player of players" class="me-2" >
+    <div class="d-flex row">
+        <span *ngFor="let player of players" class="col-4 text-center mb-1" >
           <app-player-badge [player]="player" [color]="getBadgeColor(player)"></app-player-badge>
         </span>
     </div>
