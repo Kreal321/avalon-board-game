@@ -26,15 +26,20 @@ export class GameRoundComponent implements OnChanges{
   constructor() { }
 
   ngOnChanges(): void {
-    if (this.round?.roundStatus == RoundStatus.INITIAL_TEAM) {
-      this.showTeamAssignment = true;
-      this.teamType = TeamType.INITIAL;
-    } else if (this.round?.roundStatus == RoundStatus.DISCUSSING) {
-      this.showTeamAssignment = true;
-      this.teamType = TeamType.FINAL;
-    } else {
-      this.showTeamAssignment = false;
+    this.showTeamAssignment = false;
+    if (this.round?.leader.playerId == this.character?.current.playerId) {
+      if (this.round?.roundStatus == RoundStatus.INITIAL_TEAM) {
+        this.showTeamAssignment = true;
+        this.teamType = TeamType.INITIAL;
+      } else if (this.round?.roundStatus == RoundStatus.DISCUSSING) {
+        this.showTeamAssignment = true;
+        this.teamType = TeamType.FINAL;
+      } 
     }
+  }
+
+  showFinalTeamVote(): boolean {
+    return this.round?.roundStatus == RoundStatus.FINAL_TEAM_VOTING;
   }
 
 }

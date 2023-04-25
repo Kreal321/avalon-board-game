@@ -60,7 +60,6 @@ export class TeamAssignmentComponent implements OnChanges{
         }
       }
     );
-    console.log(this.selectedTeamMembers);
   }
 
 }
