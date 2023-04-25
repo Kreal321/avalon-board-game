@@ -30,4 +30,11 @@ export class UserService {
     return localStorage.getItem('token') != null;
   }
 
+  getRecords(): Observable<DataResponse> {
+    if (!this.isLoggedIn()) {
+      return of({success: false, data: null, message: 'Not logged in', token: ''});
+    }
+    return this.http.get<DataResponse>(this.hostUrl + '/game/records');
+  }
+
 }

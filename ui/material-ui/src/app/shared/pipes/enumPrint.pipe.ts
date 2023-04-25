@@ -1,4 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { CharacterType } from 'src/app/core/enums/characterType.enum';
+import { GameModeType } from 'src/app/core/enums/gameModeType.enum';
 import { GameStatus } from 'src/app/core/enums/gameStatus.enum';
 import { RoundStatus } from 'src/app/core/enums/roundStatus.enum';
 
@@ -8,7 +10,7 @@ export class EnumPrintPipe implements PipeTransform {
 
     constructor() {}
     
-    transform(text: undefined | RoundStatus | GameStatus): string {        
+    transform(text: undefined | RoundStatus | GameStatus | GameModeType | CharacterType): string {        
         switch (text) {
             case RoundStatus.INITIAL_TEAM:
             case RoundStatus.DISCUSSING:

@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public class RecordDao extends BaseDao<Record> {
@@ -22,6 +24,11 @@ public class RecordDao extends BaseDao<Record> {
     public RecordDao(SessionFactory factory) {
         super(Record.class, factory);
     }
+
+    public Set<Record> findRecordsByUser(User u) {
+        return this.getAllBy("user", u);
+    }
+
 
     public Optional<Record> findRecordByGameAndUser(Game g, User u) {
         Session session = factory.getCurrentSession();

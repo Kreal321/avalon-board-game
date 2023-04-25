@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { GameStatus } from 'src/app/core/enums/gameStatus.enum';
 
 import { Game } from 'src/app/core/models/game.model';
 import { Player } from 'src/app/core/models/player.model';
@@ -20,6 +21,10 @@ export class GamePlayersComponent implements OnChanges {
 
   isThumbsUp(player: Player): boolean | undefined {
     return this.game?.character?.thumbsUpPlayers?.some(p => p.seatNum == player.seatNum);
+  }
+
+  isStarted(): boolean {
+    return this.game?.gameStatus != GameStatus.NOT_STARTED;
   }
 
 

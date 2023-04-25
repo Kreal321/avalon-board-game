@@ -13,7 +13,6 @@ import { PageHomeComponent } from './pages/page-home/page-home.component';
 import { PageGameHomeComponent } from './pages/page-game-home/page-game-home.component';
 import { GameJoinComponent } from './components/game-join/game-join.component';
 import { GameCreateComponent } from './components/game-create/game-create.component';
-import { GameHistoryComponent } from './components/game-history/game-history.component';
 import { GameInfoComponent } from './components/game-info/game-info.component';
 import { GamePlayersComponent } from './components/game-players/game-players.component';
 import { GameRoundComponent } from './components/game-round/game-round.component';
@@ -24,6 +23,7 @@ import { VoteContainerComponent } from './components/vote-container/vote-contain
 import { TeamContainerComponent } from './components/team-container/team-container.component';
 import { TeamAssignmentComponent } from './components/team-assignment/team-assignment.component';
 import { MissionContainerComponent } from './components/mission-container/mission-container.component';
+import { GameRecordsComponent } from './components/game-records/game-records.component';
 
 
 
@@ -33,7 +33,6 @@ import { MissionContainerComponent } from './components/mission-container/missio
     GameJoinComponent,
     GameCreateComponent,
     PageHomeComponent,
-    GameHistoryComponent,
     GameInfoComponent,
     GamePlayersComponent,
     GameRoundComponent,
@@ -44,6 +43,7 @@ import { MissionContainerComponent } from './components/mission-container/missio
     TeamContainerComponent,
     TeamAssignmentComponent,
     MissionContainerComponent,
+    GameRecordsComponent,
   ],
   imports: [
     FormsModule,

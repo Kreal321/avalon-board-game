@@ -25,6 +25,19 @@ public class GameMapper {
                     .build();
     }
 
+    public static GameResponse convertToSimplifiedResponse(Game game) {
+        return GameResponse.builder()
+                .gameId(game.getGameId())
+                .gameNum(game.getGameNum())
+                .gameSize(game.getGameSize())
+                .gameStatus(game.getGameStatus())
+                .gameStartTime(game.getGameStartTime())
+                .gameEndTime(game.getGameEndTime())
+                .gameMode(game.getGameMode())
+                .build();
+    }
+
+
     public static GameResponse convertToResponse(Game game) {
         GameResponse response = GameResponse.builder()
                     .gameId(game.getGameId())

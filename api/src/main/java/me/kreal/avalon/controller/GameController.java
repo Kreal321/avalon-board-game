@@ -25,6 +25,19 @@ public class GameController {
         this.gameLogicService = gameLogicService;
     }
 
+    @GetMapping("/records")
+    public ResponseEntity<DataResponse> handleGameRecordsRequest(@AuthenticationPrincipal AuthUserDetail userDetail) {
+
+        DataResponse response = this.gameLogicService.findRecordsByUser(userDetail);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+    }
+
+
     @PostMapping("/new")
     public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 

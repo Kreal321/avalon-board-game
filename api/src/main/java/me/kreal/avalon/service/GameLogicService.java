@@ -7,6 +7,7 @@ import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.security.JwtProvider;
 import me.kreal.avalon.util.GameMapper;
+import me.kreal.avalon.util.RecordMapper;
 import me.kreal.avalon.util.avalon.GameModeFactory;
 import me.kreal.avalon.util.enums.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +56,19 @@ public class GameLogicService {
         return this.gameService.findGameById(authUserDetail.getGameId());
     }
 
+
+    // Records
+    public DataResponse findRecordsByUser(AuthUserDetail authUserDetail) {
+
+        User u = this.userService.findUserByAuthUserDetail(authUserDetail);
+
+        List<Record> records = this.recordService.findRecordsByUser(u);
+
+        return DataResponse.success("Records found")
+                    .data(records.stream()
+                            .map(RecordMapper::convertToResponse)
+                            .collect(Collectors.toList()));
+    }
 
 
     // Game logic methods

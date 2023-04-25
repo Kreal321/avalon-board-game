@@ -3,6 +3,7 @@ package me.kreal.avalon.util.avalon;
 import me.kreal.avalon.domain.Game;
 import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.dto.response.CharacterInfo;
+import me.kreal.avalon.dto.response.PlayerResponse;
 import me.kreal.avalon.util.PlayerMapper;
 import me.kreal.avalon.util.enums.CharacterType;
 import me.kreal.avalon.util.enums.GameModeType;
@@ -79,7 +80,7 @@ public abstract class GameMode {
             case MERLIN:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
-                        .current(current)
+                        .current(PlayerMapper.convertToResponse(current))
                         .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.ASSASSIN, CharacterType.MORGANA, CharacterType.OBERON, CharacterType.EVIL))).contains(p.getCharacterType()))
                                 .map(PlayerMapper::convertToDTO)
@@ -90,7 +91,7 @@ public abstract class GameMode {
             case OBERON:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
-                        .current(current)
+                        .current(PlayerMapper.convertToResponse(current))
                         .build();
 
             case EVIL:
@@ -99,7 +100,7 @@ public abstract class GameMode {
             case ASSASSIN:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
-                        .current(current)
+                        .current(PlayerMapper.convertToResponse(current))
                         .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.ASSASSIN, CharacterType.MORGANA, CharacterType.MORDRED, CharacterType.EVIL))).contains(p.getCharacterType()))
                                 .map(PlayerMapper::convertToDTO)
@@ -109,7 +110,7 @@ public abstract class GameMode {
             case PERCIVAL:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
-                        .current(current)
+                        .current(PlayerMapper.convertToResponse(current))
                         .thumbsUpPlayers(players.stream()
                                 .filter(p -> (new HashSet<>(Arrays.asList(CharacterType.MERLIN, CharacterType.MORGANA))).contains(p.getCharacterType()))
                                 .map(PlayerMapper::convertToDTO)
@@ -119,7 +120,7 @@ public abstract class GameMode {
             default:
                 return CharacterInfo.builder()
                         .characterType(current.getCharacterType())
-                        .current(current)
+                        .current(PlayerMapper.convertToResponse(current))
                         .information("Something went wrong.")
                         .build();
         }

@@ -5,10 +5,14 @@
           <h6 class="card-subtitle mb-2 text-muted">Players</h6>
           <p class="card-text">{{game?.players?.length}} / {{game?.gameSize}}</p>
         </div>
-        <div>
+        <div *ngIf="!isStarted()">
             <h6 class="card-subtitle mb-2 text-muted">Room Num</h6>
             <p class="card-text">{{game?.gameNum}}</p>
         </div>
+        <div *ngIf="isStarted()">
+          <h6 class="card-subtitle mb-2 text-muted">Character</h6>
+          <p class="card-text">{{game?.character ? game!.character.characterType : "Visitor" | titlecase}}</p>
+      </div>
         <div>
             <button class="btn btn-primary"><i class="far fa-paper-plane me-2"></i>Invite</button>
         </div>

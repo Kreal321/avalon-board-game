@@ -27,6 +27,9 @@ public class Record {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "user_id", insertable = false, updatable = false)
+    private Long userId;
+
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "game_id")
     private Game game;
@@ -34,7 +37,11 @@ public class Record {
     @Column(name = "game_id", insertable = false, updatable = false)
     private Long gameId;
 
-    @Column(name = "player_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "player_id")
+    private Player player;
+
+    @Column(name = "player_id", insertable = false, updatable = false)
     private Long playerId;
 
     @Enumerated(EnumType.STRING)

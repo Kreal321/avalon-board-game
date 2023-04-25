@@ -11,7 +11,10 @@ import me.kreal.avalon.util.enums.VictoryStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RecordService {
@@ -43,7 +46,7 @@ public class RecordService {
         Record r = Record.builder()
                 .user(user)
                 .game(game)
-                .playerId(p.getPlayerId())
+                .player(p)
                 .victoryStatus(VictoryStatus.IN_PROGRESS)
                 .build();
 
@@ -52,6 +55,10 @@ public class RecordService {
         return r;
     }
 
-
+    public List<Record> findRecordsByUser(User u) {
+        return this.recordDao.findRecordsByUser(u).stream()
+                .sorted((r1, r2) -> r2.getRecordId().compareTo(r1.getRecordId()))
+                .collect(Collectors.toList());
+    }
 
 }
