@@ -155,7 +155,7 @@ public class RoundService {
                 .build());
 
         if (round.getVotes().size() == round.getGame().getGameSize()) {
-            if (round.getVotes().stream().filter(Vote::getAccept).count() >= round.getVotes().size() / 2) {
+            if (round.getVotes().stream().filter(Vote::getAccept).count() > round.getVotes().size() / 2) {
                 round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_SUCCESS);
             } else {
                 round.setRoundStatus(RoundStatus.FINAL_TEAM_VOTING_FAIL);

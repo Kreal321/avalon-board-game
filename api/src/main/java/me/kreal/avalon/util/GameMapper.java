@@ -4,6 +4,7 @@ import me.kreal.avalon.domain.Game;
 import me.kreal.avalon.dto.GameDTO;
 import me.kreal.avalon.dto.response.GameResponse;
 import me.kreal.avalon.util.avalon.GameModeFactory;
+import me.kreal.avalon.util.enums.TeamMemberStatus;
 
 import java.util.stream.Collectors;
 
@@ -48,6 +49,7 @@ public class GameMapper {
                 response.getRounds().stream()
                         .flatMap(round -> round.getTeams().stream())
                         .flatMap(team -> team.getTeamMembers().stream())
+                        .filter(teamMember -> teamMember.getStatus() != TeamMemberStatus.MISSION_PENDING)
                         .forEach(teamMember -> teamMember.setStatus(null));
                 break;
         }

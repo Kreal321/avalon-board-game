@@ -39,7 +39,11 @@ export class GameRoundComponent implements OnChanges{
   }
 
   showFinalTeamVote(): boolean {
-    return this.round?.roundStatus == RoundStatus.FINAL_TEAM_VOTING;
+    return !(this.round?.roundStatus == RoundStatus.INITIAL_TEAM || this.round?.roundStatus == RoundStatus.DISCUSSING);
+  }
+
+  showMissionResult(): boolean {
+    return this.round?.roundStatus == RoundStatus.FINAL_TEAM_VOTING_SUCCESS || this.round?.roundStatus == RoundStatus.QUEST_SUCCESS || this.round?.roundStatus == RoundStatus.QUEST_FAIL;
   }
 
 }

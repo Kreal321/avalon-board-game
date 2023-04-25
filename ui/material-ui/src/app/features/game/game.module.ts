@@ -23,6 +23,7 @@ import { PlayerBadgeComponent } from './components/player-badge/player-badge.com
 import { VoteContainerComponent } from './components/vote-container/vote-container.component';
 import { TeamContainerComponent } from './components/team-container/team-container.component';
 import { TeamAssignmentComponent } from './components/team-assignment/team-assignment.component';
+import { MissionContainerComponent } from './components/mission-container/mission-container.component';
 
 
 
@@ -42,6 +43,7 @@ import { TeamAssignmentComponent } from './components/team-assignment/team-assig
     VoteContainerComponent,
     TeamContainerComponent,
     TeamAssignmentComponent,
+    MissionContainerComponent,
   ],
   imports: [
     FormsModule,

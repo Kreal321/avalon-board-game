@@ -40,4 +40,8 @@ export class GameService {
     return this.http.post<DataResponse>(this.hostUrl + '/game/' + gameId + '/round/' + roundId + '/vote/new?accept=' + accept, {});
   }
 
+  mission(gameId: number, roundId: number, success: boolean): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/game/' + gameId + '/round/' + roundId + '/mission/new?success=' + success, {});
+  }
+
 }

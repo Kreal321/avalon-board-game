@@ -25,8 +25,8 @@
       <div class="mb-3" *ngIf="showFinalTeamVote()">
         <app-vote-container [players]="players" [round]="round" [character]="character"></app-vote-container>
       </div>
-      <!-- <div class="mb-3">
-        <app-vote-container [status]="'fail'" [voteType]="'mission'"></app-vote-container>
-      </div> -->
+      <div class="mb-3" *ngIf="showMissionResult()">
+        <app-mission-container [round]="round" [character]="character"></app-mission-container>
+      </div>
     </ng-template>
 </mdb-accordion-item>
