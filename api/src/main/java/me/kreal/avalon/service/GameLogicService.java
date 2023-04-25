@@ -235,15 +235,15 @@ public class GameLogicService {
             return DataResponse.error("Team size is not correct");
         }
 
-        List<Long> playerIds = round.getGame().getPlayers().stream()
-                .map(Player::getPlayerId)
+        List<Player> teamMembers = round.getGame().getPlayers().stream()
+                .filter(player -> teamRequest.getTeamMembers().contains(player.getPlayerId()))
                 .collect(Collectors.toList());
 
-        if (teamRequest.getTeamMembers().stream().filter(playerIds::contains).count() != round.getTeamSize()) {
+        if (teamMembers.size() != round.getTeamSize()) {
             return DataResponse.error("Team members are not in the game");
         }
 
-        this.roundService.createNewTeamForRound(round, teamRequest.getTeamType(), teamRequest.getTeamMembers());
+        this.roundService.createNewTeamForRound(round, teamRequest.getTeamType(), teamMembers);
 
 
 

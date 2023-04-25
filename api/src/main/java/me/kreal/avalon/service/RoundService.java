@@ -116,7 +116,7 @@ public class RoundService {
 
 
     @Transactional
-    public void createNewTeamForRound(Round round, TeamType teamType, List<Long> teamMembers) {
+    public void createNewTeamForRound(Round round, TeamType teamType, List<Player> teamMembers) {
 
         Team team = Team.builder()
                 .teamType(teamType)
@@ -124,8 +124,8 @@ public class RoundService {
                 .build();
 
         team.addTeamMembers(teamMembers.stream()
-                .map(id -> TeamMember.builder()
-                        .playerId(id)
+                .map(player -> TeamMember.builder()
+                        .player(player)
                         .status(TeamMemberStatus.MISSION_PENDING)
                         .build())
                 .collect(Collectors.toList()));

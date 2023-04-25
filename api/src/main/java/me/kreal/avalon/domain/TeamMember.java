@@ -26,10 +26,10 @@ public class TeamMember implements Serializable {
     private Team team;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "player_id", nullable = false, insertable = false, updatable = false)
+    @JoinColumn(name = "player_id", nullable = false)
     private Player player;
 
-    @Column(name = "player_id", nullable = false)
+    @Column(name = "player_id", nullable = false, insertable = false, updatable = false)
     private Long playerId;
 
     @Enumerated(EnumType.STRING)
