@@ -1,5 +1,5 @@
 <div>
-    <h6 class="card-subtitle mb-2 text-{{color}}">Mission Result</h6>
+    <h6 class="card-subtitle mb-2 text-{{color}}">Mission {{title}}</h6>
     <div class="d-flex row">
         <span *ngFor="let teamMember of teamMembers" class="col-4 text-center mb-1" >
           <app-player-badge [player]="teamMember.player" [color]="getBadgeColor(teamMember)"></app-player-badge>

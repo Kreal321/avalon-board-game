@@ -16,16 +16,14 @@ import Swal from 'sweetalert2'
 })
 export class VoteContainerComponent implements OnChanges{
 
-  // @Input() status: RoundStatus | undefined;
-  // @Input() votes: Vote[] | undefined;
-
   @Input() round: Round | undefined;
   @Input() players: Player[] | undefined;
   @Input() character: Character | undefined;
 
-  color: string = "secondary";
+  color: string = "muted";
   showVotes: boolean = false;
   canVote: boolean = true;
+  title: string = "";
 
   constructor(
     private gameService: GameService
@@ -35,8 +33,17 @@ export class VoteContainerComponent implements OnChanges{
     if (this.round?.roundStatus === RoundStatus.FINAL_TEAM_VOTING) {
       this.color = "primary";
       this.showVotes = true;
+      this.title = "In Progress";
+    } else if (this.round?.roundStatus === RoundStatus.FINAL_TEAM_VOTING_SUCCESS || this.round?.roundStatus === RoundStatus.QUEST_SUCCESS || this.round?.roundStatus === RoundStatus.QUEST_FAIL) {
+      this.color = "success";
+      this.showVotes = false;
+      this.title = "Success";
+    } else if (this.round?.roundStatus === RoundStatus.FINAL_TEAM_VOTING_FAIL) {
+      this.color = "danger";
+      this.showVotes = false;
+      this.title = "Fail";
     } else {
-      this.color = "secondary";
+      this.color = "muted";
       this.showVotes = false;
     }
   }

@@ -3,10 +3,9 @@ package me.kreal.avalon.controller;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.service.GameLogicService;
-import me.kreal.avalon.service.GameService;
-import me.kreal.avalon.util.avalon.GameModeFactory;
 import me.kreal.avalon.util.enums.GameModeType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -16,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/game")
 public class GameController {
 
-    private final GameService gameService;
     private final GameLogicService gameLogicService;
 
     @Autowired
-    public GameController(GameService gameService, GameLogicService gameLogicService) {
-        this.gameService = gameService;
+    public GameController(GameLogicService gameLogicService) {
         this.gameLogicService = gameLogicService;
     }
 
@@ -36,7 +33,6 @@ public class GameController {
 
         return ResponseEntity.ok(response);
     }
-
 
     @PostMapping("/new")
     public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
@@ -53,7 +49,7 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/leave")
@@ -68,7 +64,7 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/join/{roomNum}")
+    @PostMapping("/join/{roomNum}")
     public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
         DataResponse response = this.gameLogicService.authUserJoinGameWithGameNum(userDetail, roomNum);
@@ -77,7 +73,7 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{gameId}")

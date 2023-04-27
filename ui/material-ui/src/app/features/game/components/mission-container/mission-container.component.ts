@@ -25,6 +25,7 @@ export class MissionContainerComponent implements OnChanges{
   color: string = "secondary";
   showMissioning: boolean = false;
   canVote: boolean = false;
+  title: string = "";
 
   constructor(
     private gameService: GameService
@@ -34,15 +35,19 @@ export class MissionContainerComponent implements OnChanges{
     switch (this.round?.roundStatus) {
       case RoundStatus.FINAL_TEAM_VOTING_SUCCESS:
         this.color = "primary";
+        this.title = "In Progress";
         break;
       case RoundStatus.QUEST_SUCCESS:
         this.color = "success";
+        this.title = "Success";
         break;
       case RoundStatus.QUEST_FAIL:
         this.color = "danger";
+        this.title = "Fail";
         break;
       default:
         this.color = "secondary";
+        this.title = "";
         break;
     }
     this.teamMembers = this.round?.teams?.find(team => team.teamType == TeamType.FINAL)?.teamMembers;

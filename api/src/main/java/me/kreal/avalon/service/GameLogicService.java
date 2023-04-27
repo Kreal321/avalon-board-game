@@ -85,8 +85,7 @@ public class GameLogicService {
 
         Game game = this.gameService.createNewGame(gameMode, gameNum);
 
-        return DataResponse.success("Game created")
-                .data(GameMapper.convertToResponse(game));
+        return DataResponse.success("Game created");
 
     }
 
@@ -118,7 +117,7 @@ public class GameLogicService {
         Record record = this.recordService.findOrCreateNewRecord(game, user);
 
         return DataResponse.success("Join game success")
-                .data(GameMapper.convertToResponse(game))
+                .data(GameMapper.convertToSimplifiedResponse(game))
                 .token(this.jwtProvider.createToken(record));
 
     }
@@ -133,34 +132,28 @@ public class GameLogicService {
 
         Game game = gameOptional.get();
 
-        // game is finished or not started
-
-        if (GameStatus.gameIsFinished(game.getGameStatus()) || game.getGameStatus() == GameStatus.NOT_STARTED) {
-            return DataResponse.success("Game found")
-                    .data(GameMapper.convertToResponse(game));
-        }
-
-        // auth user is in the game and game is not finished
-
-        if (game.getGameId().equals(authUserDetail.getGameId())) {
-            return DataResponse.success("Joined Game")
-                    .data(GameMapper.convertToResponse(game, authUserDetail.getPlayerId()));
-        }
-
         User user = this.userService.findUserByAuthUserDetail(authUserDetail);
 
         Optional<Record> recordOptional = this.recordService.findRecordByGameAndUser(game, user);
 
-        if (recordOptional.isPresent()) {
-            return DataResponse.success("Joined Game")
-                    .data(GameMapper.convertToResponse(game, recordOptional.get().getPlayerId()))
+        // auth user is not in the game
+        if (!recordOptional.isPresent()) {
+            return DataResponse.success("Game found. You are not in the game.")
+                    .data(GameMapper.convertToResponse(game))
+                    .token(this.jwtProvider.createToken(user));
+        }
+
+        // auth user is in the game and game is not started
+        if (game.getGameStatus() == GameStatus.NOT_STARTED) {
+            return DataResponse.success("Game found")
+                    .data(GameMapper.convertToResponse(game))
                     .token(this.jwtProvider.createToken(recordOptional.get()));
         }
 
-        // auth user is not in the game
-
-        return DataResponse.success("Game found")
-                .data(GameMapper.convertToResponse(game));
+        // auth user is in the game and game is started
+        return DataResponse.success("Joined Game")
+                .data(GameMapper.convertToResponse(game, recordOptional.get().getPlayerId()))
+                .token(this.jwtProvider.createToken(recordOptional.get()));
 
     }
 
@@ -196,8 +189,7 @@ public class GameLogicService {
         // create first round
         this.roundService.createNewRound(game);
 
-        return DataResponse.success("Game started")
-                .data(GameMapper.convertToResponse(game, authUserDetail.getPlayerId()));
+        return DataResponse.success("Game started");
 
     }
 
@@ -261,8 +253,7 @@ public class GameLogicService {
 
 
 
-        return DataResponse.success("Team created")
-                .data(GameMapper.convertToResponse(round.getGame()));
+        return DataResponse.success("Team created");
 
     }
 
@@ -308,8 +299,7 @@ public class GameLogicService {
 
         this.roundService.createNewVoteForRound(round, authUserDetail.getPlayerId(), accept);
 
-        return DataResponse.success("Vote created")
-                .data(GameMapper.convertToResponse(round.getGame()));
+        return DataResponse.success("Vote created");
     }
 
     public DataResponse authUserCreateMissionWithGameIdAndRoundId(AuthUserDetail authUserDetail, boolean success, Long gameId, Long roundId) {
@@ -376,8 +366,7 @@ public class GameLogicService {
             this.gameService.checkGameStatus(round.getGame());
         }
 
-        return DataResponse.success("Mission created")
-                .data(GameMapper.convertToResponse(round.getGame()));
+        return DataResponse.success("Mission created");
     }
 
 }

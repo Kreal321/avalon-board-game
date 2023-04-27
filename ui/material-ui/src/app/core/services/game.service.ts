@@ -17,7 +17,7 @@ export class GameService {
   ) { }
 
   joinGameByGameNum(roomNum: number): Observable<DataResponse> {
-    return this.http.get<DataResponse>(this.hostUrl + '/game/join/' + roomNum);
+    return this.http.post<DataResponse>(this.hostUrl + '/game/join/' + roomNum, {});
   }
 
   createGame(size: number, roomNum:number, gameMode:GameModeType): Observable<any> {
