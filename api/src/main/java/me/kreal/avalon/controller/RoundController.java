@@ -10,6 +10,7 @@ import me.kreal.avalon.util.enums.TeamType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +23,12 @@ import javax.validation.Valid;
 public class RoundController {
 
     private final GameLogicService gameLogicService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public RoundController(GameLogicService gameLogicService) {
+    public RoundController(GameLogicService gameLogicService, SimpMessagingTemplate messagingTemplate) {
         this.gameLogicService = gameLogicService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @PostMapping("/team/new")
@@ -36,6 +39,8 @@ public class RoundController {
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
         }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "New Team Record");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -50,6 +55,8 @@ public class RoundController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "New Vote Record");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
@@ -62,6 +69,8 @@ public class RoundController {
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
         }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "New Mission Record");
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 

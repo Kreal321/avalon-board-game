@@ -1,12 +1,15 @@
 package me.kreal.avalon.controller;
 
+import me.kreal.avalon.dto.GameDTO;
 import me.kreal.avalon.dto.response.DataResponse;
+import me.kreal.avalon.dto.response.GameResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.service.GameLogicService;
 import me.kreal.avalon.util.enums.GameModeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,10 +19,12 @@ import org.springframework.web.bind.annotation.*;
 public class GameController {
 
     private final GameLogicService gameLogicService;
+    private final SimpMessagingTemplate messagingTemplate;
 
     @Autowired
-    public GameController(GameLogicService gameLogicService) {
+    public GameController(GameLogicService gameLogicService, SimpMessagingTemplate messagingTemplate) {
         this.gameLogicService = gameLogicService;
+        this.messagingTemplate = messagingTemplate;
     }
 
     @GetMapping("/records")
@@ -73,6 +78,8 @@ public class GameController {
             return ResponseEntity.badRequest().body(response);
         }
 
+        messagingTemplate.convertAndSend("/topic/game/" + ((GameResponse) response.getData()).getGameId(), "New user joined");
+
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -96,6 +103,8 @@ public class GameController {
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
         }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "Game started");
 
         return ResponseEntity.ok(response);
     }

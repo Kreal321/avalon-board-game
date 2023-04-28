@@ -22,6 +22,7 @@ export class GameRoundsComponent implements OnChanges{
 
   ngOnChanges(): void {
     if (this.game) {
+      this.quests = [];
       this.gameModeService.getGameModeByGameModeType(this.game.gameMode).subscribe((gameMode) => {
         gameMode?.quests.forEach((size, idx) => {
           this.quests.push({questNum: idx + 1, teamSize: size, color: "secondary"});

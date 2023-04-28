@@ -7,7 +7,6 @@ import { GameService } from 'src/app/core/services/game.service';
 import { GameModeService } from 'src/app/core/services/gameMode.service';
 
 
-
 @Component({
   selector: 'app-game-info',
   templateUrl: './game-info.component.html',

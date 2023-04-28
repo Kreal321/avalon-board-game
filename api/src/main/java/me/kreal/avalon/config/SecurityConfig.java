@@ -28,6 +28,8 @@ public class SecurityConfig {
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/user/**").permitAll()
+                .antMatchers("/stomp/**").permitAll()
+                .antMatchers("/topic/**").permitAll()
                 .anyRequest()
                 .authenticated();
         return http.build();
