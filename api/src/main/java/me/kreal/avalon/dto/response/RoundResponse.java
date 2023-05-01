@@ -26,6 +26,7 @@ public class RoundResponse {
     private PlayerResponse leader;
     private Integer teamSize;
     private RoundStatus roundStatus;
+    private Long numFails;
 
     private List<VoteResponse> votes = new ArrayList<>();
     private List<TeamResponse> teams = new ArrayList<>();

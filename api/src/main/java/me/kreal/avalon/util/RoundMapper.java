@@ -4,6 +4,7 @@ import me.kreal.avalon.domain.Round;
 import me.kreal.avalon.dto.response.PlayerResponse;
 import me.kreal.avalon.dto.response.RoundResponse;
 import me.kreal.avalon.util.enums.RoundStatus;
+import me.kreal.avalon.util.enums.TeamMemberStatus;
 
 import java.util.stream.Collectors;
 
@@ -19,6 +20,9 @@ public class RoundMapper {
                 .leader(PlayerMapper.convertToResponse(round.getLeader()))
                 .teamSize(round.getTeamSize())
                 .roundStatus(round.getRoundStatus())
+                .numFails(round.getTeams().stream().flatMap(team -> team.getTeamMembers().stream())
+                        .filter(teamMember -> teamMember.getStatus() == TeamMemberStatus.MISSION_FAILED)
+                        .count())
                 .votes(round.getVotes().stream().map(VoteMapper::convertToResponse).collect(Collectors.toList()))
                 .teams(round.getTeams().stream().map(TeamMapper::convertToResponse).collect(Collectors.toList()))
                 .build();

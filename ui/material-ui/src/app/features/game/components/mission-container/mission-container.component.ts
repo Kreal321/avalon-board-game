@@ -3,10 +3,8 @@ import { CharacterType } from 'src/app/core/enums/characterType.enum';
 import { RoundStatus } from 'src/app/core/enums/roundStatus.enum';
 import { TeamType } from 'src/app/core/enums/teamType.enum';
 import { Character } from 'src/app/core/models/character.model';
-import { Player } from 'src/app/core/models/player.model';
 import { Round } from 'src/app/core/models/round.model';
 import { TeamMember } from 'src/app/core/models/teamMember';
-import { Vote } from 'src/app/core/models/vote.model';
 import { GameService } from 'src/app/core/services/game.service';
 
 import Swal from 'sweetalert2'
@@ -39,11 +37,11 @@ export class MissionContainerComponent implements OnChanges{
         break;
       case RoundStatus.QUEST_SUCCESS:
         this.color = "success";
-        this.title = "Success";
+        this.title = "Success with " + this.round?.numFails + " fails";
         break;
       case RoundStatus.QUEST_FAIL:
         this.color = "danger";
-        this.title = "Fail";
+        this.title = "Fail with " + this.round?.numFails + " fails";
         break;
       default:
         this.color = "secondary";

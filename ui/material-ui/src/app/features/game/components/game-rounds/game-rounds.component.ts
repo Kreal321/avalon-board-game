@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { GameStatus } from 'src/app/core/enums/gameStatus.enum';
 
 import { Game } from 'src/app/core/models/game.model';
 import { Quest } from 'src/app/core/models/quest.model';
@@ -47,6 +48,9 @@ export class GameRoundsComponent implements OnChanges{
     }
   }
   
+  gameIsStarted(): boolean {
+    return this.game ? this.game.gameStatus != GameStatus.NOT_STARTED : true;
+  }
 
   gameSizeLargerThan(size: number): boolean {
     return this.game ? this.game.players.length > size : false;

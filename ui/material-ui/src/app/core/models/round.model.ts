@@ -12,6 +12,7 @@ export interface Round {
     leader: Player;
     teamSize: number;
     roundStatus: RoundStatus;
+    numFails: number;
     teams: Team[];
     votes: Vote[];
 }

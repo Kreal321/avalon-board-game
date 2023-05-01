@@ -17,7 +17,6 @@ export class StompService {
         this.socket = new SockJS("http://localhost:8080/stomp");
         this.socketClient = Stomp.over(this.socket);
 
-        console.log(this.socketClient);
         const connected: boolean = this.socketClient.connected;
         if (connected) {
             this.subscribeToGame(gameId, callback);
@@ -27,7 +26,6 @@ export class StompService {
         this.socketClient.connect({}, () => {
             this.subscribeToGame(gameId, callback);
         });
-        console.log(this.socketClient.connected);
 
 
     }
@@ -36,6 +34,12 @@ export class StompService {
         this.socketClient.subscribe(`/topic/game/${gameId}`, (message) => {
             callback(message);
         });
+    }
+
+    disconnect(): void {
+        this.socketClient.disconnect(
+            () => console.log("Disconnected")
+        );
     }
 
 

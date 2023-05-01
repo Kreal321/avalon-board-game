@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Game } from 'src/app/core/models/game.model';
@@ -12,7 +12,7 @@ import { StompService } from 'src/app/core/services/stomp.service';
   templateUrl: './page-game-home.component.html',
   styleUrls: ['./page-game-home.component.css']
 })
-export class PageGameHomeComponent {
+export class PageGameHomeComponent implements OnDestroy{
 
   gameId: number;
   game: Game | undefined;
@@ -30,12 +30,15 @@ export class PageGameHomeComponent {
           this.game = response.data;
           console.log(response.data);
           this.stompService.subscribe(this.game!.gameId, (message : string) => {
-            console.log("Updated");
             this.updateGame();
           });
         }
       }
     )
+  }
+
+  ngOnDestroy(): void {
+    this.stompService.disconnect();
   }
 
   private updateGame(): void {

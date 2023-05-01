@@ -24,6 +24,7 @@ import { TeamContainerComponent } from './components/team-container/team-contain
 import { TeamAssignmentComponent } from './components/team-assignment/team-assignment.component';
 import { MissionContainerComponent } from './components/mission-container/mission-container.component';
 import { GameRecordsComponent } from './components/game-records/game-records.component';
+import { AssassinateContainerComponent } from './components/assassinate-container/assassinate-container.component';
 
 
 
@@ -44,6 +45,7 @@ import { GameRecordsComponent } from './components/game-records/game-records.com
     TeamAssignmentComponent,
     MissionContainerComponent,
     GameRecordsComponent,
+    AssassinateContainerComponent,
   ],
   imports: [
     FormsModule,
