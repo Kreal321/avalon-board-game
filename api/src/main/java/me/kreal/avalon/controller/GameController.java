@@ -40,7 +40,7 @@ public class GameController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
+    public ResponseEntity<DataResponse> handleNewGameRequest(@RequestParam int size, @RequestParam GameModeType gameMode, @RequestParam String roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
         DataResponse response = this.gameLogicService.createNewGame(size, gameMode, roomNum);
 
@@ -70,7 +70,7 @@ public class GameController {
     }
 
     @PostMapping("/join/{roomNum}")
-    public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable int roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
+    public ResponseEntity<DataResponse> handleJoinGameRequestWithGameNum(@PathVariable String roomNum, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
         DataResponse response = this.gameLogicService.authUserJoinGameWithGameNum(userDetail, roomNum);
 

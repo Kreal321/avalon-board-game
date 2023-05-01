@@ -73,10 +73,6 @@ export class AssassinateContainerComponent implements OnChanges {
       });
   }
 
-  isAssassin(): boolean {
-    return this.character? this.character.characterType == CharacterType.ASSASSIN : false;
-  }
-
   showAssassinate(): boolean {
     
     if (this.game == undefined) {

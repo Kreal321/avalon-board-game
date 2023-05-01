@@ -34,7 +34,7 @@ public class GameService {
         return this.gameDao.getById(gameId);
     }
 
-    public Optional<Game> findNotStartedGameByGameNum(int gameNum) {
+    public Optional<Game> findNotStartedGameByGameNum(String gameNum) {
         return this.gameDao.findGameByGameNumAndGameStatus(gameNum, GameStatus.NOT_STARTED);
     }
 
@@ -55,7 +55,7 @@ public class GameService {
         return game;
     }
 
-    public Game createNewGame(GameModeType gameMode, int gameNum) {
+    public Game createNewGame(GameModeType gameMode, String gameNum) {
 
         Game game = Game.builder()
                 .gameNum(gameNum)

@@ -29,7 +29,7 @@ public class Game implements Serializable {
     private Long gameId;
 
     @Column(name = "game_num", nullable = false)
-    private int gameNum;
+    private String gameNum;
 
     @Column(name = "game_size", nullable = false)
     private Integer gameSize;

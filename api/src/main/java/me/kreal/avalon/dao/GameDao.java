@@ -24,7 +24,7 @@ public class GameDao extends BaseDao<Game> {
         return this.getAllBy("gameNum", gameNum).stream().findAny();
     }
 
-    public Optional<Game> findGameByGameNumAndGameStatus(int gameNum, GameStatus gameStatus) {
+    public Optional<Game> findGameByGameNumAndGameStatus(String gameNum, GameStatus gameStatus) {
         Session session = factory.getCurrentSession();
         CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
         CriteriaQuery<Game> criteriaQuery = criteriaBuilder.createQuery(Game.class);

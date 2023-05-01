@@ -22,7 +22,7 @@ import java.util.Set;
 public class GameDTO {
 
     private Long gameId;
-    private int gameNum;
+    private String gameNum;
     private Integer gameSize;
     private GameStatus gameStatus;
     private Timestamp gameStartTime;

@@ -73,7 +73,7 @@ public class GameLogicService {
 
     // Game logic methods
     @Synchronized
-    public DataResponse createNewGame(int gameSize, GameModeType gameMode, int gameNum) {
+    public DataResponse createNewGame(int gameSize, GameModeType gameMode, String gameNum) {
 
         if (gameSize != GameModeFactory.getGameMode(gameMode).getGameSize()) {
             return DataResponse.error("Invalid game size or game mode");
@@ -98,7 +98,7 @@ public class GameLogicService {
                 .token(this.jwtProvider.createToken(authUserDetail));
     }
 
-    public DataResponse authUserJoinGameWithGameNum(AuthUserDetail authUserDetail, int gameNum) {
+    public DataResponse authUserJoinGameWithGameNum(AuthUserDetail authUserDetail, String gameNum) {
 
         Optional<Game> notStartedGame = this.gameService.findNotStartedGameByGameNum(gameNum);
 

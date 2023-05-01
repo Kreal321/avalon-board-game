@@ -8,7 +8,7 @@ export interface Game {
     character: Character;
     gameId: number;
     gameMode: GameModeType;
-    gameNum: number;
+    gameNum: string;
     gameSize: number;
     gameStartTime: Date;
     gameEndTime: Date;

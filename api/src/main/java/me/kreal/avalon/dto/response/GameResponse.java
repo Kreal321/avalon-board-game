@@ -18,7 +18,7 @@ import java.util.List;
 public class GameResponse {
 
     private Long gameId;
-    private int gameNum;
+    private String gameNum;
     private Integer gameSize;
     private GameStatus gameStatus;
     private Timestamp gameStartTime;
