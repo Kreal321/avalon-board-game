@@ -1,32 +1,33 @@
-<div class="card bg-secondary shadow border-0">
-    <div class="card-header bg-white px-lg-5 py-sm-5">
-        <div class="text-center mb-4 lh-lg fs-5">
+<div class="card shadow">
+    <div class="card-header border-0 px-lg-5 py-sm-5">
+        <div class="text-center lh-lg fs-5">
             Most Recent Game Records
         </div>
-        <table class="table align-middle">
-            <thead>
-                <tr>
-                    <th class="px-1 d-none d-md-table-cell" scope="col">#</th>
-                    <th class="px-1" scope="col">Mode</th>
-                    <th class="px-1" scope="col">Status</th>
-                    <th class="px-1 d-none d-md-table-cell" scope="col">Character</th>
-                    <th class="px-1 d-none d-sm-table-cell" scope="col">Start Time</th>
-                    <th class="px-1 text-end" scope="col">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let record of records">
-                <th class="px-1 d-none d-md-table-cell" scope="row">{{record.recordId}}</th>
-                <td class="px-1">{{record.game.gameMode | enumPrint}}</td>
-                <td class="px-1">{{record.game.gameStatus | enumPrint}}</td>
-                <td class="px-1 d-none d-md-table-cell">{{record.current.characterType| enumPrint}}</td>
-                <td class="px-1 d-none d-sm-table-cell">{{record.game.gameStartTime | date:'mediumTime'}}</td>
-                <td class="px-1 text-end">
-                  <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/game/' + record.game.gameId]">View</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
+    </div>
+    <div class="card-body py-1">
+      <table class="table align-middle">
+        <thead>
+            <tr>
+                <th class="px-1 d-none d-md-table-cell" scope="col">#</th>
+                <th class="px-1" scope="col">Mode</th>
+                <th class="px-1" scope="col">Status</th>
+                <th class="px-1 d-none d-md-table-cell" scope="col">Character</th>
+                <th class="px-1 d-none d-sm-table-cell" scope="col">Start Time</th>
+                <th class="px-1 text-end" scope="col">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let record of records">
+            <th class="px-1 d-none d-md-table-cell" scope="row">{{record.recordId}}</th>
+            <td class="px-1">{{record.game.gameMode | enumPrint}}</td>
+            <td class="px-1">{{record.game.gameStatus | enumPrint}}</td>
+            <td class="px-1 d-none d-md-table-cell">{{record.current.characterType| enumPrint}}</td>
+            <td class="px-1 d-none d-sm-table-cell">{{record.game.gameStartTime | date:'mediumTime'}}</td>
+            <td class="px-1 text-end">
+              <button type="button" class="btn btn-primary btn-sm" [routerLink]="['/game/' + record.game.gameId]">View</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
 </div>
