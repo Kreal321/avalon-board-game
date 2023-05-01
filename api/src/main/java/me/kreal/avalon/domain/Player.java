@@ -37,4 +37,7 @@ public class Player implements Serializable {
 
     @Column(name = "seat_num")
     private Integer seatNum;
+
+    @Column(name = "is_assassinated")
+    private Boolean isAssassinated;
 }

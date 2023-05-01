@@ -11,7 +11,7 @@ export interface Game {
     gameNum: number;
     gameSize: number;
     gameStartTime: Date;
-    gameEndtime: Date;
+    gameEndTime: Date;
     gameStatus: GameStatus;
     players: Player[];
     rounds: Round[];

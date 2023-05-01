@@ -65,9 +65,9 @@ public class GameLogicService {
         List<Record> records = this.recordService.findRecordsByUser(u);
 
         return DataResponse.success("Records found")
-                    .data(records.stream()
-                            .map(RecordMapper::convertToResponse)
-                            .collect(Collectors.toList()));
+                .data(records.stream()
+                        .map(RecordMapper::convertToResponse)
+                        .collect(Collectors.toList()));
     }
 
 
@@ -102,13 +102,13 @@ public class GameLogicService {
 
         Optional<Game> notStartedGame = this.gameService.findNotStartedGameByGameNum(gameNum);
 
-        if(!notStartedGame.isPresent()) {
+        if (!notStartedGame.isPresent()) {
             return DataResponse.error("Game not found or game has already started");
         }
 
         Game game = notStartedGame.get();
 
-        if(game.getGameSize() <= game.getPlayers().size()) {
+        if (game.getGameSize() <= game.getPlayers().size()) {
             return DataResponse.error("Game is full");
         }
 
@@ -252,7 +252,6 @@ public class GameLogicService {
         this.roundService.createNewTeamForRound(round, teamRequest.getTeamType(), teamMembers);
 
 
-
         return DataResponse.success("Team created");
 
     }
@@ -369,4 +368,76 @@ public class GameLogicService {
         return DataResponse.success("Mission created");
     }
 
+    public DataResponse authUserAssassinFloppedWithGameId(AuthUserDetail authUserDetail, Long gameId) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        // player is not in the game
+        Player player = this.playerService.findPlayerByAuthUserDetail(authUserDetail);
+
+        if (!player.getGame().getGameId().equals(gameId) || !authUserDetail.getGameId().equals(gameId)) {
+            return DataResponse.error("You are not in this game.");
+        }
+
+        // player is not the assassin
+        if (player.getCharacterType() != CharacterType.ASSASSIN) {
+            return DataResponse.error("You are not the assassin");
+        }
+
+        // game not started or is finished
+        if (player.getGame().getGameStatus() != GameStatus.IN_PROGRESS) {
+            return DataResponse.error("You cannot flop the assassin now");
+        }
+
+        this.gameService.assassinFlop(player.getGame());
+
+        return DataResponse.success("Assassin flopped");
+
+    }
+
+    public DataResponse authUserAssassinAssassinateWithGameIdAndPlayerId(AuthUserDetail authUserDetail, Long gameId, Long targetId) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        // player is not in the game
+        Player current = this.playerService.findPlayerByAuthUserDetail(authUserDetail);
+
+        if (!current.getGame().getGameId().equals(gameId) || !authUserDetail.getGameId().equals(gameId)) {
+            return DataResponse.error("You are not in this game.");
+        }
+
+        // player is not the assassin
+        if (current.getCharacterType() != CharacterType.ASSASSIN) {
+            return DataResponse.error("You are not the assassin");
+        }
+
+        // game not in assassin flop status
+        if (current.getGame().getGameStatus() != GameStatus.ASSASSIN_FLOP) {
+            return DataResponse.error("You cannot assassinate now");
+        }
+
+        // success or not
+        Optional<Player> targetOptional = this.playerService.findPlayerById(targetId);
+
+        if (!targetOptional.isPresent()) {
+            return DataResponse.error("Target Player not found");
+        }
+
+        Player target = targetOptional.get();
+
+        if (!target.getGame().getGameId().equals(gameId)) {
+            return DataResponse.error("Target Player not in the game");
+        }
+
+        this.playerService.assassinatePlayer(target);
+
+        this.gameService.endGame(current.getGame(), target.getCharacterType() == CharacterType.MERLIN);
+
+        return DataResponse.success("Assassin assassinated");
+
+    }
 }

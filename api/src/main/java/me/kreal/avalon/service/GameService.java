@@ -2,6 +2,7 @@ package me.kreal.avalon.service;
 
 import me.kreal.avalon.dao.GameDao;
 import me.kreal.avalon.domain.Game;
+import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.util.GameMapper;
 import me.kreal.avalon.util.avalon.GameModeFactory;
@@ -10,6 +11,7 @@ import me.kreal.avalon.util.enums.GameStatus;
 import me.kreal.avalon.util.enums.RoundStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.util.*;
@@ -76,6 +78,27 @@ public class GameService {
 
         // assign player character
         GameModeFactory.getGameMode(g.getGameMode()).assignPlayerCharacter(g.getPlayers());
+
+        this.updateGame(g);
+
+        return g;
+    }
+
+    @Transactional
+    public Game assassinFlop(Game g) {
+
+        g.setGameStatus(GameStatus.ASSASSIN_FLOP);
+
+        this.updateGame(g);
+
+        return g;
+    }
+
+    @Transactional
+    public Game endGame(Game g, boolean assassinateResult) {
+
+        g.setGameStatus(assassinateResult ? GameStatus.EVIL_WON_WITH_ASSASSINATION : GameStatus.GOOD_WON);
+        g.setGameEndTime(new Timestamp(System.currentTimeMillis()));
 
         this.updateGame(g);
 

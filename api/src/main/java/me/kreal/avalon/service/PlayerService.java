@@ -4,9 +4,13 @@ import me.kreal.avalon.dao.PlayerDao;
 import me.kreal.avalon.domain.Game;
 import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.domain.User;
+import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.util.PlayerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 public class PlayerService {
@@ -27,6 +31,21 @@ public class PlayerService {
         this.playerDao.save(p);
 
         return p;
+    }
+
+    public Optional<Player> findPlayerById(Long playerId) {
+        return this.playerDao.getById(playerId);
+    }
+
+    public Player findPlayerByAuthUserDetail(AuthUserDetail authUserDetail) {
+        return this.findPlayerById(authUserDetail.getPlayerId()).get();
+    }
+
+    @Transactional
+    public Player assassinatePlayer(Player target) {
+        target.setIsAssassinated(true);
+        this.playerDao.update(target);
+        return target;
     }
 
 

@@ -109,5 +109,33 @@ public class GameController {
         return ResponseEntity.ok(response);
     }
 
+    @PatchMapping("/{gameId}/assassin/flop")
+    public ResponseEntity<DataResponse> handleAssassinFlopRequestWithToken(@PathVariable Long gameId, @AuthenticationPrincipal AuthUserDetail userDetail) {
+
+        DataResponse response = this.gameLogicService.authUserAssassinFloppedWithGameId(userDetail, gameId);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "Assassin flopped");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{gameId}/assassinate/{targetId}")
+    public ResponseEntity<DataResponse> handleAssassinAssassinateRequestWithToken(@PathVariable Long gameId, @PathVariable Long targetId, @AuthenticationPrincipal AuthUserDetail userDetail) {
+
+        DataResponse response = this.gameLogicService.authUserAssassinAssassinateWithGameIdAndPlayerId(userDetail, gameId, targetId);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "Assassin assassinated");
+
+        return ResponseEntity.ok(response);
+    }
+
 
 }

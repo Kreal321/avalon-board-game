@@ -44,4 +44,13 @@ export class GameService {
     return this.http.post<DataResponse>(this.hostUrl + '/game/' + gameId + '/round/' + roundId + '/mission/new?success=' + success, {});
   }
 
+  assassinFlop(gameId: number): Observable<DataResponse> {
+    return this.http.patch<DataResponse>(this.hostUrl + '/game/' + gameId + '/assassin/flop', {});
+  }
+
+  assassinAssassinate(gameId: number, targetId: number): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/game/' + gameId + '/assassinate/' + targetId, {});
+  }
+
+
 }

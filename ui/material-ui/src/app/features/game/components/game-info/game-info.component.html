@@ -23,7 +23,7 @@
             </div>
             <div>
                 <h6 class="card-subtitle mb-2 text-muted">Duration</h6>
-                <p class="card-text">{{game?.gameStartTime | date:'mediumTime'}} - {{game?.gameEndtime? (game?.gameEndtime | date:'longTime') : 'NOW'}}</p>
+                <p class="card-text">{{game?.gameStartTime | date:'shortTime'}} - {{game?.gameEndTime? (game!.gameEndTime | date:'shortTime') : 'NOW'}}</p>
             </div>
         </div>
         <hr>
