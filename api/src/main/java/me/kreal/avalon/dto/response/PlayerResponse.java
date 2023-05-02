@@ -17,5 +17,6 @@ public class PlayerResponse {
     private String displayName;
     private CharacterType characterType;
     private Integer seatNum;
+    private Boolean isAssassinated;
 
 }

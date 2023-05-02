@@ -16,7 +16,7 @@
                 <p class="card-text">{{game?.gameNum}}</p>
             </div>
         </div>
-        <div class="d-flex justify-content-between">
+        <div class="d-flex justify-content-between" *ngIf="game?.gameStartTime">
             <div>
                 <h6 class="card-subtitle mb-2 text-muted">Date</h6>
                 <p class="card-text">{{game?.gameStartTime | date:'mediumDate'}}</p>

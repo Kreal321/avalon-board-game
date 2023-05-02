@@ -11,7 +11,13 @@ export class PlayerBadgeComponent {
 
   @Input() player: Player | undefined;
   @Input() color: string = "secondary";
+  @Input() isThumbsUp: boolean| undefined;
+  @Input() showAssassinated: boolean = false;
 
   constructor() { }
+
+  isAssassinated(): boolean | undefined {
+    return this.showAssassinated && this.player?.isAssassinated;
+  }
 
 }

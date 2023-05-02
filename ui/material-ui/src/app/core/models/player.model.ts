@@ -5,4 +5,5 @@ export interface Player {
     displayName: string;
     characterType: CharacterType;
     seatNum: number;
+    isAssassinated: boolean;
 }

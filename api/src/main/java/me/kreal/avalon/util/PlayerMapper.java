@@ -21,6 +21,7 @@ public class PlayerMapper {
                 .displayName(player.getDisplayName())
                 .characterType(player.getCharacterType())
                 .seatNum(player.getSeatNum())
+                .isAssassinated(player.getIsAssassinated())
                 .build();
     }
 }

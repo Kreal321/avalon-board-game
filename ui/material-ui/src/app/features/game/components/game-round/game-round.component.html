@@ -18,15 +18,15 @@
       <div class="mb-3" *ngFor="let team of round?.teams">
         <app-team-container [team]="team" [players]="players"></app-team-container>
       </div>
-      <div class="mb-3" *ngIf="showTeamAssignment">
+      <div class="mb-3" *ngIf="showTeamAssignment()">
         <app-team-assignment [players]="players" [round]="round" [teamType]="teamType"></app-team-assignment>
       </div>
       <hr />
       <div class="mb-3" *ngIf="showFinalTeamVote()">
-        <app-vote-container [players]="players" [round]="round" [character]="character"></app-vote-container>
+        <app-vote-container [players]="players" [round]="round" [character]="game?.character"></app-vote-container>
       </div>
       <div class="mb-3" *ngIf="showMissionResult()">
-        <app-mission-container [round]="round" [character]="character"></app-mission-container>
+        <app-mission-container [round]="round" [character]="game?.character"></app-mission-container>
       </div>
     </ng-template>
 </mdb-accordion-item>

@@ -11,9 +11,9 @@
     </div>
     <div>
         <mdb-accordion [multiple]="true" [flush]="true">
-            <app-game-round *ngFor="let round of game?.rounds; let i = index;" [round]="round" [players]="game?.players" [collapsed]="i + 1 != game?.rounds?.length" [character]="game?.character"></app-game-round>
+            <app-game-round *ngFor="let round of game?.rounds; let i = index;" [round]="round" [players]="game?.players" [collapsed]="i + 1 != game?.rounds?.length" [game]="game"></app-game-round>
         </mdb-accordion>
     </div>
-    <app-assassinate-container [game]="game"></app-assassinate-container>
+    <app-assassinate-container [game]="game" *ngIf="gameIsStarted()"></app-assassinate-container>
     <div class="card-body py-1"></div>
 </div>
