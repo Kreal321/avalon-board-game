@@ -2,8 +2,11 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { CharacterType } from 'src/app/core/enums/characterType.enum';
 import { GameStatus } from 'src/app/core/enums/gameStatus.enum';
 
+import Swal from 'sweetalert2';
+
 import { Game } from 'src/app/core/models/game.model';
 import { Player } from 'src/app/core/models/player.model';
+import { GameService } from 'src/app/core/services/game.service';
 
 @Component({
   selector: 'app-game-players',
@@ -13,8 +16,11 @@ import { Player } from 'src/app/core/models/player.model';
 export class GamePlayersComponent implements OnChanges {
 
   @Input() game: Game | undefined;
+  newDisplayName: string | undefined;
 
-  constructor() { }
+  constructor(
+    private gameService: GameService,
+  ) { }
 
   ngOnChanges(): void {
     if (this.game) {
@@ -50,8 +56,28 @@ export class GamePlayersComponent implements OnChanges {
       default:
         return "secondary";
     }
-
   }
 
+  changeName(): void {
+    if (!this.newDisplayName) {
+      Swal.fire({
+        title: 'Error',
+        text: 'New display name cannot be empty!',
+        icon: 'error',
+      })
+      return;
+    }
+    this.gameService.playerRename(this.game!.gameId, this.game!.character.current.playerId, this.newDisplayName).subscribe(
+      response => {
+        if (response.success) {
+          console.log(response);
+        }
+      });
+  }
+
+  gameIsFinished(): boolean {
+    if (!this.game) return false;
+    return this.game.gameStatus == GameStatus.GOOD_WON || this.game.gameStatus == GameStatus.EVIL_WON_WITH_ASSASSINATION || this.game.gameStatus == GameStatus.EVIL_WON_WITH_QUEST;
+  }
 
 }

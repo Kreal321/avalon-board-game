@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
+import { GameStatus } from 'src/app/core/enums/gameStatus.enum';
 
 import { Game } from 'src/app/core/models/game.model';
 import { GameMode } from 'src/app/core/models/gameMode.model';
@@ -41,6 +42,10 @@ export class GameInfoComponent implements OnChanges {
         }
       )
     }
+  }
+
+  gameIsStarted(): boolean {
+    return this.game ? this.game.gameStatus != GameStatus.NOT_STARTED : false;
   }
 
 }

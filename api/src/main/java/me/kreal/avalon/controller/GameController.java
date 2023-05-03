@@ -1,6 +1,5 @@
 package me.kreal.avalon.controller;
 
-import me.kreal.avalon.dto.GameDTO;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.dto.response.GameResponse;
 import me.kreal.avalon.security.AuthUserDetail;
@@ -82,6 +81,22 @@ public class GameController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @PatchMapping("/{gameId}/player/{playerId}")
+    public ResponseEntity<DataResponse> handlePlayerRenameRequest(@PathVariable Long gameId, @PathVariable Long playerId, @RequestParam String newName, @AuthenticationPrincipal AuthUserDetail userDetail) {
+
+        DataResponse response = this.gameLogicService.authUserRenameWithGameIdAndPlayerId(userDetail, gameId, playerId, newName);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "Player Renamed.");
+
+
+        return ResponseEntity.ok(response);
+    }
+
 
     @GetMapping("/{gameId}")
     public ResponseEntity<DataResponse> handleFindGameByIdRequest(@PathVariable Long gameId, @AuthenticationPrincipal AuthUserDetail userDetail) {

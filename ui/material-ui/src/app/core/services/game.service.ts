@@ -28,6 +28,10 @@ export class GameService {
     return this.http.get<DataResponse>(this.hostUrl + '/game/' + gameId);
   }
 
+  playerRename(gameId: number, playerId: number, newName: string) {
+    return this.http.patch<DataResponse>(this.hostUrl + '/game/' + gameId + '/player/' + playerId + '?newName=' + newName, {});
+  }
+
   startGame(gameId: number): Observable<DataResponse> {
     return this.http.get<DataResponse>(this.hostUrl + '/game/' + gameId + '/start');
   }

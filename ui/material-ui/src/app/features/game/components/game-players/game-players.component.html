@@ -35,10 +35,10 @@
 
     <hr>
 
-    <div class="input-group input-group-alternative">
+    <div class="input-group input-group-alternative" *ngIf="!gameIsFinished()">
         <span class="input-group-text"><i class="fas fa-gamepad"></i></span>
-        <input class="form-control" placeholder="Display Name" type="text" name="gameNum" >
-        <button class="btn btn-primary">change</button>
+        <input class="form-control" placeholder="Display Name" type="text" name="gameNum" [(ngModel)]="newDisplayName">
+        <button class="btn btn-primary" (click)="changeName()">change</button>
     </div>
   </div>
 </div>

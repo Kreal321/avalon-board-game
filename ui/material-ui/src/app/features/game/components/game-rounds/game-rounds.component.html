@@ -14,6 +14,14 @@
             <app-game-round *ngFor="let round of game?.rounds; let i = index;" [round]="round" [players]="game?.players" [collapsed]="i + 1 != game?.rounds?.length" [game]="game"></app-game-round>
         </mdb-accordion>
     </div>
+    <div class="card-body pt-2 text-center" *ngIf="assassinFlopped()">
+        <span class="badge badge-danger fs-6 ">Assassin Flopped</span>
+    </div>
+    <div class="card-body pt-2 d-flex justify-content-center" *ngIf="target">
+        <app-player-badge [player]="target"></app-player-badge>
+        <span class="ps-1">was assassinated.</span>
+    </div>
     <app-assassinate-container [game]="game" *ngIf="gameIsStarted()"></app-assassinate-container>
-    <div class="card-body py-1"></div>
+    <div class="card-body py-1">
+    </div>
 </div>

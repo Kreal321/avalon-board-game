@@ -122,6 +122,35 @@ public class GameLogicService {
 
     }
 
+    public DataResponse authUserRenameWithGameIdAndPlayerId(AuthUserDetail authUserDetail, Long gameId, Long playerId, String newName) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        Optional<Game> gameOptional = this.gameService.findGameById(gameId);
+
+        if (!gameOptional.isPresent()) {
+            return DataResponse.error("Game not found");
+        }
+
+        Game game = gameOptional.get();
+
+        if (!game.getGameId().equals(authUserDetail.getGameId())) {
+            return DataResponse.error("You are not in this game");
+        }
+
+        if (GameStatus.gameIsFinished(game.getGameStatus())) {
+            return DataResponse.error("Game is finished");
+        }
+
+        Player player = this.playerService.findPlayerByAuthUserDetail(authUserDetail);
+        this.playerService.playerRename(player, newName);
+
+        return DataResponse.success("Rename success");
+
+    }
+
     public DataResponse authUserFindGameWithId(AuthUserDetail authUserDetail, Long gameId) {
 
         Optional<Game> gameOptional = this.gameService.findGameById(gameId);
@@ -146,7 +175,7 @@ public class GameLogicService {
         // auth user is in the game and game is not started
         if (game.getGameStatus() == GameStatus.NOT_STARTED) {
             return DataResponse.success("Game found")
-                    .data(GameMapper.convertToResponse(game))
+                    .data(GameMapper.convertToResponse(game, recordOptional.get().getPlayer()))
                     .token(this.jwtProvider.createToken(recordOptional.get()));
         }
 

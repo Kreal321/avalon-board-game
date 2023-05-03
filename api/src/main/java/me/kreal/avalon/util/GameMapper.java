@@ -1,9 +1,12 @@
 package me.kreal.avalon.util;
 
 import me.kreal.avalon.domain.Game;
+import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.dto.GameDTO;
+import me.kreal.avalon.dto.response.CharacterInfo;
 import me.kreal.avalon.dto.response.GameResponse;
 import me.kreal.avalon.util.avalon.GameModeFactory;
+import me.kreal.avalon.util.enums.GameStatus;
 import me.kreal.avalon.util.enums.TeamMemberStatus;
 
 import java.util.stream.Collectors;
@@ -75,6 +78,17 @@ public class GameMapper {
 
         response.setCharacter(GameModeFactory.getGameMode(game.getGameMode()).getCharacterInfo(game, player_id));
 
+        return response;
+    }
+
+    public static GameResponse convertToResponse(Game game, Player player) {
+        GameResponse response = GameMapper.convertToResponse(game);
+
+        response.setCharacter(
+                CharacterInfo.builder()
+                        .current(PlayerMapper.convertToResponse(player))
+                        .build()
+        );
         return response;
     }
 

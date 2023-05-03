@@ -48,5 +48,12 @@ public class PlayerService {
         return target;
     }
 
+    @Transactional
+    public Player playerRename(Player player, String newName) {
+        player.setDisplayName(newName);
+        this.playerDao.update(player);
+        return player;
+    }
+
 
 }

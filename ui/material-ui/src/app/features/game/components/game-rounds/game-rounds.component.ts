@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { GameStatus } from 'src/app/core/enums/gameStatus.enum';
 
 import { Game } from 'src/app/core/models/game.model';
+import { Player } from 'src/app/core/models/player.model';
 import { Quest } from 'src/app/core/models/quest.model';
 
 import { GameModeService } from 'src/app/core/services/gameMode.service';
@@ -16,6 +17,7 @@ export class GameRoundsComponent implements OnChanges{
   @Input() game: Game | undefined;
   quests: Quest[] = [];
   currentQuestRound: number = 1;
+  target: Player | undefined;
 
   constructor(
     public gameModeService: GameModeService
@@ -44,7 +46,10 @@ export class GameRoundsComponent implements OnChanges{
             this.currentQuestRound = round.roundNum;
             break;
         }
-      });  
+      });
+      this.game.players.forEach((player : Player) => {
+        if (player.isAssassinated) this.target = player;
+      });
     }
   }
   
@@ -56,5 +61,8 @@ export class GameRoundsComponent implements OnChanges{
     return this.game ? this.game.players.length > size : false;
   }
 
+  assassinFlopped(): boolean {
+    return this.game ? this.game.gameStatus == GameStatus.ASSASSIN_FLOP : false;
+  }
 
 }
