@@ -114,6 +114,16 @@ public class UserService {
 
     }
 
+    public DataResponse getUserMeByAuthUserDetail(AuthUserDetail authUserDetail) {
 
+        User u = this.findUserByAuthUserDetail(authUserDetail);
+
+        return DataResponse.builder()
+                .success(true)
+                .message("User found.")
+                .data(UserMapper.convertToResponse(u))
+                .build();
+
+    }
 
 }

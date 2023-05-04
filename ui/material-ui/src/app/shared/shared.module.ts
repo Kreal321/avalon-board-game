@@ -7,6 +7,7 @@ import { GameStatusPipe } from './pipes/gameStatus.pipe';
 
 import { NavComponent } from './components/nav/nav.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { GameRecordsComponent } from './components/game-records/game-records.component';
 
 
 import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
@@ -19,7 +20,8 @@ import { EnumPrintPipe } from './pipes/enumPrint.pipe';
     GameStatusPipe,
     EnumPrintPipe,
     NavComponent,
-    FooterComponent
+    FooterComponent,
+    GameRecordsComponent
   ],
   imports: [
     CommonModule,
@@ -31,7 +33,8 @@ import { EnumPrintPipe } from './pipes/enumPrint.pipe';
     GameStatusPipe,
     EnumPrintPipe,
     NavComponent,
-    FooterComponent
+    FooterComponent,
+    GameRecordsComponent
   ]
 })
 export class SharedModule { }

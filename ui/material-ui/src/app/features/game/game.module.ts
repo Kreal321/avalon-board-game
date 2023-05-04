@@ -23,7 +23,6 @@ import { VoteContainerComponent } from './components/vote-container/vote-contain
 import { TeamContainerComponent } from './components/team-container/team-container.component';
 import { TeamAssignmentComponent } from './components/team-assignment/team-assignment.component';
 import { MissionContainerComponent } from './components/mission-container/mission-container.component';
-import { GameRecordsComponent } from './components/game-records/game-records.component';
 import { AssassinateContainerComponent } from './components/assassinate-container/assassinate-container.component';
 
 
@@ -44,7 +43,6 @@ import { AssassinateContainerComponent } from './components/assassinate-containe
     TeamContainerComponent,
     TeamAssignmentComponent,
     MissionContainerComponent,
-    GameRecordsComponent,
     AssassinateContainerComponent,
   ],
   imports: [
