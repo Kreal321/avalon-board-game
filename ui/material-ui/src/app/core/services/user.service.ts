@@ -22,6 +22,10 @@ export class UserService {
     return this.http.post<DataResponse>(this.hostUrl + '/user/register', {username, userHash, email, preferredName});
   }
 
+  update(username: string, userHash: string, email: string, preferredName: string): Observable<DataResponse> {
+    return this.http.patch<DataResponse>(this.hostUrl + '/user/update', {username, userHash, email, preferredName});
+  }
+
   me(): Observable<DataResponse> {
     return this.http.get<DataResponse>(this.hostUrl + '/user/me');
   }

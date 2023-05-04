@@ -37,6 +37,10 @@ public class UserService {
         return this.userDao.findUserByUsername(username);
     }
 
+    public Optional<User> findUserByEmail(String email) {
+        return this.userDao.findUserByEmail(email);
+    }
+
     public User findUserByAuthUserDetail(AuthUserDetail authUserDetail) {
         return this.userDao.findUserByUsername(authUserDetail.getUsername()).get();
     }
@@ -57,6 +61,13 @@ public class UserService {
             return DataResponse.builder()
                     .success(false)
                     .message("Username is existed.")
+                    .build();
+        }
+
+        if (this.findUserByEmail(u.getEmail()).isPresent()) {
+            return DataResponse.builder()
+                    .success(false)
+                    .message("Email is existed.")
                     .build();
         }
 
@@ -126,4 +137,45 @@ public class UserService {
 
     }
 
+    @Transactional
+    public DataResponse updateUserByAuthUserDetail(AuthUserDetail authUserDetail, UserRequest request) {
+
+        User u = this.findUserByAuthUserDetail(authUserDetail);
+
+        String newUsername = request.getUsername() + "#" + request.getUserHash();
+
+        if (!u.getUsername().equals(newUsername)) {
+            if (this.findUserByUsername(newUsername).isPresent()) {
+                return DataResponse.builder()
+                        .success(false)
+                        .message("New username is existed.")
+                        .build();
+            }
+            u.setUsername(newUsername);
+        }
+
+        if (request.getEmail() != null && !request.getEmail().trim().isEmpty() && !u.getEmail().equals(request.getEmail())){
+            if (this.findUserByEmail(request.getEmail()).isPresent()) {
+                return DataResponse.builder()
+                        .success(false)
+                        .message("New email is existed.")
+                        .build();
+            }
+            u.setEmail(request.getEmail());
+        }
+
+        if (request.getPreferredName() != null && !request.getPreferredName().trim().isEmpty()) {
+            u.setPreferredName(request.getPreferredName());
+        }
+
+        this.userDao.save(u);
+
+        return DataResponse.builder()
+                .success(true)
+                .message("User updated.")
+                .data(UserMapper.convertToResponse(u))
+                .token(jwtProvider.createToken(u))
+                .build();
+
+    }
 }

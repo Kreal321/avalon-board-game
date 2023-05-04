@@ -16,6 +16,9 @@ import { PageRegisterComponent } from './pages/page-register/page-register.compo
 import { PageProfileComponent } from './pages/page-profile/page-profile.component';
 import { UserInfoComponent } from './components/user-info/user-info.component';
 import { PageForgotAccountComponent } from './pages/page-forgot-account/page-forgot-account.component';
+import { FormRegisterComponent } from './components/form-register/form-register.component';
+import { PageUpdateComponent } from './pages/page-update/page-update.component';
+import { UserUpdateComponent } from './components/user-update/user-update.component';
 
 
 @NgModule({
@@ -24,7 +27,10 @@ import { PageForgotAccountComponent } from './pages/page-forgot-account/page-for
     PageRegisterComponent,
     PageProfileComponent,
     UserInfoComponent,
-    PageForgotAccountComponent
+    PageForgotAccountComponent,
+    FormRegisterComponent,
+    PageUpdateComponent,
+    UserUpdateComponent
   ],
   imports: [
     FormsModule,

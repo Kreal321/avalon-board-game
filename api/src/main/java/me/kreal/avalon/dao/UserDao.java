@@ -20,4 +20,7 @@ public class UserDao extends BaseDao<User> {
         return this.getAllBy("username", username).stream().findFirst();
     }
 
+    public Optional<User> findUserByEmail(String email) {
+        return this.getAllBy("email", email).stream().findFirst();
+    }
 }

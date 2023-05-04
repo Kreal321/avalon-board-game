@@ -82,4 +82,26 @@ public class UserController {
         return ResponseEntity.ok(response);
 
     }
+
+    @PatchMapping("/update")
+    public ResponseEntity<DataResponse> handleUserUpdateRequest(@AuthenticationPrincipal AuthUserDetail userDetail, @Valid @RequestBody UserRequest request, BindingResult result) {
+
+        // Validation failed
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body(DataResponse.error(result.getFieldErrors().stream()
+                            .map(FieldError::getDefaultMessage)
+                            .reduce("", String::concat)));
+        }
+
+        DataResponse response = this.userService.updateUserByAuthUserDetail(userDetail, request);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+
+    }
+
 }
