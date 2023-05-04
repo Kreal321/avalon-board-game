@@ -17,10 +17,15 @@ public class AuthUserDetail implements UserDetails {
     private boolean credentialsNonExpired;
     private boolean enabled;
     private List<GrantedAuthority> authorities;
-
+    private Long userId;
     private Long gameId;
     private Long playerId;
-
+    public Long getUserId() {
+        return userId;
+    }
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
     public Long getGameId() {
         return gameId;
     }

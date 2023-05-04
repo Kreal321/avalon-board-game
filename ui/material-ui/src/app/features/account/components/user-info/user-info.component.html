@@ -14,7 +14,10 @@
             </div>
         </div>
         <div class="mb-3">
-            <h6 class="card-subtitle mb-2 text-muted">Preferred Name</h6>
+            <h6 class="card-subtitle mb-2 text-muted">
+                <span class="me-2">Preferred Name</span>
+                <i class="fas fa-info fa-sm bg-secondary text-white icon-circle" mdbTooltip="Preferred Name used as display name in games." trigger="hover"></i> 
+            </h6>
             <span class="card-text">{{user?.preferredName}}</span>
         </div>
         <div class="d-flex justify-content-between mb-3">
@@ -27,7 +30,7 @@
             <div>
                 <h6 class="card-subtitle mb-2 text-muted">
                     <span class="me-2">One Time Password</span>
-                    <i class="fas fa-info bg-secondary text-white icon-circle" mdbTooltip="Password changes on every login." trigger="hover"></i> 
+                    <i class="fas fa-info fa-sm bg-secondary text-white icon-circle" mdbTooltip="Password changes on every login." trigger="hover"></i> 
                 </h6>
                 <span class="card-text">{{user?.oneTimePassword}}</span>
             </div>

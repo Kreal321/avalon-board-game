@@ -94,8 +94,7 @@ public class GameLogicService {
         authUserDetail.setGameId(null);
         authUserDetail.setPlayerId(null);
 
-        return DataResponse.success("Leave game success")
-                .token(this.jwtProvider.createToken(authUserDetail));
+        return DataResponse.success("Leave game success");
     }
 
     public DataResponse authUserJoinGameWithGameNum(AuthUserDetail authUserDetail, String gameNum) {

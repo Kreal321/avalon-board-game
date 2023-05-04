@@ -42,7 +42,7 @@ public class UserService {
     }
 
     public User findUserByAuthUserDetail(AuthUserDetail authUserDetail) {
-        return this.userDao.findUserByUsername(authUserDetail.getUsername()).get();
+        return this.userDao.getById(authUserDetail.getUserId()).get();
     }
 
     @Transactional

@@ -27,6 +27,7 @@ public class JwtProvider {
     public String createToken(AuthUserDetail userDetails){
 
         Claims claims = Jwts.claims().setSubject(userDetails.getUsername());
+        claims.put("userId", userDetails.getUserId());
         claims.put("gameId", userDetails.getGameId());
         claims.put("playerId", userDetails.getPlayerId());
         return Jwts.builder()
@@ -39,6 +40,7 @@ public class JwtProvider {
     public String createToken(User u){
 
         Claims claims = Jwts.claims().setSubject(u.getUsername());
+        claims.put("userId", u.getUserId());
         return Jwts.builder()
                 .setClaims(claims)
                 .signWith(SignatureAlgorithm.HS256, key)
@@ -48,6 +50,7 @@ public class JwtProvider {
     public String createToken(Record r){
 
         Claims claims = Jwts.claims().setSubject(r.getUser().getUsername());
+        claims.put("userId", r.getUserId());
         claims.put("gameId", r.getGame().getGameId());
         claims.put("playerId", r.getPlayerId());
         return Jwts.builder()
@@ -71,6 +74,7 @@ public class JwtProvider {
 
             if (claims.get("gameId") == null || claims.get("playerId") == null) {
                 return Optional.of(AuthUserDetail.builder()
+                        .userId(((Number) claims.get("userId")).longValue())
                         .username(username)
                         .authorities(authorities)
                         .build());
@@ -80,6 +84,7 @@ public class JwtProvider {
             return Optional.of(AuthUserDetail.builder()
                     .username(username)
                     .authorities(authorities)
+                    .userId(((Number) claims.get("userId")).longValue())
                     .gameId(((Number) claims.get("gameId")).longValue())
                     .playerId(((Number) claims.get("playerId")).longValue())
                     .build());
