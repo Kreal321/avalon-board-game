@@ -50,7 +50,7 @@ public class JwtProvider {
     public String createToken(Record r){
 
         Claims claims = Jwts.claims().setSubject(r.getUser().getUsername());
-        claims.put("userId", r.getUserId());
+        claims.put("userId", r.getUser().getUserId());
         claims.put("gameId", r.getGame().getGameId());
         claims.put("playerId", r.getPlayerId());
         return Jwts.builder()

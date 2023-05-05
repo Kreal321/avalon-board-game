@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .cors().and()
                 .addFilterAfter(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers("/user/register", "/user/login").permitAll()
+                .antMatchers("/user/register", "/user/register/temp", "/user/login").permitAll()
                 .antMatchers("/stomp/**").permitAll()
                 .antMatchers("/topic/**").permitAll()
                 .anyRequest()

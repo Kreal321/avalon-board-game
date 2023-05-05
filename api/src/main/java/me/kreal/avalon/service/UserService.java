@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +47,7 @@ public class UserService {
     }
 
     @Transactional
-    public DataResponse createNewPlayer(UserRequest request) {
+    public DataResponse createNewUser(UserRequest request) {
 
         if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
             return DataResponse.builder()
@@ -83,6 +84,29 @@ public class UserService {
                 .success(true)
                 .message("Creation succeeded.")
                 .data(UserMapper.convertToDTO(u))
+                .token(jwtProvider.createToken(u))
+                .build();
+
+    }
+
+    @Transactional
+    public DataResponse createNewTempUser() {
+
+        User u = new User();
+
+        String username = "Player#" + new Date().getTime();
+
+        u.setUsername(username);
+        u.setPreferredName(username);
+        u.setEmail(username + "@avalon.com");
+        u.setOneTimePassword(this.getRandomPassword());
+
+        this.userDao.save(u);
+
+        return DataResponse.builder()
+                .success(true)
+                .message("Creation succeeded.")
+                .data(UserMapper.convertToResponse(u))
                 .token(jwtProvider.createToken(u))
                 .build();
 

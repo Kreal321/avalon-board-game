@@ -22,6 +22,10 @@ export class UserService {
     return this.http.post<DataResponse>(this.hostUrl + '/user/register', {username, userHash, email, preferredName});
   }
 
+  registerForTempGuest(): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/user/register/temp', {});
+  }
+
   update(username: string, userHash: string, email: string, preferredName: string): Observable<DataResponse> {
     return this.http.patch<DataResponse>(this.hostUrl + '/user/update', {username, userHash, email, preferredName});
   }

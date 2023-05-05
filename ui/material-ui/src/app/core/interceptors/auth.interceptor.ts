@@ -42,15 +42,21 @@ export class AuthInterceptor implements HttpInterceptor {
             catchError((error) => {
                 if (error instanceof HttpErrorResponse) {
                     if (error.status == 403) {
-                        localStorage.removeItem('token');
+                        // localStorage.removeItem('token');
                         Swal.fire({
                             title: 'You are not logged in',
                             text: 'Please login first',
+                            showDenyButton: true,
                             icon: 'error',
                             confirmButtonText: 'Login',
+                            denyButtonText: 'Continue as guest',
+                            denyButtonColor: '#9fa6b2',
                         }).then((request) => {
                             if (request.isConfirmed) {
                                 this.router.navigate(['/login']);
+                            }
+                            if (request.isDenied) {
+                                this.router.navigate(['/register/temp']);
                             }
                         })
                     } else if (error.status == 400) {

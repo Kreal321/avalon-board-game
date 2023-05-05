@@ -39,7 +39,7 @@ public class UserController {
                             .reduce("", String::concat)));
         }
 
-        DataResponse response = this.userService.createNewPlayer(request);
+        DataResponse response = this.userService.createNewUser(request);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -48,6 +48,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
+
+    @PostMapping("/register/temp")
+    public ResponseEntity<DataResponse> handleTempUserRegisterRequest() {
+
+        DataResponse response = this.userService.createNewTempUser();
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+    }
+
 
     @PostMapping("/login")
     public ResponseEntity<DataResponse> handleUserLoginRequest(@Valid @RequestBody UserRequest request, BindingResult result) {
