@@ -42,7 +42,7 @@ export class AuthInterceptor implements HttpInterceptor {
             catchError((error) => {
                 if (error instanceof HttpErrorResponse) {
                     if (error.status == 403) {
-                        // localStorage.removeItem('token');
+                        localStorage.removeItem('token');
                         Swal.fire({
                             title: 'You are not logged in',
                             text: 'Please login first',

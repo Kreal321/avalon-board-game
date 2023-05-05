@@ -106,7 +106,8 @@ public class GameService {
     }
 
 
-    public void checkGameStatus(Game game) {
+    @Transactional
+    public boolean updateGameIfFinished(Game game) {
 
         long successTimes = game.getRounds().stream()
                 .filter(RoundStatus::roundHasQuest)
@@ -115,17 +116,20 @@ public class GameService {
 
         long failTimes = game.getRounds().stream()
                 .filter(RoundStatus::roundHasQuest)
-                .filter(round -> round.getRoundStatus() == RoundStatus.QUEST_SUCCESS)
+                .filter(round -> round.getRoundStatus() == RoundStatus.QUEST_FAIL)
                 .count();
 
         if (successTimes >= 3) {
             game.setGameStatus(GameStatus.GOOD_WON);
+            this.gameDao.save(game);
+            return true;
         } else if (failTimes >= 3) {
             game.setGameStatus(GameStatus.EVIL_WON_WITH_QUEST);
+            this.gameDao.save(game);
+            return true;
         }
 
-        this.gameDao.save(game);
-
+        return false;
     }
 
 

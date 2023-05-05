@@ -1,18 +1,15 @@
-<div>
-    <small class="rounded-start p-1 pe-0 badge-{{color}} border-end border-2 border-{{color}}">
-        {{player ? (player.seatNum) : ""}}
+<div class="text-truncate">
+    <small class="me-1 rounded p-1 badge-secondary " *ngIf="isAssassinated()">
+        <i class="fas fa-skull-crossbones"></i>
     </small>
-    <small class="rounded-end p-1 badge-{{color}} " *ngIf="!isThumbsUp">
-        {{player ? (player.displayName) : ""}}
-    </small>
-    <small class="p-1 pe-0 badge-{{color}} border-end border-1 border-{{color}}" *ngIf="isThumbsUp">
-        {{player ? (player.displayName) : ""}}
-    </small>
-    <small class="rounded-end p-1 badge-{{color}} " *ngIf="isThumbsUp">
+    <small class="me-1 rounded p-1 badge-{{color}} " *ngIf="isThumbsUp">
         <i class="far fa-thumbs-up"></i>
     </small>
-    <small class="ms-1 rounded p-1 badge-secondary " *ngIf="isAssassinated()">
-        <i class="fas fa-skull-crossbones"></i>
+    <small class="rounded-start p-1 pe-0 badge-{{color}}">
+        {{player ? (player.seatNum) : ""}}
+    </small>
+    <small class="border-start border-2 border-{{color}} rounded-end p-1 badge-{{color}}">
+        {{player ? (player.displayName) : ""}}
     </small>
 </div>
 

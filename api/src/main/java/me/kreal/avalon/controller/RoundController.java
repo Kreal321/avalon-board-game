@@ -62,7 +62,7 @@ public class RoundController {
     }
 
     @PostMapping("/mission/new")
-    public ResponseEntity<DataResponse> handleNewChallengeRequest(@PathVariable("gameId") Long gameId, @PathVariable("roundId") Long roundId, @RequestParam("success") Boolean success, @AuthenticationPrincipal AuthUserDetail userDetail) {
+    public ResponseEntity<DataResponse> handleNewMissionRequest(@PathVariable("gameId") Long gameId, @PathVariable("roundId") Long roundId, @RequestParam("success") Boolean success, @AuthenticationPrincipal AuthUserDetail userDetail) {
 
         DataResponse response = this.gameLogicService.authUserCreateMissionWithGameIdAndRoundId(userDetail, success, gameId, roundId);
 

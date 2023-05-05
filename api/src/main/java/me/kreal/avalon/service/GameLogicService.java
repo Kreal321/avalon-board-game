@@ -390,7 +390,12 @@ public class GameLogicService {
         // check if game is over
 
         if (RoundStatus.roundIsFinished(round.getRoundStatus())) {
-            this.gameService.checkGameStatus(round.getGame());
+            if (this.gameService.updateGameIfFinished(round.getGame())) {
+                return DataResponse.success("Game is over");
+            } else {
+                // create new round
+                this.roundService.createNewRound(round.getGame());
+            }
         }
 
         return DataResponse.success("Mission created");

@@ -177,7 +177,6 @@ public class RoundService {
             } else {
                 round.setRoundStatus(RoundStatus.QUEST_SUCCESS);
             }
-            this.createNewRound(round.getGame());
         }
 
         this.roundDao.save(round);
