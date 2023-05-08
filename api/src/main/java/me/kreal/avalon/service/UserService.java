@@ -10,6 +10,7 @@ import me.kreal.avalon.util.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
@@ -47,16 +48,16 @@ public class UserService {
     }
 
     @Transactional
-    public DataResponse createNewUser(UserRequest request) {
+    public DataResponse createNewUser(UserRequest userRequest, HttpServletRequest request) {
 
-        if (request.getEmail() == null || request.getEmail().trim().isEmpty()) {
+        if (userRequest.getEmail() == null || userRequest.getEmail().trim().isEmpty()) {
             return DataResponse.builder()
                     .success(false)
                     .message("Email is required.")
                     .build();
         }
 
-        User u = UserMapper.convertToEntity(request);
+        User u = UserMapper.convertToEntity(userRequest, request);
 
         if (this.findUserByUsername(u.getUsername()).isPresent()) {
             return DataResponse.builder()
@@ -90,7 +91,7 @@ public class UserService {
     }
 
     @Transactional
-    public DataResponse createNewTempUser() {
+    public DataResponse createNewTempUser(HttpServletRequest request) {
 
         User u = new User();
 
@@ -98,8 +99,10 @@ public class UserService {
 
         u.setUsername(username);
         u.setPreferredName(username);
-        u.setEmail(username + "@avalon.com");
+        u.setEmail(username + "@playlobby.club");
         u.setOneTimePassword(this.getRandomPassword());
+        u.setLastLoginIp(request.getRemoteAddr());
+        u.setLastLoginClient(request.getHeader("User-Agent"));
 
         this.userDao.save(u);
 
@@ -113,18 +116,9 @@ public class UserService {
     }
 
     @Transactional
-    public DataResponse findUserByLoginRequest(UserRequest request) {
+    public DataResponse findUserByLoginRequest(UserRequest userRequest, HttpServletRequest request) {
 
-        if (request.getPassword() == null || request.getPassword().trim().isEmpty()){
-            return DataResponse.builder()
-                    .success(false)
-                    .message("Password is empty.")
-                    .build();
-        }
-
-        User u = UserMapper.convertToEntity(request);
-
-        Optional<User> userOptional = this.findUserByUsername(u.getUsername());
+        Optional<User> userOptional = this.findUserByUsername(userRequest.getFullUsername());
 
         if (!userOptional.isPresent()) {
             return DataResponse.builder()
@@ -133,11 +127,26 @@ public class UserService {
                     .build();
         }
 
-        if (!userOptional.get().getOneTimePassword().equals(u.getOneTimePassword())) {
-            return DataResponse.builder()
-                    .success(false)
-                    .message("Password is incorrect.")
-                    .build();
+        User u = userOptional.get();
+
+        if (!(u.getLastLoginIp().equals(request.getRemoteAddr()) && u.getLastLoginClient().equals(request.getHeader("User-Agent")))) {
+            if (userRequest.getPassword() == null || userRequest.getPassword().trim().isEmpty()){
+                return DataResponse.builder()
+                        .success(false)
+                        .message("Cannot auto login. Please enter password.")
+                        .build();
+            }
+
+            if (!u.getOneTimePassword().equals(userRequest.getPassword())) {
+                return DataResponse.builder()
+                        .success(false)
+                        .message("Password is incorrect.")
+                        .build();
+            }
+
+            u.setLastLoginIp(request.getRemoteAddr());
+            u.setLastLoginClient(request.getHeader("User-Agent"));
+            this.userDao.update(u);
         }
 
         return DataResponse.builder()

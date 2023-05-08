@@ -24,4 +24,8 @@ public class UserRequest {
 
     private String password;
 
+    public String getFullUsername() {
+        return this.username + "#" + this.userHash;
+    }
+
 }

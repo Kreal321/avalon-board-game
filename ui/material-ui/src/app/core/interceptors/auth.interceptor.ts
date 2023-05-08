@@ -65,6 +65,13 @@ export class AuthInterceptor implements HttpInterceptor {
                             text: error.error.message,
                             icon: 'error',
                         })
+                    } else if (error.status == 401) {
+                        this.router.navigateByUrl('/login?success=false');
+                        Swal.fire({
+                            title: 'Auto Login Failed',
+                            text: error.error.message,
+                            icon: 'error',
+                        })
                     } else {
                         Swal.fire({
                             title: 'Network Error',
@@ -75,7 +82,7 @@ export class AuthInterceptor implements HttpInterceptor {
                         throwError(() => error);
                     }
                 }
-                return of([]);
+                return of(error.error as DataResponse);
             })
         ) as Observable<HttpEvent<any>>;
 

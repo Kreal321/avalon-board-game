@@ -5,14 +5,18 @@ import me.kreal.avalon.dto.UserDTO;
 import me.kreal.avalon.dto.request.UserRequest;
 import me.kreal.avalon.dto.response.UserResponse;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class UserMapper {
 
-    public static User convertToEntity(UserRequest request) {
+    public static User convertToEntity(UserRequest userRequest, HttpServletRequest request) {
         return User.builder()
-                .username(request.getUsername() + "#" + request.getUserHash())
-                .email(request.getEmail())
-                .oneTimePassword(request.getPassword())
-                .preferredName(request.getPreferredName())
+                .username(userRequest.getUsername() + "#" + userRequest.getUserHash())
+                .email(userRequest.getEmail())
+                .oneTimePassword(userRequest.getPassword())
+                .preferredName(userRequest.getPreferredName())
+                .lastLoginIp(request.getRemoteAddr())
+                .lastLoginClient(request.getHeader("User-Agent"))
                 .build();
     }
 

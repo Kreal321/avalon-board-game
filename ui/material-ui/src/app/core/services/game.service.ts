@@ -1,20 +1,24 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { DataResponse } from '../models/dataResponse.model';
 import { GameModeType } from '../enums/gameModeType.enum';
 import { TeamType } from '../enums/teamType.enum';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
 
-  private hostUrl = 'http://localhost:8080';
+  private hostUrl;
+  
 
   constructor(
     private http: HttpClient
-  ) { }
+  ) { 
+    this.hostUrl = environment.api;
+  }
 
   joinGameByGameNum(roomNum: number): Observable<DataResponse> {
     return this.http.post<DataResponse>(this.hostUrl + '/game/join/' + roomNum, {});

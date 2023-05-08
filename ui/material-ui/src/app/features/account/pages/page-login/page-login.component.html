@@ -16,14 +16,14 @@
                                 <input class="form-control" placeholder="0000" type="text" name="userHash" [(ngModel)]="userHash">
                             </div>
 
-                            <div class="input-group input-group-lg input-group-alternative">
+                            <div class="input-group input-group-lg input-group-alternative" *ngIf="showPasswordInput">
                                 <span class="input-group-text"><i class="fa fa-unlock-alt"></i></span>
                                 <input class="form-control" placeholder="6-digit code" type="text" name="code" [(ngModel)]="code">
                             </div>
                         </div>
 
                         <div class="text-center">
-                            <button type="button" class="btn btn-primary mt-3" (click)="loginWithCredentials()">Sign in</button>
+                            <button type="button" class="btn btn-primary mt-3" (click)="loginWithCredentials()">Login</button>
                         </div>
                     </form>
                 </div>

@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.xml.crypto.Data;
 
@@ -29,7 +30,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<DataResponse> handleUserRegisterRequest(@Valid @RequestBody UserRequest request, BindingResult result) {
+    public ResponseEntity<DataResponse> handleUserRegisterRequest(@Valid @RequestBody UserRequest userRequest, BindingResult result, HttpServletRequest request) {
 
         // Validation failed
         if (result.hasErrors()) {
@@ -39,7 +40,7 @@ public class UserController {
                             .reduce("", String::concat)));
         }
 
-        DataResponse response = this.userService.createNewUser(request);
+        DataResponse response = this.userService.createNewUser(userRequest, request);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -50,9 +51,9 @@ public class UserController {
     }
 
     @PostMapping("/register/temp")
-    public ResponseEntity<DataResponse> handleTempUserRegisterRequest() {
+    public ResponseEntity<DataResponse> handleTempUserRegisterRequest(HttpServletRequest request) {
 
-        DataResponse response = this.userService.createNewTempUser();
+        DataResponse response = this.userService.createNewTempUser(request);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
@@ -64,7 +65,7 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<DataResponse> handleUserLoginRequest(@Valid @RequestBody UserRequest request, BindingResult result) {
+    public ResponseEntity<DataResponse> handleUserLoginRequest(@Valid @RequestBody UserRequest userRequest, BindingResult result, HttpServletRequest request) {
 
         // Validation failed
         if (result.hasErrors()) {
@@ -74,10 +75,10 @@ public class UserController {
                             .reduce("", String::concat)));
         }
 
-        DataResponse response = this.userService.findUserByLoginRequest(request);
+        DataResponse response = this.userService.findUserByLoginRequest(userRequest, request);
 
         if (!response.getSuccess()) {
-            return ResponseEntity.badRequest().body(response);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
         }
 
         return ResponseEntity.ok(response);

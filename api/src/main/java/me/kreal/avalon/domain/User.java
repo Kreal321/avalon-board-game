@@ -27,10 +27,16 @@ public class User implements Serializable {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "oneTimePassword", nullable = false)
+    @Column(name = "one_time_password", nullable = false)
     private String oneTimePassword;
 
     @Column(name = "preferred_name", nullable = false)
     private String preferredName;
+
+    @Column(name = "last_login_ip", nullable = false)
+    private String lastLoginIp;
+
+    @Column(name = "last_login_client", nullable = false)
+    private String lastLoginClient;
 
 }
