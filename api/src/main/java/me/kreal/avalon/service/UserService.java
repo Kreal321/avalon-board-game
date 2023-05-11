@@ -2,6 +2,7 @@ package me.kreal.avalon.service;
 
 import me.kreal.avalon.dao.UserDao;
 import me.kreal.avalon.domain.User;
+import me.kreal.avalon.dto.MailDTO;
 import me.kreal.avalon.dto.request.UserRequest;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
@@ -20,11 +21,13 @@ import java.util.Optional;
 public class UserService {
 
     private final UserDao userDao;
+    private final MailService mailService;
     private final JwtProvider jwtProvider;
 
     @Autowired
-    public UserService(UserDao userDao, JwtProvider jwtProvider) {
+    public UserService(UserDao userDao, MailService mailService, JwtProvider jwtProvider) {
         this.userDao = userDao;
+        this.mailService = mailService;
         this.jwtProvider = jwtProvider;
     }
 
@@ -80,6 +83,8 @@ public class UserService {
         u.setOneTimePassword(this.getRandomPassword());
 
         this.userDao.save(u);
+
+        this.mailService.sendWelcomeMail(u);
 
         return DataResponse.builder()
                 .success(true)

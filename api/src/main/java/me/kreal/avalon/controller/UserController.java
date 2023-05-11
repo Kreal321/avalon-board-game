@@ -1,8 +1,10 @@
 package me.kreal.avalon.controller;
 
+import me.kreal.avalon.dto.MailDTO;
 import me.kreal.avalon.dto.request.UserRequest;
 import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.security.AuthUserDetail;
+import me.kreal.avalon.service.MailService;
 import me.kreal.avalon.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,12 @@ import javax.xml.crypto.Data;
 public class UserController {
 
     private final UserService userService;
-
+    private final MailService mailService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(UserService userService, MailService mailService) {
         this.userService = userService;
+        this.mailService = mailService;
     }
 
     @PostMapping("/register")

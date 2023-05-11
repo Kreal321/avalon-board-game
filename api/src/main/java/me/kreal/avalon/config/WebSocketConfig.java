@@ -27,7 +27,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
         // Registers the endpoint where the connection will take place
         registry.addEndpoint("/stomp")
-                .setAllowedOrigins("http://localhost:4200/", "http://localhost:4200")
+                .setAllowedOrigins("http://localhost:4200/", "http://localhost:4200", "http://www.playlobby.club/", "http://www.playlobby.club")
 //                .setAllowedOriginPatterns("*")
                 .withSockJS();
 
