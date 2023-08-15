@@ -5,6 +5,7 @@ import { DataResponse } from '../models/dataResponse.model';
 import { GameModeType } from '../enums/gameModeType.enum';
 import { TeamType } from '../enums/teamType.enum';
 import { environment } from 'src/environments/environment';
+import {CharacterType} from "../enums/characterType.enum";
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,11 @@ import { environment } from 'src/environments/environment';
 export class GameService {
 
   private hostUrl;
-  
+
 
   constructor(
     private http: HttpClient
-  ) { 
+  ) {
     this.hostUrl = environment.api;
   }
 
@@ -34,6 +35,10 @@ export class GameService {
 
   playerRename(gameId: number, playerId: number, newName: string) {
     return this.http.patch<DataResponse>(this.hostUrl + '/game/' + gameId + '/player/' + playerId + '?newName=' + newName, {});
+  }
+
+  chooseCharacter(gameId: number, playerId: number, character: CharacterType): Observable<DataResponse> {
+    return this.http.patch<DataResponse>(this.hostUrl + '/game/' + gameId + '/player/' + playerId + '/' + character,{});
   }
 
   startGame(gameId: number): Observable<DataResponse> {

@@ -15,7 +15,7 @@ export class PageRegisterTempComponent {
   constructor(
     private UserService: UserService,
     private router: Router
-  ) { 
+  ) {
     if (UserService.isLoggedIn()) {
       this.router.navigate(['/profile']);
     } else {
@@ -32,7 +32,7 @@ export class PageRegisterTempComponent {
             this.UserService.registerForTempGuest().subscribe(
               response => {
                 if (response.success) {
-                  this.router.navigate(['/profile']);
+                  this.router.navigate(['/update']);
                 }
               }
             );

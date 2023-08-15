@@ -44,7 +44,9 @@ public abstract class GameMode {
 
     public void assignPlayerCharacter(List<Player> players) {
 
-        List<Player> playerList = players.stream().sorted((p1, p2) -> new Random().nextInt(3) - 1).collect(Collectors.toList());
+        List<Player> playerList = players.stream().sorted((p1, p2) -> new Random().nextInt(3) - 2).collect(Collectors.toList());
+
+        Collections.shuffle(playerList);
 
         for(int idx = 0; idx < this.gameSize; idx++) {
             playerList.get(idx).setSeatNum(idx + 1);
@@ -52,8 +54,21 @@ public abstract class GameMode {
 
         Collections.shuffle(playerList);
 
-        for(int idx = 0; idx < this.gameSize; idx++) {
-            playerList.get(idx).setCharacterType(this.characterTypes[idx]);
+        List<CharacterType> characters = new ArrayList<>(Arrays.asList(this.characterTypes));
+
+        playerList.forEach(player -> {
+            int random = new Random().nextInt(100);
+            if (player.getCharacterType() != null && random < 80 && characters.contains(player.getCharacterType())) {
+                characters.remove(player.getCharacterType());
+            } else {
+                int idx = random % characters.size();
+                player.setCharacterType(characters.get(idx));
+                characters.remove(idx);
+            }
+        });
+
+        if (characters.size() != 0) {
+            throw new RuntimeException("Character assign error");
         }
 
     }

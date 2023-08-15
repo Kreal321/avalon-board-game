@@ -20,7 +20,16 @@ export class PageRegisterComponent {
   constructor(
     private userService: UserService,
     private router: Router
-  ) { }
+  ) {
+    Swal.fire({
+      title: 'Registration is not open yet',
+      text: 'Register as a guest to play',
+      icon: 'info',
+      confirmButtonText: 'Continue',
+    }).then(() => {
+      this.router.navigate(['/register/temp']);
+    })
+  }
 
   register(): void {
     this.userService.register(this.username, this.userHash, this.email, this.preferredName).subscribe(

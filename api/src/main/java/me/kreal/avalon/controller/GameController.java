@@ -4,6 +4,7 @@ import me.kreal.avalon.dto.response.DataResponse;
 import me.kreal.avalon.dto.response.GameResponse;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.service.GameLogicService;
+import me.kreal.avalon.util.enums.CharacterType;
 import me.kreal.avalon.util.enums.GameModeType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -106,6 +107,20 @@ public class GameController {
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);
         }
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/{gameId}/player/{playerId}/{characterType}")
+    public ResponseEntity<DataResponse> handlePlayerPreChooseCharacterType(@PathVariable Long gameId, @PathVariable Long playerId, @PathVariable CharacterType characterType, @AuthenticationPrincipal AuthUserDetail userDetail) {
+
+        DataResponse response = this.gameLogicService.playerPredefineCharacter(gameId, playerId, characterType, userDetail);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        messagingTemplate.convertAndSend("/topic/game/" + gameId, "Player defined character type.");
 
         return ResponseEntity.ok(response);
     }

@@ -25,7 +25,7 @@ public class GameModeFactory {
 
     @PostConstruct
     public void initGameModeCache() {
-        gameModes.forEach(gameMode -> gameModeCache.put(gameMode.getGameMode(), gameMode));
+        this.gameModes.forEach(gameMode -> gameModeCache.put(gameMode.getGameMode(), gameMode));
     }
 
     public static GameMode getGameMode(GameModeType gameModeType) {

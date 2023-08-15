@@ -6,6 +6,7 @@ import me.kreal.avalon.domain.Player;
 import me.kreal.avalon.domain.User;
 import me.kreal.avalon.security.AuthUserDetail;
 import me.kreal.avalon.util.PlayerMapper;
+import me.kreal.avalon.util.enums.CharacterType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,6 +52,13 @@ public class PlayerService {
     @Transactional
     public Player playerRename(Player player, String newName) {
         player.setDisplayName(newName);
+        this.playerDao.update(player);
+        return player;
+    }
+
+    @Transactional
+    public Player playerChangeCharacter(Player player, CharacterType characterType) {
+        player.setCharacterType(characterType);
         this.playerDao.update(player);
         return player;
     }

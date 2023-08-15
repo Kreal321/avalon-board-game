@@ -35,21 +35,24 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<DataResponse> handleUserRegisterRequest(@Valid @RequestBody UserRequest userRequest, BindingResult result, HttpServletRequest request) {
 
+        // suspend
+        return ResponseEntity.badRequest().body(DataResponse.error("This feature is currently suspended."));
+
         // Validation failed
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest()
-                    .body(DataResponse.error(result.getFieldErrors().stream()
-                            .map(FieldError::getDefaultMessage)
-                            .reduce("", String::concat)));
-        }
-
-        DataResponse response = this.userService.createNewUser(userRequest, request);
-
-        if (!response.getSuccess()) {
-            return ResponseEntity.badRequest().body(response);
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+//        if (result.hasErrors()) {
+//            return ResponseEntity.badRequest()
+//                    .body(DataResponse.error(result.getFieldErrors().stream()
+//                            .map(FieldError::getDefaultMessage)
+//                            .reduce("", String::concat)));
+//        }
+//
+//        DataResponse response = this.userService.createNewUser(userRequest, request);
+//
+//        if (!response.getSuccess()) {
+//            return ResponseEntity.badRequest().body(response);
+//        }
+//
+//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
 
@@ -65,7 +68,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
-
 
     @PostMapping("/login")
     public ResponseEntity<DataResponse> handleUserLoginRequest(@Valid @RequestBody UserRequest userRequest, BindingResult result, HttpServletRequest request) {
@@ -87,6 +89,20 @@ public class UserController {
         return ResponseEntity.ok(response);
 
     }
+
+    @GetMapping("/find")
+    public ResponseEntity<DataResponse> handleForgotAccountRequest(@RequestParam("email") String email) {
+
+        DataResponse response = this.userService.resendAccountInfo(email);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+
+    }
+
 
     @GetMapping("/me")
     public ResponseEntity<DataResponse> handleUserMeRequest(@AuthenticationPrincipal AuthUserDetail userDetail) {
@@ -113,6 +129,19 @@ public class UserController {
         }
 
         DataResponse response = this.userService.updateUserByAuthUserDetail(userDetail, request);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.ok(response);
+
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<DataResponse> handleUserUpdatePreferredNameRequest(@AuthenticationPrincipal AuthUserDetail userDetail, @RequestParam String preferredName) {
+
+        DataResponse response = this.userService.updateUserPreferredNameByAuthUserDetail(userDetail, preferredName);
 
         if (!response.getSuccess()) {
             return ResponseEntity.badRequest().body(response);

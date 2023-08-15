@@ -71,6 +71,36 @@ public class GameLogicService {
                         .collect(Collectors.toList()));
     }
 
+    // Game logic methods
+    @Synchronized
+    public DataResponse playerPredefineCharacter(long gameId, long playerId, CharacterType characterType, AuthUserDetail authUserDetail) {
+
+        if (authUserDetail.getGameId() == null || authUserDetail.getPlayerId() == null) {
+            return DataResponse.error("You are not in a game");
+        }
+
+        if (authUserDetail.getPlayerId() != playerId || authUserDetail.getGameId() != gameId) {
+            return DataResponse.error("Player id or Game id not match");
+        }
+
+        Optional<Game> gameOptional = this.gameService.findGameById(gameId);
+
+        if (!gameOptional.isPresent()) {
+            return DataResponse.error("Game not found");
+        }
+
+        if (gameOptional.get().getGameStatus() != GameStatus.NOT_STARTED) {
+            return DataResponse.error("Game is started");
+        }
+
+        Player player = this.playerService.findPlayerByAuthUserDetail(authUserDetail);
+
+        this.playerService.playerChangeCharacter(player, characterType);
+
+        return DataResponse.success("Player character defined");
+
+    }
+
 
     // Game logic methods
     @Synchronized

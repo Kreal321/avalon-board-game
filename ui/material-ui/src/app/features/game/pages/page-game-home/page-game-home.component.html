@@ -6,9 +6,11 @@
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
             <app-game-players [game]="game"></app-game-players>
         </div>
+        <div class="col-lg-4 col-md-6 col-sm-12 my-2" *ngIf="game!.gameStatus == 'NOT_STARTED'">
+          <app-choose-character [game]="game"></app-choose-character>
+        </div>
         <div class="col-lg-4 col-md-6 col-sm-12 my-2">
             <app-game-rounds [game]="game"></app-game-rounds>
         </div>
-
     </div>
 </div>

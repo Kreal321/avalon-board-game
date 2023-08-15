@@ -24,6 +24,8 @@ import { TeamContainerComponent } from './components/team-container/team-contain
 import { TeamAssignmentComponent } from './components/team-assignment/team-assignment.component';
 import { MissionContainerComponent } from './components/mission-container/mission-container.component';
 import { AssassinateContainerComponent } from './components/assassinate-container/assassinate-container.component';
+import { ChooseCharacterComponent } from './components/choose-character/choose-character.component';
+import { CharacterBadgeComponent } from './components/character-badge/character-badge.component';
 
 
 
@@ -44,6 +46,8 @@ import { AssassinateContainerComponent } from './components/assassinate-containe
     TeamAssignmentComponent,
     MissionContainerComponent,
     AssassinateContainerComponent,
+    ChooseCharacterComponent,
+    CharacterBadgeComponent,
   ],
   imports: [
     FormsModule,

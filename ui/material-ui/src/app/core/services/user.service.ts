@@ -14,7 +14,7 @@ export class UserService {
 
   constructor(
     private http: HttpClient
-  ) { 
+  ) {
     this.hostUrl = environment.api;
   }
 
@@ -26,12 +26,20 @@ export class UserService {
     return this.http.post<DataResponse>(this.hostUrl + '/user/register', {username, userHash, email, preferredName});
   }
 
+  findAccount(email: string): Observable<DataResponse> {
+    return this.http.get<DataResponse>(this.hostUrl + '/user/find?email=' + email);
+  }
+
   registerForTempGuest(): Observable<DataResponse> {
     return this.http.post<DataResponse>(this.hostUrl + '/user/register/temp', {});
   }
 
   update(username: string, userHash: string, email: string, preferredName: string): Observable<DataResponse> {
     return this.http.patch<DataResponse>(this.hostUrl + '/user/update', {username, userHash, email, preferredName});
+  }
+
+  updatePreferredName(preferredName: string): Observable<DataResponse> {
+    return this.http.patch<DataResponse>(this.hostUrl + '/user/me?preferredName=' + preferredName, {});
   }
 
   me(): Observable<DataResponse> {

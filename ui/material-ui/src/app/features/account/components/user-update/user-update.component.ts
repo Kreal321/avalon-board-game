@@ -34,8 +34,8 @@ export class UserUpdateComponent implements OnChanges{
     }
   }
 
-  register(): void {
-    this.userService.update(this.username, this.userHash, this.email, this.preferredName).subscribe(
+  update(): void {
+    this.userService.updatePreferredName(this.preferredName).subscribe(
       response => {
         if (response.success) {
           Swal.fire({
@@ -49,4 +49,22 @@ export class UserUpdateComponent implements OnChanges{
       }
     );
   }
+
+  // update(): void {
+  //   this.userService.update(this.username, this.userHash, this.email, this.preferredName).subscribe(
+  //     response => {
+  //       if (response.success) {
+  //         Swal.fire({
+  //           title: 'Update Successful',
+  //           icon: 'success',
+  //           confirmButtonText: 'Continue',
+  //         }).then(() => {
+  //           this.router.navigate(['/profile']);
+  //         })
+  //       }
+  //     }
+  //   );
+  // }
+
+
 }

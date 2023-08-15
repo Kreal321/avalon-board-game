@@ -120,6 +120,27 @@ public class UserService {
 
     }
 
+    public DataResponse resendAccountInfo(String email) {
+
+            Optional<User> userOptional = this.findUserByEmail(email);
+
+            if (!userOptional.isPresent()) {
+                return DataResponse.builder()
+                        .success(false)
+                        .message("Cannot find email.")
+                        .build();
+            }
+
+            User u = userOptional.get();
+
+            this.mailService.sendRetrievalMail(u);
+
+            return DataResponse.builder()
+                    .success(true)
+                    .message("Email sent.")
+                    .build();
+
+    }
     @Transactional
     public DataResponse findUserByLoginRequest(UserRequest userRequest, HttpServletRequest request) {
 
@@ -151,6 +172,7 @@ public class UserService {
 
             u.setLastLoginIp(request.getRemoteAddr());
             u.setLastLoginClient(request.getHeader("User-Agent"));
+            u.setOneTimePassword(this.getRandomPassword());
             this.userDao.update(u);
         }
 
@@ -204,6 +226,32 @@ public class UserService {
 
         if (request.getPreferredName() != null && !request.getPreferredName().trim().isEmpty()) {
             u.setPreferredName(request.getPreferredName());
+        }
+
+        this.userDao.save(u);
+
+        return DataResponse.builder()
+                .success(true)
+                .message("User updated.")
+                .data(UserMapper.convertToResponse(u))
+                .token(jwtProvider.createToken(u))
+                .build();
+
+    }
+
+    @Transactional
+    public DataResponse updateUserPreferredNameByAuthUserDetail(AuthUserDetail authUserDetail, String preferredName) {
+
+        User u = this.findUserByAuthUserDetail(authUserDetail);
+
+
+        if (preferredName != null && !preferredName.trim().isEmpty()) {
+            u.setPreferredName(preferredName);
+        } else {
+            return DataResponse.builder()
+                    .success(false)
+                    .message("Preferred name cannot be empty.")
+                    .build();
         }
 
         this.userDao.save(u);
