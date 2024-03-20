@@ -1,6 +1,13 @@
 # Avalon
 
 ## Change Log
+
+### Version 0.0.5
+* User Registration
+* Email System
+* Token bug hot fix, need https
+
+
 ### Version 0.0.4
 * Resend code email
 * Find account

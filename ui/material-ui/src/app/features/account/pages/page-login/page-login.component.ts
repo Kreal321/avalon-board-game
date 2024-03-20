@@ -16,6 +16,7 @@ export class PageLoginComponent {
   preferredName: string = '';
   code: string = '';
   showPasswordInput: boolean = false;
+  signInWithToken: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -61,6 +62,9 @@ export class PageLoginComponent {
         }
       }
     );
+  }
 
+  changeSignInWithToken(): void {
+    this.signInWithToken = !this.signInWithToken;
   }
 }
