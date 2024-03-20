@@ -18,12 +18,16 @@ export class UserService {
     this.hostUrl = environment.api;
   }
 
-  loginWithCredentials(username: string, userHash: string, password: string): Observable<DataResponse> {
-    return this.http.post<DataResponse>(this.hostUrl + '/user/login', {username, userHash, password});
+  loginWithCredentials(username: string, password: string): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/user/login', {username, password});
   }
 
-  register(username: string, userHash: string, email: string, preferredName: string): Observable<DataResponse> {
-    return this.http.post<DataResponse>(this.hostUrl + '/user/register', {username, userHash, email, preferredName});
+  loginWithToken(token: string) {
+    return this.http.post<DataResponse>(this.hostUrl + '/user/login/token?token=' + token, {});
+  }
+
+  register(username: string, email: string, preferredName: string): Observable<DataResponse> {
+    return this.http.post<DataResponse>(this.hostUrl + '/user/register', {username, email, preferredName});
   }
 
   findAccount(email: string): Observable<DataResponse> {
@@ -34,8 +38,8 @@ export class UserService {
     return this.http.post<DataResponse>(this.hostUrl + '/user/register/temp', {});
   }
 
-  update(username: string, userHash: string, email: string, preferredName: string): Observable<DataResponse> {
-    return this.http.patch<DataResponse>(this.hostUrl + '/user/update', {username, userHash, email, preferredName});
+  update(username: string, email: string, preferredName: string): Observable<DataResponse> {
+    return this.http.patch<DataResponse>(this.hostUrl + '/user/update', {username, email, preferredName});
   }
 
   updatePreferredName(preferredName: string): Observable<DataResponse> {
@@ -60,5 +64,6 @@ export class UserService {
     }
     return this.http.get<DataResponse>(this.hostUrl + '/game/records');
   }
+
 
 }

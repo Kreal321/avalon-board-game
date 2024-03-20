@@ -13,7 +13,6 @@ export class FormRegisterComponent {
 
   token: string = '';
   username: string = '';
-  userHash: string = '';
   email: string = '';
   preferredName: string = '';
   code: string = '';
@@ -24,7 +23,33 @@ export class FormRegisterComponent {
   ) { }
 
   register(): void {
-    this.userService.register(this.username, this.userHash, this.email, this.preferredName).subscribe(
+
+    let registerTime = sessionStorage.getItem('registerTime');
+
+    if (registerTime != null) {
+      let timeDiff = new Date().getTime() - parseInt(registerTime);
+      if (timeDiff < 60000) {
+        Swal.fire({
+          title: 'Error',
+          text: 'You can only retrieve account information once every 60 seconds.',
+          icon: 'error',
+          confirmButtonText: 'Continue',
+        });
+        return;
+      }
+    }
+
+    sessionStorage.setItem('retrieveTime', new Date().getTime().toString());
+
+    Swal.fire({
+      title: 'Registering...',
+      text: 'Please wait while we register your account',
+      icon: 'info',
+      confirmButtonText: 'Continue',
+    });
+
+
+    this.userService.register(this.username, this.email, this.preferredName).subscribe(
       response => {
         if (response.success) {
           Swal.fire({
@@ -39,5 +64,5 @@ export class FormRegisterComponent {
       }
     );
   }
-  
+
 }

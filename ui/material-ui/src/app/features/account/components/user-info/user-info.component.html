@@ -9,14 +9,12 @@
             <div>
                 <h6 class="card-subtitle mb-2 text-muted">Username</h6>
                 <span class="card-text me-2">{{user?.username}}</span>
-                <i class="fas fa-hashtag me-2"></i>
-                <span class="card-text">{{user?.userHash}}</span>
             </div>
         </div>
         <div class="mb-3">
             <h6 class="card-subtitle mb-2 text-muted">
                 <span class="me-2">Preferred Name</span>
-                <i class="fas fa-info fa-sm bg-secondary text-white icon-circle" mdbTooltip="Preferred Name used as display name in games." trigger="hover"></i> 
+                <i class="fas fa-info fa-sm bg-secondary text-white icon-circle" mdbTooltip="Preferred Name used as display name in games." trigger="hover"></i>
             </h6>
             <span class="card-text">{{user?.preferredName}}</span>
         </div>
@@ -30,7 +28,7 @@
             <div>
                 <h6 class="card-subtitle mb-2 text-muted">
                     <span class="me-2">One Time Password</span>
-                    <i class="fas fa-info fa-sm bg-secondary text-white icon-circle" mdbTooltip="Password changes on every login." trigger="hover"></i> 
+                    <i class="fas fa-info fa-sm bg-secondary text-white icon-circle" mdbTooltip="Password changes on every login." trigger="hover"></i>
                 </h6>
                 <span class="card-text">{{user?.oneTimePassword}}</span>
             </div>
@@ -38,6 +36,8 @@
         <hr />
         <div class="d-flex justify-content-center">
             <button class="btn btn-primary me-2" [routerLink]="['/update']">Change Info</button>
+            <button class="btn btn-secondary me-2" (click)="copyToClipboard()">Copy Token</button>
+
             <!-- <button class="btn btn-danger me-2">Resend Password</button> -->
         </div>
     </div>

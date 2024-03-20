@@ -28,15 +28,39 @@ export class PageForgotAccountComponent {
       return;
     }
 
-    this.userService.findAccount(this.email).subscribe(res => {
-      if (res.success) {
+    let retrieveTime = sessionStorage.getItem('retrieveTime');
+
+    if (retrieveTime != null) {
+      let timeDiff = new Date().getTime() - parseInt(retrieveTime);
+      if (timeDiff < 300000) {
         Swal.fire({
-          title: 'Success',
-          text: 'An email has been sent to ' + this.email + ' with your account information.',
-          icon: 'success',
+          title: 'Error',
+          text: 'You can only retrieve account information once every 5 minutes.',
+          icon: 'error',
           confirmButtonText: 'Continue',
         });
+        return;
       }
+    }
+
+    sessionStorage.setItem('retrieveTime', new Date().getTime().toString());
+
+    Swal.fire({
+      title: 'Success',
+      text: 'An email has been sent to ' + this.email + ' with your account information.',
+      icon: 'success',
+      confirmButtonText: 'Continue',
+    });
+
+    this.userService.findAccount(this.email).subscribe(res => {
+      if (!res.success) {
+        Swal.fire({
+          title: 'Error',
+          text: res.message,
+          icon: 'error',
+          confirmButtonText: 'Continue',
+        });
+        }
     });
   }
 }

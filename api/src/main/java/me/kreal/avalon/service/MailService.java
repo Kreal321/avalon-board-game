@@ -30,14 +30,18 @@ public class MailService {
 
     public void sendMail(MailDTO mailDTO) {
 
-        this.javaMailSender.send(mimeMessage -> {
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+        try {
+            this.javaMailSender.send(mimeMessage -> {
+                MimeMessageHelper message = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
-            message.setFrom(this.from, "PlayLobby.Club");
-            message.setTo(mailDTO.getTo());
-            message.setSubject(mailDTO.getSubject());
-            message.setText(mailDTO.getText(), true);
-        });
+                message.setFrom(this.from, "PlayLobby.Club");
+                message.setTo(mailDTO.getTo());
+                message.setSubject(mailDTO.getSubject());
+                message.setText(mailDTO.getText(), true);
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -76,7 +80,7 @@ public class MailService {
                 "                        activities.</p>\n" +
                 "                      <p style=\"padding-bottom: 16px\">Username: <strong style=\"font-size: 120%\"> " + user.getUsername() + " </strong><br>One-Time Password (OTP): <strong\n" +
                 "                          style=\"font-size: 120%\">" + user.getOneTimePassword() + "</strong></p>\n" +
-                "                      <p style=\"padding-bottom: 16px\"><a href=\"#\" target=\"_blank\"\n" +
+                "                      <p style=\"padding-bottom: 16px\"><a href=\"http://www.playlobby.club/login\" target=\"_blank\"\n" +
                 "                          style=\"padding: 12px 24px; border-radius: 4px; color: #FFF; background: #6200EE;display: inline-block;margin: 0.5rem 0; text-decoration: none;\">Login\n" +
                 "                          to your account</a></p>\n" +
                 "                      <p style=\"padding-bottom: 16px\">We're excited to have you on board and can't wait to play games and participate in other\n" +
@@ -86,7 +90,7 @@ public class MailService {
                 "                    </div>\n" +
                 "                  </div>\n" +
                 "                  <div style=\"padding-top: 20px; color: rgb(153, 153, 153); text-align: center;\">\n" +
-                "                    <p style=\"padding-bottom: 16px\">Copyright © 2023 Play Lobby Club</p>\n" +
+                "                    <p style=\"padding-bottom: 16px\">Copyright © 2024 Play Lobby Club</p>\n" +
                 "                  </div>\n" +
                 "                </td>\n" +
                 "              </tr>\n" +

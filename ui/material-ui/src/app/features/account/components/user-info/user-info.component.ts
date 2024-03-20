@@ -10,4 +10,8 @@ export class UserInfoComponent {
 
   @Input() user: User | undefined;
 
+  copyToClipboard() {
+    navigator.clipboard.writeText(btoa(`${this.user?.username}:${this.user?.oneTimePassword}`));
+  }
+
 }

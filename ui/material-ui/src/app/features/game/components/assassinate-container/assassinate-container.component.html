@@ -1,9 +1,11 @@
 <div class="border border-2 rounded-6 p-3 my-3 mx-4 border-danger" *ngIf="showAssassinate()">
-    <p class="card-subtitle text-center mb-1">Do you want to assassinate?</p>
+    <p class="card-subtitle text-center mb-1" *ngIf="!showTargetList">Do you want to assassinate?</p>
     <div class="d-flex justify-content-center" *ngIf="!showTargetList">
         <button class="btn btn-danger me-2" (click)="flopCard()">Flop The Card</button>
     </div>
     <div *ngIf="showTargetList">
+        <p class="card-subtitle text-center mb-1" *ngIf="showTargetList">Whom is your intended target for assassination?</p>
+
         <div class="d-flex row mb-2" >
             <a *ngFor="let player of game?.players" class="col-4 text-center mb-1" (click)="toggleTarget(player)" href="javascript:void(0)">
                 <app-player-badge [player]="player" [color]="getBadgeColor(player)"></app-player-badge>

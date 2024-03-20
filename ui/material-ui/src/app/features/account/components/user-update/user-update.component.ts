@@ -14,7 +14,6 @@ export class UserUpdateComponent implements OnChanges{
 
   @Input() user: User | undefined;
   username: string = '';
-  userHash: string = '';
   email: string = '';
   preferredName: string = '';
   oneTimePassword: string = '';
@@ -27,31 +26,14 @@ export class UserUpdateComponent implements OnChanges{
   ngOnChanges(): void {
     if (this.user) {
       this.username = this.user.username;
-      this.userHash = this.user.userHash;
       this.email = this.user.email;
       this.preferredName = this.user.preferredName;
       this.oneTimePassword = this.user.oneTimePassword;
     }
   }
 
-  update(): void {
-    this.userService.updatePreferredName(this.preferredName).subscribe(
-      response => {
-        if (response.success) {
-          Swal.fire({
-            title: 'Update Successful',
-            icon: 'success',
-            confirmButtonText: 'Continue',
-          }).then(() => {
-            this.router.navigate(['/profile']);
-          })
-        }
-      }
-    );
-  }
-
   // update(): void {
-  //   this.userService.update(this.username, this.userHash, this.email, this.preferredName).subscribe(
+  //   this.userService.updatePreferredName(this.preferredName).subscribe(
   //     response => {
   //       if (response.success) {
   //         Swal.fire({
@@ -65,6 +47,22 @@ export class UserUpdateComponent implements OnChanges{
   //     }
   //   );
   // }
+
+  update(): void {
+    this.userService.update(this.username, this.email, this.preferredName).subscribe(
+      response => {
+        if (response.success) {
+          Swal.fire({
+            title: 'Update Successful',
+            icon: 'success',
+            confirmButtonText: 'Continue',
+          }).then(() => {
+            this.router.navigate(['/profile']);
+          })
+        }
+      }
+    );
+  }
 
 
 }

@@ -36,23 +36,23 @@ public class UserController {
     public ResponseEntity<DataResponse> handleUserRegisterRequest(@Valid @RequestBody UserRequest userRequest, BindingResult result, HttpServletRequest request) {
 
         // suspend
-        return ResponseEntity.badRequest().body(DataResponse.error("This feature is currently suspended."));
+//        return ResponseEntity.badRequest().body(DataResponse.error("This feature is currently suspended."));
 
         // Validation failed
-//        if (result.hasErrors()) {
-//            return ResponseEntity.badRequest()
-//                    .body(DataResponse.error(result.getFieldErrors().stream()
-//                            .map(FieldError::getDefaultMessage)
-//                            .reduce("", String::concat)));
-//        }
-//
-//        DataResponse response = this.userService.createNewUser(userRequest, request);
-//
-//        if (!response.getSuccess()) {
-//            return ResponseEntity.badRequest().body(response);
-//        }
-//
-//        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        if (result.hasErrors()) {
+            return ResponseEntity.badRequest()
+                    .body(DataResponse.error(result.getFieldErrors().stream()
+                            .map(FieldError::getDefaultMessage)
+                            .reduce("", String::concat)));
+        }
+
+        DataResponse response = this.userService.createNewUser(userRequest, request);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.badRequest().body(response);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
     }
 
@@ -81,6 +81,19 @@ public class UserController {
         }
 
         DataResponse response = this.userService.findUserByLoginRequest(userRequest, request);
+
+        if (!response.getSuccess()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        return ResponseEntity.ok(response);
+
+    }
+
+    @PostMapping("/login/token")
+    public ResponseEntity<DataResponse> handleUserLoginTokenRequest(@RequestParam("token") String token, HttpServletRequest request) {
+
+        DataResponse response = this.userService.loginUserByToken(token, request);
 
         if (!response.getSuccess()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);

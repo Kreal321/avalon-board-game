@@ -12,7 +12,6 @@ export class PageLoginComponent {
 
   token: string = '';
   username: string = '';
-  userHash: string = '';
   email: string = '';
   preferredName: string = '';
   code: string = '';
@@ -21,7 +20,7 @@ export class PageLoginComponent {
   constructor(
     private userService: UserService,
     private router: Router,
-  ) { 
+  ) {
     this.showPasswordInput = this.router.url != "/login"
 
     this.router.events.subscribe((val) => {
@@ -30,7 +29,7 @@ export class PageLoginComponent {
   }
 
   loginWithCredentials(): void {
-    this.userService.loginWithCredentials(this.username, this.userHash, this.code).subscribe(
+    this.userService.loginWithCredentials(this.username, this.code).subscribe(
       response => {
         console.log(response);
         if (response.success) {
@@ -42,9 +41,26 @@ export class PageLoginComponent {
           }).then(() => {
             this.router.navigate(['/profile']);
           })
-        } 
+        }
       }
     );
   }
 
+  loginWithToken(): void {
+    this.userService.loginWithToken(this.token).subscribe(
+      response => {
+        if (response.success) {
+          Swal.fire({
+            title: 'Login Successful',
+            text: 'Welcome back ' + response.data.preferredName,
+            icon: 'success',
+            confirmButtonText: 'Continue',
+          }).then(() => {
+            this.router.navigate(['/profile']);
+          })
+        }
+      }
+    );
+
+  }
 }

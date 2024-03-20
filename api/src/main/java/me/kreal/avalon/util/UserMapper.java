@@ -11,7 +11,7 @@ public class UserMapper {
 
     public static User convertToEntity(UserRequest userRequest, HttpServletRequest request) {
         return User.builder()
-                .username(userRequest.getUsername() + "#" + userRequest.getUserHash())
+                .username(userRequest.getUsername())
                 .email(userRequest.getEmail())
                 .oneTimePassword(userRequest.getPassword())
                 .preferredName(userRequest.getPreferredName())
@@ -21,12 +21,10 @@ public class UserMapper {
     }
 
     public static UserDTO convertToDTO(User user) {
-        String[] array = user.getUsername().split("#", 2);
 
         return UserDTO.builder()
                 .userId(user.getUserId())
-                .username(array[0])
-                .userHash(array[1])
+                .username(user.getUsername())
                 .email(user.getEmail())
                 .oneTimePassword(user.getOneTimePassword())
                 .preferredName(user.getPreferredName())
@@ -34,12 +32,10 @@ public class UserMapper {
     }
 
     public static UserResponse convertToResponse(User user) {
-        String[] array = user.getUsername().split("#", 2);
 
         return UserResponse.builder()
                 .userId(user.getUserId())
-                .username(array[0])
-                .userHash(array[1])
+                .username(user.getUsername())
                 .email(user.getEmail())
                 .oneTimePassword(user.getOneTimePassword())
                 .preferredName(user.getPreferredName())

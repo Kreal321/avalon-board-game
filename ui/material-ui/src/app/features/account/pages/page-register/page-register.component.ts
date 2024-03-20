@@ -12,7 +12,6 @@ export class PageRegisterComponent {
 
   token: string = '';
   username: string = '';
-  userHash: string = '';
   email: string = '';
   preferredName: string = '';
   code: string = '';
@@ -21,31 +20,14 @@ export class PageRegisterComponent {
     private userService: UserService,
     private router: Router
   ) {
-    Swal.fire({
-      title: 'Registration is not open yet',
-      text: 'Register as a guest to play',
-      icon: 'info',
-      confirmButtonText: 'Continue',
-    }).then(() => {
-      this.router.navigate(['/register/temp']);
-    })
-  }
-
-  register(): void {
-    this.userService.register(this.username, this.userHash, this.email, this.preferredName).subscribe(
-      response => {
-        if (response.success) {
-          Swal.fire({
-            title: 'Registration Successful',
-            text: 'Welcome ' + response.data.preferredName,
-            icon: 'success',
-            confirmButtonText: 'Continue',
-          }).then(() => {
-            this.router.navigate(['/game']);
-          })
-        }
-      }
-    );
+    // Swal.fire({
+    //   title: 'Registration is not open yet',
+    //   text: 'Register as a guest to play',
+    //   icon: 'info',
+    //   confirmButtonText: 'Continue',
+    // }).then(() => {
+    //   this.router.navigate(['/register/temp']);
+    // })
   }
 
 }

@@ -120,7 +120,7 @@ public class GameService {
                 .count();
 
         if (successTimes >= 3) {
-            game.setGameStatus(GameStatus.GOOD_WON);
+            game.setGameStatus(GameStatus.ASSASSIN_FLOP);
             this.gameDao.save(game);
             return true;
         } else if (failTimes >= 3) {

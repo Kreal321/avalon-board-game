@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -122,29 +123,29 @@ public class UserService {
 
     public DataResponse resendAccountInfo(String email) {
 
-            Optional<User> userOptional = this.findUserByEmail(email);
+        Optional<User> userOptional = this.findUserByEmail(email);
 
-            if (!userOptional.isPresent()) {
-                return DataResponse.builder()
-                        .success(false)
-                        .message("Cannot find email.")
-                        .build();
-            }
-
-            User u = userOptional.get();
-
-            this.mailService.sendRetrievalMail(u);
-
+        if (!userOptional.isPresent()) {
             return DataResponse.builder()
-                    .success(true)
-                    .message("Email sent.")
+                    .success(false)
+                    .message("Cannot find email.")
                     .build();
+        }
+
+        User u = userOptional.get();
+
+        this.mailService.sendRetrievalMail(u);
+
+        return DataResponse.builder()
+                .success(true)
+                .message("Email sent.")
+                .build();
 
     }
     @Transactional
     public DataResponse findUserByLoginRequest(UserRequest userRequest, HttpServletRequest request) {
 
-        Optional<User> userOptional = this.findUserByUsername(userRequest.getFullUsername());
+        Optional<User> userOptional = this.findUserByUsername(userRequest.getUsername());
 
         if (!userOptional.isPresent()) {
             return DataResponse.builder()
@@ -185,6 +186,17 @@ public class UserService {
 
     }
 
+    public DataResponse loginUserByToken(String token, HttpServletRequest request) {
+        byte[] decodedBytes = Base64.getDecoder().decode(token);
+        String decodedString = new String(decodedBytes);
+        String[] parts = decodedString.split(":");
+        String password = parts[1];
+        String username = parts[0];
+
+        UserRequest userRequest = new UserRequest(username, null, null, password);
+        return this.findUserByLoginRequest(userRequest, request);
+    }
+
     public DataResponse getUserMeByAuthUserDetail(AuthUserDetail authUserDetail) {
 
         User u = this.findUserByAuthUserDetail(authUserDetail);
@@ -202,7 +214,7 @@ public class UserService {
 
         User u = this.findUserByAuthUserDetail(authUserDetail);
 
-        String newUsername = request.getUsername() + "#" + request.getUserHash();
+        String newUsername = request.getUsername();
 
         if (!u.getUsername().equals(newUsername)) {
             if (this.findUserByUsername(newUsername).isPresent()) {
